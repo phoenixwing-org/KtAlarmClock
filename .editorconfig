@@ -1,0 +1,24 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file 
+root = true
+# this project is both for linux and windows, and save by git,
+# so do not set endline
+# end_of_line = lf, crlf ...
+
+[*]
+
+[*.{cpp,c}]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{h,hpp}]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.pro]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true

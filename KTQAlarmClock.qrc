@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/Start.PNG</file>
+        <file>images/Pause.PNG</file>
+        <file>images/Options.png</file>
+        <file>images/Reset.PNG</file>
+        <file>images/Clock.png</file>
+        <file>images/Close.PNG</file>
+        <file>images/Question.png</file>
+    </qresource>
+</RCC>

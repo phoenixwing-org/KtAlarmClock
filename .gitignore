@@ -1,6 +1,12 @@
 # Build and Release Folders
 bin-debug/
 bin-release/
+bin/
+out/
+build
+x64
+Debug
+Release
 [Oo]bj/
 [Bb]in/
 
@@ -13,6 +19,7 @@ bin-release/
 *.ipa
 *.apk
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+#others
+.vs
+*.user
+*.bmp
