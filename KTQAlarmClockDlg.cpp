@@ -26,13 +26,13 @@ KTQAlarmClockDlg::KTQAlarmClockDlg(QWidget *parent)
       m_pTimeOverDlg(NULL),
       m_Step(SpeechFinished),
       m_Punish(0),
-      m_PunishTarget(10),
+      m_PunishTarget(15),
       m_pTimeLabel(NULL),
       m_pSoundEffect(NULL)
 
 {
     ui->setupUi(this);
-    setWindowOpacity(0.9);
+    setWindowOpacity(0.8);
     m_pTimeLabel = ui->labelTime; //set label
     m_pTimer = new QTimer(this);
     m_pause = false;
