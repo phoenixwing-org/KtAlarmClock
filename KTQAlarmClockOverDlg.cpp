@@ -15,7 +15,7 @@ KTQAlarmClockOverDlg::KTQAlarmClockOverDlg(QWidget *parent)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::WindowStaysOnTopHint);
-    setWindowOpacity(0.9);
+    setWindowOpacity(0.8);
 
     connect(ui->pushButtonStartTalking, SIGNAL(clicked()), this, SLOT(OnStartTalking()));
     connect(ui->pushButtonFinishSpeech, SIGNAL(clicked()), this, SLOT(OnFinishSpeech()));
