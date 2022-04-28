@@ -4,14 +4,14 @@
  * @author      Kuntai
  * @file        KTQAlarmClockOverDlg.h
  * @brief       main entry
-*/
+ */
 
-#include <QApplication>
 #include "KTQAlarmClockDlg.h"
-//程序入口
-int main(int argc, char *argv[])
-{
-    QApplication a(argc, argv);
+#include <QApplication>
+
+// program entry
+int main(int argc, char *argv[]) {
+    QApplication     a(argc, argv);
     KTQAlarmClockDlg mainDlg;
     mainDlg.setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
     mainDlg.show();
