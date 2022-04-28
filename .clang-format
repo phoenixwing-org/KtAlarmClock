@@ -80,7 +80,6 @@ BraceWrapping:
   
   #和BraceWrapping: AfterFunction 一起使用会冲突
   #BreakBeforeBraces: Stroustrup
-  
-AccessModifierOffset:        -4
+
 AllowShortEnumsOnASingleLine: false
 
