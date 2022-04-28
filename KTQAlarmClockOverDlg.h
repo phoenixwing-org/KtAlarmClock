@@ -6,25 +6,22 @@
  * @author      Kuntai
  * @file        KTQAlarmClockOverDlg.h
  * @brief       dialog after time is over.
-*/
+ */
 
-#include <QWidget>
 #include <QLabel>
+#include <QWidget>
 
-namespace Ui
-{
-    class KTQAlarmClockOverDlg;
+namespace Ui {
+class KTQAlarmClockOverDlg;
 }
-enum SpeechStep
-{
-    SpeechFirst = 0,
-    SpeechDelay = 1,
-    SpeechTalking = 2,
+enum SpeechStep {
+    SpeechFirst    = 0,
+    SpeechDelay    = 1,
+    SpeechTalking  = 2,
     SpeechFinished = 3
 };
 
-class KTQAlarmClockOverDlg : public QWidget
-{
+class KTQAlarmClockOverDlg : public QWidget {
     Q_OBJECT
 
 public:

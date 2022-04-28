@@ -1,0 +1,85 @@
+# version 1.0
+Language: Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlinesLeft: true
+AlignOperands: true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine : false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+BreakConstructorInitializersBeforeComma: true
+ColumnLimit: 100
+CommentPragmas: '^ IWYU pragma:'
+IndentCaseLabels: false
+IndentWidth: 4
+IndentWrappedFunctionNames: true
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 1
+ObjCBlockIndentWidth: 4
+ObjCSpaceAfterProperty: true
+PointerAlignment: Right
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpacesInContainerLiterals: true
+SpacesInParentheses : false
+SpacesInSquareBrackets: true
+TabWidth: 4
+UseTab: Never
+
+BreakBeforeBraces: Custom
+
+BraceWrapping:   
+  # class定义后面
+  AfterClass:        false
+  
+  # 控制语句后面
+  AfterControlStatement:        false
+  
+  # enum定义后面
+  AfterEnum:        false
+  
+  # 函数定义后面
+  AfterFunction:        false
+  
+  # 命名空间定义后面
+  AfterNamespace:        false
+  
+  # ObjC定义后面
+  AfterObjCDeclaration:        false
+  
+  # struct定义后面
+  AfterStruct:        false
+  
+  # union定义后面
+  AfterUnion:        true
+ 
+  AfterExternBlock: false
+  
+  # catch之前
+  BeforeCatch:        true
+  
+  # else之前
+  BeforeElse:        true
+  
+  # 缩进大括号
+  IndentBraces:        false
+  
+  SplitEmptyFunction: true
+  
+  SplitEmptyRecord: true
+  
+  SplitEmptyNamespace: true
+  
+  #和BraceWrapping: AfterFunction 一起使用会冲突
+  #BreakBeforeBraces: Stroustrup
+
+AllowShortEnumsOnASingleLine: false
+
