@@ -10,6 +10,9 @@ import QtQuick.Layouts 1.12
 Item {
     width: 250
     height: 400
+    property alias toolButtonMySpeech: toolButtonMySpeech
+    property alias toolButtonMyClass: toolButtonMyClass
+    property alias toolButtonMySetting: toolButtonMySetting
 
     ToolBar {
         id: toolbar
@@ -18,14 +21,17 @@ Item {
         ColumnLayout {
             anchors.fill: parent
             ToolButton {
+                id: toolButtonMySpeech
                 Layout.fillWidth: true
                 action: actionMySpeech
             }
             ToolButton {
+                id: toolButtonMyClass
                 Layout.fillWidth: true
                 action: actionMyClass
             }
             ToolButton {
+                id: toolButtonMySetting
                 Layout.fillWidth: true
                 action: actionSet
             }

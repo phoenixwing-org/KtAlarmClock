@@ -12,7 +12,7 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 640
-    height: 480
+    height: 550
     title: qsTr("Kt Alarm Clock")
 
     // Left
@@ -23,10 +23,17 @@ ApplicationWindow {
 
     MyRight{
         id: ktRight
+        height: 550
         anchors.left: ktLeft.right
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.top: parent.top
         anchors.leftMargin: 0
     }
+
+    // connect signal onCompleted
+    Component.onCompleted: {
+        ktLeft.actionClicked.connect(ktRight.changeScrollRect)// pass index value
+    }
+
 }

@@ -14,5 +14,6 @@
         <file>MyLeftForm.ui.qml</file>
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>
+        <file>MyScroll.qml</file>
     </qresource>
 </RCC>

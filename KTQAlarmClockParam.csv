@@ -1,0 +1,12 @@
+NameSuffix,ID,Name,ParamString,DataType,TCKind,DefaultValue,CATAttrInOut,IsList,IsOnTree,Component,Count,IsParamDlg,Unit,Author,CreateDate,Notes
+Param,1,ClassTime,ClassTime,int,,4500,,,,,0,,sec,Kevin,,45 min
+Param,2,Class Break,ClassBreak,int,,600,,,,,0,,sec,Kevin,,10 min
+Param,3,Punish Time,PunishTime,int,,0,,,,,0,,sec,Kevin,,
+Param,4,Punish Score,PunishScore,double,,0,,,,,0,,,Kevin,,
+Param,5,Time Counter,TimeCounter,int,,0,,,,,0,,sec,Kevin,,
+Param,6,Time Step,TimeStep,int,,0,,,,,0,,,Kevin,,
+Param,100,Time Total,TimeTotal,int,,5100,,,,,0,,sec,Kevin,,total = Work + Break
+$NamePrefix,KTQ,the prefix,,,,,,,,,,,,,,
+$NameMiddle,AlarmClock,the middle name,,,,,,,,,,,,,,
+$NameSpace,kt,$Name Space,,,,,,,,,,,,,,
+$AppendFunction,append,the append function name,,,,,,,,,,,,,,
