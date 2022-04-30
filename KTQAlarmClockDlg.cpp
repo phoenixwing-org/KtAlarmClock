@@ -7,9 +7,7 @@
 
 #include "KTQAlarmClockDlg.h"
 #include "KTQAlarmClockOverDlg.h"
-
 #include "ui_KTQAlarmClockDlg.h"
-
 #include <QDateTime>
 #include <QMessageBox>
 

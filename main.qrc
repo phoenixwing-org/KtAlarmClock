@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="Start.PNG">images/Start.PNG</file>
+        <file alias="Pause.PNG">images/Pause.PNG</file>
+        <file alias="Options.png">images/Options.png</file>
+        <file alias="Reset.PNG">images/Reset.PNG</file>
+        <file alias="Clock.png">images/Clock.png</file>
+        <file alias="Close.PNG">images/Close.PNG</file>
+        <file alias="Question.png">images/Question.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>MyMain.qml</file>
+        <file>MyLeft.qml</file>
+        <file>MyLeftForm.ui.qml</file>
+        <file>MyRight.qml</file>
+        <file>MyRightForm.ui.qml</file>
+    </qresource>
+</RCC>

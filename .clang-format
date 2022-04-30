@@ -1,5 +1,4 @@
 # version 1.0
-Language:        Cpp
 BasedOnStyle: LLVM
 Language: Cpp
 AccessModifierOffset: -4
@@ -12,12 +11,34 @@ AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine : false
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 BreakConstructorInitializersBeforeComma: true
+BreakBeforeBraces: Custom
+BraceWrapping:   
+  AfterClass:        false
+  AfterControlStatement:        false
+  AfterEnum:        false
+  AfterFunction:        false
+  AfterNamespace:        false
+  AfterObjCDeclaration:        false
+  AfterStruct:        false
+  AfterUnion:        true
+  AfterExternBlock: false
+  BeforeCatch:        true
+  BeforeElse:        true
+  IndentBraces:        false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+  #use with BraceWrapping: AfterFunction has conflict
+  #BreakBeforeBraces: Stroustrup
+  
+
 ColumnLimit: 100
 CommentPragmas: '^ IWYU pragma:'
 IndentCaseLabels: false
@@ -36,53 +57,4 @@ SpacesInSquareBrackets: true
 TabWidth: 4
 UseTab: Never
 
-BreakBeforeBraces: Custom
-
-BraceWrapping:   
-  # class定义后面
-  AfterClass:        false
-  
-  # 控制语句后面
-  AfterControlStatement:        false
-  
-  # enum定义后面
-  AfterEnum:        false
-  
-  # 函数定义后面
-  AfterFunction:        false
-  
-  # 命名空间定义后面
-  AfterNamespace:        false
-  
-  # ObjC定义后面
-  AfterObjCDeclaration:        false
-  
-  # struct定义后面
-  AfterStruct:        false
-  
-  # union定义后面
-  AfterUnion:        true
- 
-  AfterExternBlock: false
-  
-  # catch之前
-  BeforeCatch:        true
-  
-  # else之前
-  BeforeElse:        true
-  
-  # 缩进大括号
-  IndentBraces:        false
-  
-  SplitEmptyFunction: true
-  
-  SplitEmptyRecord: true
-  
-  SplitEmptyNamespace: true
-  
-  #和BraceWrapping: AfterFunction 一起使用会冲突
-  #BreakBeforeBraces: Stroustrup
-  
-AccessModifierOffset:        -4
-AllowShortEnumsOnASingleLine: false
 
