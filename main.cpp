@@ -9,6 +9,10 @@
 #include <QApplication>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlComponent> // for load xml component
+#include <QQmlContext>
+#include <QQmlProperty>
+#include <QQuickItem>
 
 #include "KTQAlarmClockDlg.h"
 

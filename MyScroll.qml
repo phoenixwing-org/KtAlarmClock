@@ -27,6 +27,7 @@ Item {
             id: rect
             width: parent.width
             height: rect0.height + rect1.height + rect2.height
+
             Rectangle {
                 id: rect0
                 width: itemTop.width
@@ -34,6 +35,16 @@ Item {
                 height: 300
                 color: "red"
                 border.color: "blue"
+
+                Text {
+                    id: element
+                    x: 184
+                    y: 149
+                    width: 125
+                    height: 38
+                    text: qsTr("Speech")
+                    font.pixelSize: 24
+                }
             }
 
             Rectangle {
@@ -43,6 +54,16 @@ Item {
                 height: 300
                 color: "green"
                 border.color: "blue"
+
+                Text {
+                    id: element1
+                    x: 184
+                    y: 149
+                    width: 125
+                    height: 38
+                    text: qsTr("Class")
+                    font.pixelSize: 24
+                }
             }
 
             Rectangle {
@@ -59,6 +80,16 @@ Item {
                         scroll.flickableItem.contentY = rect1.y
                     }
                 }
+
+                Text {
+                    id: element2
+                    x: 184
+                    y: 149
+                    width: 125
+                    height: 38
+                    text: qsTr("Setting")
+                    font.pixelSize: 24
+                }
             }
         }
     }
@@ -66,8 +97,6 @@ Item {
 
 /*##^##
 Designer {
-    D{
-        i: 2;anchors_height: 900;anchors_width: 530
-    }D{i: 1;anchors_height: 263;anchors_width: 514}
+    D{i:2;anchors_height:900;anchors_width:530}D{i:1;anchors_height:263;anchors_width:514}
 }
 ##^##*/

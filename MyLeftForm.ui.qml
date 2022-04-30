@@ -1,3 +1,4 @@
+
 /**
 * @copyright Shanghai Kuntai Software Technology Co., Ltd. 2022
 * @license LGPL 3.0
@@ -36,19 +37,6 @@ Item {
                 action: actionSet
             }
         }
-    }
-
-    Text {
-        id: element
-        text: qsTr("Left")
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignLeft
-        anchors.top: toolbar.bottom
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.topMargin: 0
-        font.pixelSize: 22
     }
 
     Action {

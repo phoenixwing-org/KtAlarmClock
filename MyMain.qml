@@ -12,7 +12,9 @@ ApplicationWindow {
     id: applicationWindow
     visible: true
     width: 640
-    height: 550
+    height: 480
+    minimumWidth:400
+    minimumHeight: 300
     title: qsTr("Kt Alarm Clock")
 
     // Left
@@ -23,7 +25,6 @@ ApplicationWindow {
 
     MyRight{
         id: ktRight
-        height: 550
         anchors.left: ktLeft.right
         anchors.right: parent.right
         anchors.bottom: parent.bottom
