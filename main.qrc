@@ -1,12 +1,28 @@
 <RCC>
     <qresource prefix="/image">
-        <file alias="Start.png">images/Start.png</file>
-        <file alias="Pause.png">images/Pause.png</file>
-        <file alias="Options.png">images/Options.png</file>
-        <file alias="Reset.png">images/Reset.png</file>
-        <file alias="Clock.png">images/Clock.png</file>
-        <file alias="Close.png">images/Close.png</file>
-        <file alias="Question.png">images/Question.png</file>
+        <file alias="Start.png">image/Start.png</file>
+        <file alias="Pause.png">image/Pause.png</file>
+        <file alias="Options.png">image/Options.png</file>
+        <file alias="Reset.png">image/Reset.png</file>
+        <file alias="Clock.png">image/Clock.png</file>
+        <file alias="Close.png">image/Close.png</file>
+        <file alias="Question.png">image/Question.png</file>        
+        <file alias="back.svg">image/back.svg</file>
+        <file alias="book-opened.svg">image/book-opened.svg</file>
+        <file alias="chevron-left.svg">image/chevron-left.svg</file>
+        <file alias="chevron-right.svg">image/chevron-right.svg</file>
+        <file alias="coffee.svg">image/coffee.svg</file>
+        <file alias="grid.svg">image/grid.svg</file>
+        <file alias="justify.svg">image/justify.svg</file>
+        <file alias="next.svg">image/next.svg</file>
+        <file alias="pause.svg">image/pause.svg</file>
+        <file alias="play.svg">image/play.svg</file>
+        <file alias="previous.svg">image/previous.svg</file>
+        <file alias="settings.svg">image/settings.svg</file>
+        <file alias="stop.svg">image/stop.svg</file>
+        <file alias="verified.svg">image/verified.svg</file>
+        <file alias="vertical.svg">image/vertical.svg</file>
+        <file alias="volume-loud.svg">image/volume-loud.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>MyMain.qml</file>

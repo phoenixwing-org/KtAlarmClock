@@ -23,17 +23,21 @@ Item {
             anchors.fill: parent
             ToolButton {
                 id: toolButtonMySpeech
+                transformOrigin: Item.Left
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/volume-loud.svg"
                 action: actionMySpeech
             }
             ToolButton {
                 id: toolButtonMyClass
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/book-opened.svg"
                 action: actionMyClass
             }
             ToolButton {
                 id: toolButtonMySetting
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/settings.svg"
                 action: actionSet
             }
         }

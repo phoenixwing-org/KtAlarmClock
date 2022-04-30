@@ -5,8 +5,8 @@
 * @author Kuntai
 */
 import QtQuick 2.4
-import QtQuick.Layouts 1.2
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.12
+import QtQuick.Layouts 1.12
 
 Item {
     id: element
@@ -53,24 +53,22 @@ Item {
                 width: 90
                 height: 36
                 text: "Start"
-                iconSource: "qrc:/image/Start.png"
+                icon.source: "qrc:/image/play.svg"
                 layer.effect: toolButtonStart
                 layer.enabled: false
                 layer.smooth: true
-                isDefault: true
-                iconName: ""
             }
 
             ToolButton {
                 id: toolButtonPause
                 text: "Pause"
-                iconSource: "qrc:/image/Pause.png"
+                icon.source: "qrc:/image/pause.svg"
             }
 
             ToolButton {
                 id: toolButtonReset
                 text: "Stop"
-                iconSource: "qrc:/image/Reset.png"
+                icon.source: "qrc:/image/stop.svg"
             }
         }
     }
