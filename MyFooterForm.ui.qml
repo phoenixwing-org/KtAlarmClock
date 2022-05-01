@@ -11,7 +11,7 @@ Item {
 
     Rectangle {
         id: rectangle
-        radius:15
+        radius: 15
         width: 400
         color: "#7ec687"
 
@@ -28,21 +28,21 @@ Item {
                 id: buttonStart
                 text: qsTr("Start")
                 height: 48
-                iconSource: "images/ic_start.svg"
+                iconSource: "image/ic_start.svg"
             }
 
             ToolButton {
                 id: buttonPause
                 text: qsTr("Pause")
                 height: 48
-                iconSource: "images/ic_pause.svg"
+                iconSource: "image/ic_pause.svg"
             }
 
             ToolButton {
                 id: buttonStop
                 text: qsTr("Stop")
                 height: 48
-                iconSource: "images/ic_stop.svg"
+                iconSource: "image/ic_stop.svg"
             }
         }
     }

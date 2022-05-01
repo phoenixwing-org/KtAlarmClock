@@ -1,15 +1,33 @@
 <RCC>
-    <qresource prefix="/images">
-        <file alias="Start.PNG">images/Start.PNG</file>
-        <file alias="Pause.PNG">images/Pause.PNG</file>
-        <file alias="Options.png">images/Options.png</file>
-        <file alias="Reset.PNG">images/Reset.PNG</file>
-        <file alias="Clock.png">images/Clock.png</file>
-        <file alias="Close.PNG">images/Close.PNG</file>
-        <file alias="Question.png">images/Question.png</file>
-        <file alias="ic_pause.svg">images/ic_pause.svg</file>
-        <file alias="ic_start.svg">images/ic_start.svg</file>
-        <file alias="ic_stop.svg">images/ic_stop.svg</file>
+    <qresource prefix="/image">
+        <file alias="Start.png">image/Start.png</file>
+        <file alias="Pause.png">image/Pause.png</file>
+        <file alias="Options.png">image/Options.png</file>
+        <file alias="Reset.png">image/Reset.png</file>
+        <file alias="Close.png">image/Close.png</file>
+        <file alias="Question.png">image/Question.png</file>
+        <file alias="back.svg">image/back.svg</file>
+        <file alias="book-opened.svg">image/book-opened.svg</file>
+        <file alias="chevron-left.svg">image/chevron-left.svg</file>
+        <file alias="chevron-right.svg">image/chevron-right.svg</file>
+        <file alias="coffee.svg">image/coffee.svg</file>
+        <file alias="grid.svg">image/grid.svg</file>
+        <file alias="justify.svg">image/justify.svg</file>
+        <file alias="next.svg">image/next.svg</file>
+        <file alias="pause.svg">image/pause.svg</file>
+        <file alias="play.svg">image/play.svg</file>
+        <file alias="previous.svg">image/previous.svg</file>
+        <file alias="settings.svg">image/settings.svg</file>
+        <file alias="stop.svg">image/stop.svg</file>
+        <file alias="verified.svg">image/verified.svg</file>
+        <file alias="vertical.svg">image/vertical.svg</file>
+        <file alias="volume-loud.svg">image/volume-loud.svg</file>
+        <file alias="Clock.ico">image/Clock.ico</file>
+
+        <file alias="ic_pause.svg">image/ic_pause.svg</file>
+        <file alias="ic_start.svg">image/ic_start.svg</file>
+        <file alias="ic_stop.svg">image/ic_stop.svg</file>
+
     </qresource>
     <qresource prefix="/">
         <file>MyFooter.qml</file>

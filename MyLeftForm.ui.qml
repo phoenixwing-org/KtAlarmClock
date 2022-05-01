@@ -1,3 +1,4 @@
+
 /**
 * @copyright Shanghai Kuntai Software Technology Co., Ltd. 2022
 * @license LGPL 3.0
@@ -22,33 +23,24 @@ Item {
             anchors.fill: parent
             ToolButton {
                 id: toolButtonMySpeech
+                transformOrigin: Item.Left
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/volume-loud.svg"
                 action: actionMySpeech
             }
             ToolButton {
                 id: toolButtonMyClass
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/book-opened.svg"
                 action: actionMyClass
             }
             ToolButton {
                 id: toolButtonMySetting
                 Layout.fillWidth: true
+                icon.source: "qrc:/image/settings.svg"
                 action: actionSet
             }
         }
-    }
-
-    Text {
-        id: element
-        text: qsTr("Left")
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignLeft
-        anchors.top: toolbar.bottom
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.topMargin: 0
-        font.pixelSize: 22
     }
 
     Action {
