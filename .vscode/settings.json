@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "xutility": "cpp",
+        "algorithm": "cpp",
+        "iostream": "cpp"
+    },
+    "editor.formatOnSave": true
+}

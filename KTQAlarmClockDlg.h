@@ -8,24 +8,18 @@
  * @brief       main dialog
  */
 
-#include <QDialog>
-#include <QLabel>
-#include <QMouseEvent>
 #include <QPoint>
 #include <QSoundEffect>
 #include <QTimer>
 
-#include "KTQAlarmClockOverDlg.h"
+// KTQ
+#include "KTQAlarmClockParam.h"
 
-namespace Ui {
-class KTQAlarmClockDlg;
-}
-
-class KTQAlarmClockDlg : public QDialog {
+class KTQAlarmClockDlg : public QObject {
     Q_OBJECT
 
 public:
-    explicit KTQAlarmClockDlg(QWidget *parent = 0);
+    explicit KTQAlarmClockDlg(QObject *parent = 0);
     ~KTQAlarmClockDlg();
 
 public:
@@ -44,10 +38,6 @@ public:
     void ShowTopmost();
 
     void UpdateSensitivity();
-
-private:
-    void mouseMoveEvent(QMouseEvent *event);
-    void mousePressEvent(QMouseEvent *event);
 
 private slots:
 
@@ -74,21 +64,18 @@ private slots:
     void OnQuestion();
 
 private:
-    Ui::KTQAlarmClockDlg *ui;
-    int                   m_TimeCount;
-    int                   m_DelayCount;
-    int                   m_DelayCountTotal;
-    int                   m_WholeCount; // for whole
-    QTimer               *m_pTimer;
-    bool                  m_pause;
-    KTQAlarmClockOverDlg *m_pTimeOverDlg;
-    int                   m_PosX;
-    SpeechStep            m_Step;
-    double                m_Punish;       // punish
-    double                m_PunishTarget; // punish target.
-    QPoint                dPos;           // Position
-    QLabel               *m_pTimeLabel;
-    QSoundEffect         *m_pSoundEffect; // QT6.0 QSound is replaced by QSoundEffect
+    int             m_TimeCount;
+    int             m_DelayCount;
+    int             m_DelayCountTotal;
+    int             m_WholeCount; // for whole
+    QTimer         *m_pTimer;
+    bool            m_pause;
+    int             m_PosX;
+    KTQ::SpeechStep m_Step;
+    double          m_Punish;       // punish
+    double          m_PunishTarget; // punish target.
+    QPoint          dPos;           // Position
+    QSoundEffect   *m_pSoundEffect; // QT6.0 QSound is replaced by QSoundEffect
 };
 
 #endif // KTQAlarmClockDlg_H
