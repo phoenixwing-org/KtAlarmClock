@@ -4,29 +4,38 @@
  * @author      Kuntai
  * @file        KTQAlarmClockParam.h
  * @version		V1.0
- * @brief		param define class for AlarmClock
+ * @brief		parameter class
  */
 
 #ifndef KTQAlarmClockParam_H
 #define KTQAlarmClockParam_H
 
+// KTQ
+#include "KTQAlarmClockUI.h"
+
 // KT
 namespace KTQ {
 
-enum SpeechStep { SpeechFirst = 0, SpeechDelay = 1, SpeechTalking = 2, SpeechFinished = 3 };
+enum SpeechStep {
+    SpeechFirst    = 0,
+    SpeechDelay    = 1,
+    SpeechTalking  = 2,
+    SpeechFinished = 3
+};
+} // namespace KTQ
 
 /**
- * @brief Class AlarmClock
+ * @brief Class KTQAlarmClockParam
  */
-class AlarmClock {
+class ExportedByKTQAlarmClockUI KTQAlarmClockParam {
 public:
     /** @brief Standard constructors and destructors */
-    AlarmClock();
-    virtual ~AlarmClock();
+    KTQAlarmClockParam();
+    virtual ~KTQAlarmClockParam();
 
     /** @brief Copy constructor and equal operator */
-    AlarmClock(const AlarmClock &);
-    AlarmClock &operator=(const AlarmClock &);
+    KTQAlarmClockParam(const KTQAlarmClockParam &);
+    KTQAlarmClockParam &operator=(const KTQAlarmClockParam &);
 
 public:
     // clang-format off
@@ -97,10 +106,9 @@ public: // functions
 
     /**
      * @brief cout class members for debug
-     * @param[in] dumpContents is dump contents
      * @return void
      */
-    void dump(bool dumpContents = false);
+    void dump();
 
     /**
      * @brief set sample value for debug
@@ -108,5 +116,4 @@ public: // functions
      */
     void sample();
 };
-} // namespace KTQ
 #endif

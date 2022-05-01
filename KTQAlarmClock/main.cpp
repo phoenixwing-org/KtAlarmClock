@@ -2,17 +2,15 @@
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
  * @license     LGPL 3.0
  * @author      Kuntai
- * @file        KTQAlarmClockOverDlg.h
- * @brief       main entry
+ * @file        main.cpp
+ * @brief       main entry of the application
  */
 
-#include <QApplication>
+// Qt
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QQmlComponent> // for load xml component
-#include <QQmlContext>
-#include <QQmlProperty>
-#include <QQuickItem>
+// KTQ
+#include "KTQAlarmClockCmd.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -20,7 +18,7 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    const QUrl            url(QStringLiteral("qrc:/MyMain.qml"));
+    const QUrl            url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,
         [ url ](QObject *obj, const QUrl &objUrl) {
@@ -28,6 +26,8 @@ int main(int argc, char *argv[]) {
         },
         Qt::QueuedConnection);
     engine.load(url);
+    KTQAlarmClockCmd cmd;
+    cmd.debug(" Clock");
 
     return app.exec();
 }

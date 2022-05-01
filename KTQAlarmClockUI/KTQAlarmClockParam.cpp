@@ -12,9 +12,8 @@
 // KTQ
 #include "KTQAlarmClockParam.h"
 
-namespace KTQ {
 //--------------------------------------------------------------------
-AlarmClock::AlarmClock()
+KTQAlarmClockParam::KTQAlarmClockParam()
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM CONSTRUCTOR
     : ClassTime(4500),
@@ -30,7 +29,7 @@ AlarmClock::AlarmClock()
 {
 }
 //--------------------------------------------------------------------
-AlarmClock::~AlarmClock() {
+KTQAlarmClockParam::~KTQAlarmClockParam() {
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM DESTRUCTOR
     //ClassTime = 4500; //1
@@ -45,11 +44,11 @@ AlarmClock::~AlarmClock() {
     // clang-format on
 }
 //--------------------------------------------------------------------
-AlarmClock::AlarmClock(const AlarmClock &iOriginal) {
+KTQAlarmClockParam::KTQAlarmClockParam(const KTQAlarmClockParam &iOriginal) {
     *this = iOriginal;
 }
 //--------------------------------------------------------------------
-AlarmClock &AlarmClock::operator=(const AlarmClock &iOriginal) {
+KTQAlarmClockParam &KTQAlarmClockParam::operator=(const KTQAlarmClockParam &iOriginal) {
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM EQUAL
     this->ClassTime = iOriginal.ClassTime;
@@ -65,18 +64,18 @@ AlarmClock &AlarmClock::operator=(const AlarmClock &iOriginal) {
     return *this;
 }
 //--------------------------------------------------------------------
-void AlarmClock::clear() {
-    *this = AlarmClock();
+void KTQAlarmClockParam::clear() {
+    *this = KTQAlarmClockParam();
 }
 //--------------------------------------------------------------------
-void AlarmClock::dump(bool dumpContents) {
+void KTQAlarmClockParam::dump() {
     std::cout << " {  ClassTime:" << ClassTime << ",ClassBreak: " << ClassBreak
               << ",PunishTime: " << PunishTime << ",:PunishScore " << PunishScore
               << ",TimeCounter:" << TimeCounter << ", :TimeStep" << TimeStep
               << ",TimeTotal: " << TimeTotal << " }" << std::endl;
 }
 //--------------------------------------------------------------------
-void AlarmClock::sample() {
+void KTQAlarmClockParam::sample() {
     ClassTime   = 4500; // 1
     ClassBreak  = 600;  // 2
     PunishTime  = 0;    // 3
@@ -85,4 +84,3 @@ void AlarmClock::sample() {
     TimeStep    = 0;    // 6
     TimeTotal   = 5100; // 100
 }
-} // namespace KTQ

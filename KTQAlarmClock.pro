@@ -14,12 +14,7 @@ TARGET = KTQAlarmClock
 TEMPLATE = app
 
 SOURCES +=\
-    KTQAlarmClockDlg.cpp \
-    KTQAlarmClockParam.cpp \
     main.cpp
-
-HEADERS  += KTQAlarmClockDlg.h \
-    KTQAlarmClockParam.h
 
 RESOURCES += \
     main.qrc
@@ -36,3 +31,6 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    main.rc
