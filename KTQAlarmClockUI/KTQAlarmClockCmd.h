@@ -31,6 +31,13 @@ public:
     explicit KTQAlarmClockCmd(QObject *parent = nullptr);
     ~KTQAlarmClockCmd() override;
 
+public:
+    /**
+     * @brief Print Message
+     * @param[in] iMsg messge
+     */
+    void debug(const QString &iMsg);
+
 private:
     KTQAlarmClockParam *m_pClockParam;
     KTQAlarmClockDlg   *m_pClockDlg;

@@ -4,7 +4,9 @@
  * @author      Kuntai
  * @file        KTQAlarmClockCmd.cpp
  */
-
+// Qt
+#include <QDebug>
+// KTQ
 #include "KTQAlarmClockCmd.h"
 #include "KTQAlarmClockDlg.h"
 #include "KTQAlarmClockParam.h"
@@ -24,4 +26,9 @@ KTQAlarmClockCmd::~KTQAlarmClockCmd() {
     delete m_pClockParam;
     m_pClockParam = NULL;
     m_pClockDlg   = NULL;
+}
+//------------------------------------------------
+void KTQAlarmClockCmd::debug(const QString &iMsg) {
+
+    qDebug() << "Hello to KTQAlarmClockCmd. msg = " << iMsg;
 }
