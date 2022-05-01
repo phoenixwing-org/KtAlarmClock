@@ -16,7 +16,6 @@
         <file alias="verified.svg">image/verified.svg</file>
         <file alias="vertical.svg">image/vertical.svg</file>
         <file alias="volume-loud.svg">image/volume-loud.svg</file>
-        <file alias="Clock.ico">image/Clock.ico</file>
         <file alias="ic_pause.svg">image/ic_pause.svg</file>
         <file alias="ic_start.svg">image/ic_start.svg</file>
         <file alias="ic_stop.svg">image/ic_stop.svg</file>
