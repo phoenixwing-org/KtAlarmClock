@@ -1,10 +1,12 @@
 TEMPLATE = lib
 TARGET = KTQAlarmClockUI
 QT += qml quick
+DEFINES += KTQAlarmClockUI_EXPORTS
+
 CONFIG += plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
-uri = cn.kuntaisoft.KTQAlarmClockCmd
+uri = cn.kuntaisoft.KTQAlarmClockDlg
 
 # Input
 SOURCES += \

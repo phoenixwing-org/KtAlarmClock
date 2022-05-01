@@ -1,15 +1,27 @@
+/**
+ * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
+ * @license     LGPL 3.0
+ * @author      Kuntai
+ * @file        KTQAlarmClockCmd.cpp
+ */
+
 #include "KTQAlarmClockCmd.h"
+#include "KTQAlarmClockDlg.h"
+#include "KTQAlarmClockParam.h"
 
-KTQAlarmClockCmd::KTQAlarmClockCmd(QQuickItem *parent)
-    : QQuickItem(parent)
-{
-    // By default, QQuickItem does not draw anything. If you subclass
-    // QQuickItem to create a visual item, you will need to uncomment the
-    // following line and re-implement updatePaintNode()
+//------------------------------------------------
+KTQAlarmClockCmd::KTQAlarmClockCmd(QObject *parent)
+    : QObject(parent)
+    , m_pClockParam(NULL)
+    , m_pClockDlg(NULL) {
 
-    // setFlag(ItemHasContents, true);
+    m_pClockParam = new KTQAlarmClockParam();
+    // m_pClockDlg   = new KTQAlarmClockDlg();
 }
-
-KTQAlarmClockCmd::~KTQAlarmClockCmd()
-{
+//------------------------------------------------
+KTQAlarmClockCmd::~KTQAlarmClockCmd() {
+    // delete
+    delete m_pClockParam;
+    m_pClockParam = NULL;
+    m_pClockDlg   = NULL;
 }

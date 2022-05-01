@@ -1,2 +1,2 @@
-module cn.kuntaisoft.KTQAlarmClockCmd
+module cn.kuntaisoft.KTQAlarmClockDlg
 plugin KTQAlarmClockUI
