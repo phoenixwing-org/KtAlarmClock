@@ -11,13 +11,14 @@
 #define KTQAlarmClockParam_H
 
 // KT
-#include "ktCore.h"
-#include "ktErrorCode.h"
-#include "ktString.h"
-
 namespace KTQ {
-/** @brief Class AlarmClock*/
-class ExportedByktCore AlarmClock {
+
+enum SpeechStep { SpeechFirst = 0, SpeechDelay = 1, SpeechTalking = 2, SpeechFinished = 3 };
+
+/**
+ * @brief Class AlarmClock
+ */
+class AlarmClock {
 public:
     /** @brief Standard constructors and destructors */
     AlarmClock();

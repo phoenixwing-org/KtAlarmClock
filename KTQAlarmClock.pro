@@ -15,14 +15,11 @@ TEMPLATE = app
 
 SOURCES +=\
     KTQAlarmClockDlg.cpp \
-    KTQAlarmClockOverDlg.cpp \
+    KTQAlarmClockParam.cpp \
     main.cpp
 
 HEADERS  += KTQAlarmClockDlg.h \
-    KTQAlarmClockOverDlg.h
-
-FORMS    += KTQAlarmClockDlg.ui \
-    KTQAlarmClockOverDlg.ui
+    KTQAlarmClockParam.h
 
 RESOURCES += \
     main.qrc

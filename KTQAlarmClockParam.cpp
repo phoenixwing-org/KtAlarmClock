@@ -66,7 +66,7 @@ AlarmClock &AlarmClock::operator=(const AlarmClock &iOriginal) {
 }
 //--------------------------------------------------------------------
 void AlarmClock::clear() {
-    *this = kt::AlarmClock();
+    *this = AlarmClock();
 }
 //--------------------------------------------------------------------
 void AlarmClock::dump(bool dumpContents) {

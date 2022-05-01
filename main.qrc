@@ -1,11 +1,5 @@
 <RCC>
     <qresource prefix="/image">
-        <file alias="Start.png">image/Start.png</file>
-        <file alias="Pause.png">image/Pause.png</file>
-        <file alias="Options.png">image/Options.png</file>
-        <file alias="Reset.png">image/Reset.png</file>
-        <file alias="Close.png">image/Close.png</file>
-        <file alias="Question.png">image/Question.png</file>
         <file alias="back.svg">image/back.svg</file>
         <file alias="book-opened.svg">image/book-opened.svg</file>
         <file alias="chevron-left.svg">image/chevron-left.svg</file>
@@ -23,11 +17,9 @@
         <file alias="vertical.svg">image/vertical.svg</file>
         <file alias="volume-loud.svg">image/volume-loud.svg</file>
         <file alias="Clock.ico">image/Clock.ico</file>
-
         <file alias="ic_pause.svg">image/ic_pause.svg</file>
         <file alias="ic_start.svg">image/ic_start.svg</file>
         <file alias="ic_stop.svg">image/ic_stop.svg</file>
-
     </qresource>
     <qresource prefix="/">
         <file>MyFooter.qml</file>
