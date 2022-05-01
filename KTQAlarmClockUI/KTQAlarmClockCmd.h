@@ -19,6 +19,8 @@
 // class pre-declare
 class KTQAlarmClockDlg;
 class KTQAlarmClockParam;
+class QGuiApplication;
+class QQmlApplicationEngine;
 
 /**
  * @brief Class KTQAlarmClockCmd
@@ -37,6 +39,11 @@ public:
      * @param[in] iMsg messge
      */
     void debug(const QString &iMsg);
+
+    /**
+     * @brief Build Dialog
+     */
+    int BuildDialog(QQmlApplicationEngine *engine);
 
 private:
     KTQAlarmClockParam *m_pClockParam;

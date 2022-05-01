@@ -1,6 +1,8 @@
 TEMPLATE = lib
 TARGET = KTQAlarmClockUI
-QT += qml quick
+QT += core qml quick
+QT       += multimedia
+
 DEFINES += KTQAlarmClockUI_EXPORTS
 
 CONFIG += plugin c++11
@@ -38,3 +40,6 @@ unix {
     target.path = $$installPath
     INSTALLS += target qmldir
 }
+
+RESOURCES += \
+    main.qrc
