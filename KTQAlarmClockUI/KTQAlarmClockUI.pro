@@ -12,12 +12,14 @@ uri = cn.kuntaisoft.KTQAlarmClockDlg
 
 # Input
 SOURCES += \
+        KTQAlarmClockCore.cpp \
         KTQAlarmClockDlg.cpp \
         KTQAlarmClockParam.cpp \
         KTQAlarmClockPlugin.cpp \
         KTQAlarmClockCmd.cpp
 
 HEADERS += \
+        KTQAlarmClockCore.h \
         KTQAlarmClockDlg.h \
         KTQAlarmClockParam.h \
         KTQAlarmClockPlugin.h \

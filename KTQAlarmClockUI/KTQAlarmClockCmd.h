@@ -17,6 +17,7 @@
 #include "KTQAlarmClockUI.h"
 
 // class pre-declare
+class KTQAlarmClockCore;
 class KTQAlarmClockDlg;
 class KTQAlarmClockParam;
 class QGuiApplication;
@@ -46,6 +47,7 @@ public:
     int BuildDialog(QQmlApplicationEngine *engine);
 
 private:
+    KTQAlarmClockCore  *m_pClockCore;
     KTQAlarmClockParam *m_pClockParam;
     KTQAlarmClockDlg   *m_pClockDlg;
 };

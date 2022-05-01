@@ -10,32 +10,44 @@
 #include <QQmlApplicationEngine>
 // KTQ
 #include "KTQAlarmClockCmd.h"
+#include "KTQAlarmClockCore.h"
 #include "KTQAlarmClockDlg.h"
 #include "KTQAlarmClockParam.h"
 
 //------------------------------------------------
 KTQAlarmClockCmd::KTQAlarmClockCmd(QObject *parent)
     : QObject(parent)
+    , m_pClockCore(NULL)
     , m_pClockParam(NULL)
     , m_pClockDlg(NULL) {
-
+    qDebug() << "KTQAlarmClockCmd::KTQAlarmClockCmd()";
+    // new
     m_pClockParam = new KTQAlarmClockParam();
+    m_pClockCore  = new KTQAlarmClockCore();
+    // set value
+    m_pClockCore->k_pClockParam = m_pClockParam;
 }
 //------------------------------------------------
 KTQAlarmClockCmd::~KTQAlarmClockCmd() {
+    qDebug() << "KTQAlarmClockCmd::~KTQAlarmClockCmd()";
     // delete
     delete m_pClockParam;
     m_pClockParam = NULL;
-    m_pClockDlg   = NULL;
+    delete m_pClockCore;
+    m_pClockCore = NULL;
+
+    // only set NULL
+    m_pClockDlg = NULL;
 }
 //------------------------------------------------
 int KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
-
     qDebug() << "KTQAlarmClockCmd::BuildDialog()";
 
+    m_pClockParam = new KTQAlarmClockParam();
     if (nullptr == qGuiApp) {
         return 1;
-    } else if (nullptr == engine) {
+    }
+    else if (nullptr == engine) {
         return 1;
     }
 
@@ -53,6 +65,5 @@ int KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
 }
 //------------------------------------------------
 void KTQAlarmClockCmd::debug(const QString &iMsg) {
-
     qDebug() << "Hello to KTQAlarmClockCmd. msg = " << iMsg;
 }

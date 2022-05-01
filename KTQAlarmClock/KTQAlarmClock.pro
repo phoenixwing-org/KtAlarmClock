@@ -16,7 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
-LIBS += -L$$PWD/../build-KTQAlarmClockUI-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/debug/ -lKTQAlarmClockUI
+LIBS += -L$$PWD/../../KTQAlarmClock-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/KTQAlarmClockui/debug/ -lKTQAlarmClockUI
 
 INCLUDEPATH += \
          ../KTQAlarmClockUI \
