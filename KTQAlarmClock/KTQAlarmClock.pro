@@ -16,8 +16,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
-RESOURCES += qml.qrc
-
 LIBS += -L$$PWD/../build-KTQAlarmClockUI-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/debug/ -lKTQAlarmClockUI
 
 INCLUDEPATH += \
@@ -33,3 +31,7 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    main.rc
+
