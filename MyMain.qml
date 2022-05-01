@@ -18,18 +18,31 @@ ApplicationWindow {
     // Left
     MyLeft{
         id: ktLeft
-        height: parent.height
+        anchors.left: parent.left
+        anchors.right: ktRight.left
+        anchors.bottom: ktfooter.top
+        anchors.top: parent.top
     }
 
     MyRight{
         id: ktRight
-        height: 550
         anchors.left: ktLeft.right
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
         anchors.top: parent.top
+        anchors.bottom: ktfooter.top
         anchors.leftMargin: 0
     }
+
+    MyFooter{
+        id:ktfooter
+        height:60
+        width: parent.width
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+
+    }
+
 
     // connect signal onCompleted
     Component.onCompleted: {
