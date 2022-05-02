@@ -22,7 +22,23 @@ CONFIG(release, debug|release){
     UI_DIR =  "$$OUT_PWD/tmp/release/.ui"
     RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
 }
-# message(KTQAlarmClockUI.OUT_PWD=$$OUT_PWD)
+
+# KT_BASE_INCLUDE for deferent system
+unix {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+}
+macx {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+}
+win32 {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+}
+
+# message(KT_INCLUDES=$$(KT_INCLUDES))
+# message(KT_BASE_INCLUDE=$${KT_BASE_INCLUDE})
+
+INCLUDEPATH += \
+         $${KT_BASE_INCLUDE} \
 
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = cn.kuntaisoft.KTQAlarmClockDlg

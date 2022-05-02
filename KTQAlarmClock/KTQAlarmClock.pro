@@ -38,9 +38,20 @@ CONFIG(release, debug|release){
 LIBS += -L$$DESTDIR -lKTQAlarmClockUI
 
 # message(KTQAlarmClock.LIBS=$$LIBS)
+# KT_BASE_INCLUDE for deferent system
+unix {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+}
+macx {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+}
+win32 {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+}
 
 INCLUDEPATH += \
          ../KTQAlarmClockUI \
+         $${KT_BASE_INCLUDE} \
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

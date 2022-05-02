@@ -13,28 +13,28 @@
 //------------------------------------------------
 KTQAlarmClockCore::KTQAlarmClockCore()
     : k_pClockParam(NULL)
-    , m_Pretreat(1) {
+    , m_Pretreat(KT_E_FAIL) {
     qDebug() << "KTQAlarmClockCore::KTQAlarmClockCore()";
 }
 //------------------------------------------------
 KTQAlarmClockCore::~KTQAlarmClockCore() {
-    k_pClockParam = NULL; // outside
+    KTSetNULL(k_pClockParam); // outside
 }
 //------------------------------------------------
-int KTQAlarmClockCore::pretreat() {
+ktErrorCode KTQAlarmClockCore::pretreat() {
     qDebug() << "KTQAlarmClockCore::pretreat()";
-    m_Pretreat = 1;
+    m_Pretreat = KT_E_FAIL;
     if (NULL == k_pClockParam) {
         return m_Pretreat;
     }
-    m_Pretreat = 2; // unfinish
+    m_Pretreat = KT_E_UNEXPECTED; // unfinish
     return m_Pretreat;
 }
 //------------------------------------------------
-int KTQAlarmClockCore::calculate() {
+ktErrorCode KTQAlarmClockCore::calculate() {
     qDebug() << "KTQAlarmClockCore::calculate()";
-    if (m_Pretreat > 0) {
+    if (m_Pretreat > KT_S_OK) {
         return m_Pretreat;
     }
-    return 2; // unfinish
+    return KT_E_UNEXPECTED; // unfinish
 }

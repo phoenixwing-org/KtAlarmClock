@@ -31,24 +31,22 @@ KTQAlarmClockCmd::KTQAlarmClockCmd(QObject *parent)
 KTQAlarmClockCmd::~KTQAlarmClockCmd() {
     qDebug() << "KTQAlarmClockCmd::~KTQAlarmClockCmd()";
     // delete
-    delete m_pClockParam;
-    m_pClockParam = NULL;
-    delete m_pClockCore;
-    m_pClockCore = NULL;
+    KTDelete(m_pClockParam);
+    KTDelete(m_pClockCore);
 
     // only set NULL
-    m_pClockDlg = NULL;
+    KTSetNULL(m_pClockDlg);
 }
 //------------------------------------------------
-int KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
+ktErrorCode KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
     qDebug() << "KTQAlarmClockCmd::BuildDialog()";
 
     m_pClockParam = new KTQAlarmClockParam();
     if (nullptr == qGuiApp) {
-        return 1;
+        return KT_E_INVALIDARG;
     }
     else if (nullptr == engine) {
-        return 1;
+        return KT_E_INVALIDARG;
     }
 
     // m_pClockDlg = new KTQAlarmClockDlg();
@@ -61,7 +59,7 @@ int KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
         },
         Qt::QueuedConnection);
     engine->load(url);
-    return 0;
+    return KT_S_OK;
 }
 //------------------------------------------------
 void KTQAlarmClockCmd::debug(const QString &iMsg) {

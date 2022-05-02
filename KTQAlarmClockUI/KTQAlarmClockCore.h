@@ -14,10 +14,8 @@
 #include <QObject>
 
 // KTQ
+#include "KTQAlarmClockParam.h"
 #include "KTQAlarmClockUI.h"
-
-// class pre-declare
-class KTQAlarmClockParam;
 
 /**
  * @brief Class KTQAlarmClockCore
@@ -34,19 +32,19 @@ public:
      * @brief pretreat
      * @return int, 0: succeed, plus： failed
      */
-    int pretreat();
+    ktErrorCode pretreat();
 
     /**
      * @brief calculate
      * @return int, 0: succeed, plus： failed
      */
-    int calculate();
+    ktErrorCode calculate();
 
 public:
     KTQAlarmClockParam *k_pClockParam;
 
 private:
-    int m_Pretreat;
+    ktErrorCode m_Pretreat;
 };
 
 #endif // KTQAlarmClockCore_H

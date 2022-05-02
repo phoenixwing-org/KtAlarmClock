@@ -10,10 +10,13 @@
 #ifndef KTQAlarmClockParam_H
 #define KTQAlarmClockParam_H
 
+// kt
+#include "ktCoreDefine.h"
+#include "ktErrorCode.h"
+
 // KTQ
 #include "KTQAlarmClockUI.h"
 
-// KT
 namespace KTQ {
 
 enum SpeechStep {

@@ -23,8 +23,20 @@ KT闹钟程序
 1.换肤功能
 2.UI美化
 
+### pro配置
+#### SUBDIRS
+- 主目录的pro，配置为 subdirs
+- 子目录的顺序就是编译的顺序。要把底层动态库放到前面。
+```
+SUBDIRS += \
+    KTQAlarmClockUI \
+    KTQAlarmClock
+```
+#### include path
+
+区分系统见KT_BASE_INCLUDE的配置。
 
 #### 参与贡献
 
 1.  kevin
-2.  
+2.  Jane
