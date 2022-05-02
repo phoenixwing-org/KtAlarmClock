@@ -16,10 +16,42 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
-LIBS += -L$$PWD/../build-KTQAlarmClockUI-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/debug/ -lKTQAlarmClockUI
+# DESTDIR: define the out exe or dll folder
+CONFIG(debug, debug|release){
+    DESTDIR=$$PWD/../../bin/debug
+    MOC_DIR = "$$OUT_PWD/tmp/debug/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/debug/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/debug/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/debug/.qrc"
+}
+CONFIG(release, debug|release){
+    DESTDIR=$$PWD/../../bin/release
+    MOC_DIR = "$$OUT_PWD/tmp/release/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/release/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/release/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
+}
+
+# message(KTQAlarmClock.OUT_PWD=$$OUT_PWD)
+
+# L:Folder, l:filename
+LIBS += -L$$DESTDIR -lKTQAlarmClockUI
+
+# message(KTQAlarmClock.LIBS=$$LIBS)
+# KT_BASE_INCLUDE for deferent system
+unix {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+}
+macx {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+}
+win32 {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+}
 
 INCLUDEPATH += \
          ../KTQAlarmClockUI \
+         $${KT_BASE_INCLUDE} \
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

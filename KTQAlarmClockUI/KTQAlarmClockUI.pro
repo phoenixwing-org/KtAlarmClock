@@ -7,17 +7,52 @@ DEFINES += KTQAlarmClockUI_EXPORTS
 
 CONFIG += plugin c++11
 
+# DESTDIR: define the out exe or dll folder
+CONFIG(debug, debug|release){
+    DESTDIR=$$PWD/../../bin/debug
+    MOC_DIR = "$$OUT_PWD/tmp/debug/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/debug/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/debug/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/debug/.qrc"
+}
+CONFIG(release, debug|release){
+    DESTDIR=$$PWD/../../bin/release
+    MOC_DIR = "$$OUT_PWD/tmp/release/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/release/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/release/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
+}
+
+# KT_BASE_INCLUDE for deferent system
+unix {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+}
+macx {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+}
+win32 {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+}
+
+# message(KT_INCLUDES=$$(KT_INCLUDES))
+# message(KT_BASE_INCLUDE=$${KT_BASE_INCLUDE})
+
+INCLUDEPATH += \
+         $${KT_BASE_INCLUDE} \
+
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = cn.kuntaisoft.KTQAlarmClockDlg
 
 # Input
 SOURCES += \
+        KTQAlarmClockCore.cpp \
         KTQAlarmClockDlg.cpp \
         KTQAlarmClockParam.cpp \
         KTQAlarmClockPlugin.cpp \
         KTQAlarmClockCmd.cpp
 
 HEADERS += \
+        KTQAlarmClockCore.h \
         KTQAlarmClockDlg.h \
         KTQAlarmClockParam.h \
         KTQAlarmClockPlugin.h \

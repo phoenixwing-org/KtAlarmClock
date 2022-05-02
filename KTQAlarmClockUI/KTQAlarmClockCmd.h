@@ -13,10 +13,15 @@
 // Qt
 #include <QObject>
 
+// kt
+#include "ktCoreDefine.h"
+#include "ktErrorCode.h"
+
 // KTQ
 #include "KTQAlarmClockUI.h"
 
 // class pre-declare
+class KTQAlarmClockCore;
 class KTQAlarmClockDlg;
 class KTQAlarmClockParam;
 class QGuiApplication;
@@ -43,9 +48,10 @@ public:
     /**
      * @brief Build Dialog
      */
-    int BuildDialog(QQmlApplicationEngine *engine);
+    ktErrorCode BuildDialog(QQmlApplicationEngine *engine);
 
 private:
+    KTQAlarmClockCore  *m_pClockCore;
     KTQAlarmClockParam *m_pClockParam;
     KTQAlarmClockDlg   *m_pClockDlg;
 };

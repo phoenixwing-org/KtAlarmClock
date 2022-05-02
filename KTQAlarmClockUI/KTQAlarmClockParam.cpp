@@ -4,7 +4,8 @@
  * @author      Kuntai
  * @file        KTQAlarmClockParam.cpp
  */
-
+// Qt
+#include <QDebug>
 // std
 #include <fstream>
 #include <iostream>
@@ -27,6 +28,7 @@ KTQAlarmClockParam::KTQAlarmClockParam()
 
 // clang-format on
 {
+    qDebug() << "KTQAlarmClockParam::KTQAlarmClockParam()";
 }
 //--------------------------------------------------------------------
 KTQAlarmClockParam::~KTQAlarmClockParam() {

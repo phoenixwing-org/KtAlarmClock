@@ -7,5 +7,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    KTQAlarmClock \
-    KTQAlarmClockUI
+    KTQAlarmClockUI \
+    KTQAlarmClock
