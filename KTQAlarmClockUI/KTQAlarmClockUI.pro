@@ -7,6 +7,23 @@ DEFINES += KTQAlarmClockUI_EXPORTS
 
 CONFIG += plugin c++11
 
+# DESTDIR: define the out exe or dll folder
+CONFIG(debug, debug|release){
+    DESTDIR=$$PWD/../../bin/debug
+    MOC_DIR = "$$OUT_PWD/tmp/debug/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/debug/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/debug/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/debug/.qrc"
+}
+CONFIG(release, debug|release){
+    DESTDIR=$$PWD/../../bin/release
+    MOC_DIR = "$$OUT_PWD/tmp/release/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/release/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/release/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
+}
+# message(KTQAlarmClockUI.OUT_PWD=$$OUT_PWD)
+
 TARGET = $$qtLibraryTarget($$TARGET)
 uri = cn.kuntaisoft.KTQAlarmClockDlg
 

@@ -16,7 +16,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
-LIBS += -L$$PWD/../../KTQAlarmClock-Desktop_Qt_5_14_2_MinGW_64_bit-Debug/KTQAlarmClockui/debug/ -lKTQAlarmClockUI
+# DESTDIR: define the out exe or dll folder
+CONFIG(debug, debug|release){
+    DESTDIR=$$PWD/../../bin/debug
+    MOC_DIR = "$$OUT_PWD/tmp/debug/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/debug/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/debug/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/debug/.qrc"
+}
+CONFIG(release, debug|release){
+    DESTDIR=$$PWD/../../bin/release
+    MOC_DIR = "$$OUT_PWD/tmp/release/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/release/.obj"
+    UI_DIR =  "$$OUT_PWD/tmp/release/.ui"
+    RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
+}
+
+# message(KTQAlarmClock.OUT_PWD=$$OUT_PWD)
+
+# L:Folder, l:filename
+LIBS += -L$$DESTDIR -lKTQAlarmClockUI
+
+# message(KTQAlarmClock.LIBS=$$LIBS)
 
 INCLUDEPATH += \
          ../KTQAlarmClockUI \
