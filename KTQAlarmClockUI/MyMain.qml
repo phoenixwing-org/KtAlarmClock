@@ -41,14 +41,11 @@ ApplicationWindow {
         width: parent.width
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-
-
     }
-
 
     // connect signal onCompleted
     Component.onCompleted: {
-        ktLeft.actionClicked.connect(ktRight.changeScrollRect)// pass index value
+        ktLeft.sigScrollPage.connect(ktRight.myScroll.scrollPage)// pass index value
     }
 
 }

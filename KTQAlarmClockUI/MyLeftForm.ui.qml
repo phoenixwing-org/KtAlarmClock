@@ -11,7 +11,7 @@ import QtQuick.Layouts 1.12
 Item {
     width: 250
     height: 400
-    property alias toolButtonMySpeech: toolButtonMySpeech
+    property alias toolButtonMyWork: toolButtonMyWork
     property alias toolButtonMyClass: toolButtonMyClass
     property alias toolButtonMySetting: toolButtonMySetting
 
@@ -22,11 +22,11 @@ Item {
         ColumnLayout {
             anchors.fill: parent
             ToolButton {
-                id: toolButtonMySpeech
+                id: toolButtonMyWork
                 transformOrigin: Item.Left
                 Layout.fillWidth: true
                 icon.source: "qrc:/image/volume-loud.svg"
-                action: actionMySpeech
+                action: actionMyWork
             }
             ToolButton {
                 id: toolButtonMyClass
@@ -44,8 +44,8 @@ Item {
     }
 
     Action {
-        id: actionMySpeech
-        text: "&My Speech"
+        id: actionMyWork
+        text: "&My Work"
         shortcut: StandardKey.New
     }
 

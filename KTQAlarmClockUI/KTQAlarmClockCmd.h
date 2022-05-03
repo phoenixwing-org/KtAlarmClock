@@ -12,7 +12,7 @@
 
 // Qt
 #include <QObject>
-
+#include <QQuickItem>
 // kt
 #include "ktCoreDefine.h"
 #include "ktErrorCode.h"
@@ -35,7 +35,7 @@ class ExportedByKTQAlarmClockUI KTQAlarmClockCmd : public QObject {
     Q_DISABLE_COPY(KTQAlarmClockCmd);
 
 public:
-    explicit KTQAlarmClockCmd(QObject *parent = nullptr);
+    explicit KTQAlarmClockCmd(QObject* parent = nullptr);
     ~KTQAlarmClockCmd() override;
 
 public:
@@ -43,17 +43,22 @@ public:
      * @brief Print Message
      * @param[in] iMsg messge
      */
-    void debug(const QString &iMsg);
+    void debug(const QString& iMsg);
 
     /**
      * @brief Build Dialog
      */
-    ktErrorCode BuildDialog(QQmlApplicationEngine *engine);
+    ktErrorCode BuildDialog(QQmlApplicationEngine* engine);
+
+    /**
+     * @brief Give My Panel
+     */
+    QQuickItem* GiveMyPanel() const;
 
 private:
-    KTQAlarmClockCore  *m_pClockCore;
-    KTQAlarmClockParam *m_pClockParam;
-    KTQAlarmClockDlg   *m_pClockDlg;
+    KTQAlarmClockCore*  m_pClockCore;
+    KTQAlarmClockParam* m_pClockParam;
+    KTQAlarmClockDlg*   m_pClockDlg;
 };
 
 #endif // KTQAlarmClockCmd_H

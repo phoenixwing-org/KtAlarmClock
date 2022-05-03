@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 // KTQ
 #include "KTQAlarmClockCmd.h"
 #include "KTQAlarmClockCore.h"
@@ -15,7 +16,7 @@
 #include "KTQAlarmClockParam.h"
 
 //------------------------------------------------
-KTQAlarmClockCmd::KTQAlarmClockCmd(QObject *parent)
+KTQAlarmClockCmd::KTQAlarmClockCmd(QObject* parent)
     : QObject(parent)
     , m_pClockCore(NULL)
     , m_pClockParam(NULL)
@@ -38,30 +39,43 @@ KTQAlarmClockCmd::~KTQAlarmClockCmd() {
     KTSetNULL(m_pClockDlg);
 }
 //------------------------------------------------
-ktErrorCode KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine *engine) {
+ktErrorCode KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
     qDebug() << "KTQAlarmClockCmd::BuildDialog()";
+    if (NULL != m_pClockDlg) {
+        return KT_S_OK;
+    }
 
-    m_pClockParam = new KTQAlarmClockParam();
     if (nullptr == qGuiApp) {
         return KT_E_INVALIDARG;
     }
     else if (nullptr == engine) {
         return KT_E_INVALIDARG;
     }
+    // m_pClockDlg
+    m_pClockDlg = new KTQAlarmClockDlg();
 
-    // m_pClockDlg = new KTQAlarmClockDlg();
+    // register m_pClockParam to qml
+    engine->rootContext()->setContextProperty("ktqAlarmClockParam", m_pClockParam);
 
     const QUrl url(QStringLiteral("qrc:/MyMain.qml"));
+    /*
+     * What's the meaning?
     QObject::connect(
         engine, &QQmlApplicationEngine::objectCreated, qGuiApp,
-        [ url ](QObject *obj, const QUrl &objUrl) {
+        [ url ](QObject* obj, const QUrl& objUrl) {
             if (!obj && url == objUrl) QCoreApplication::exit(-1);
         },
         Qt::QueuedConnection);
+    */
     engine->load(url);
+
     return KT_S_OK;
 }
 //------------------------------------------------
-void KTQAlarmClockCmd::debug(const QString &iMsg) {
+void KTQAlarmClockCmd::debug(const QString& iMsg) {
     qDebug() << "Hello to KTQAlarmClockCmd. msg = " << iMsg;
+}
+//------------------------------------------------
+QQuickItem* KTQAlarmClockCmd::GiveMyPanel() const {
+    return m_pClockDlg;
 }

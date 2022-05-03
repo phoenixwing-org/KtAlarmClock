@@ -7,15 +7,16 @@ import QtQuick 2.4
 
 MyLeftForm {
 
-    signal actionClicked(int index)
-    toolButtonMySpeech.onClicked: {
-        actionClicked(0)
+    signal sigScrollPage(int index)
+    
+    toolButtonMyWork.onClicked: {
+        sigScrollPage(0)
     }
     toolButtonMyClass.onClicked: {
-        actionClicked(1)
+        sigScrollPage(1)
     }
     toolButtonMySetting.onClicked: {
-        actionClicked(2)
+        sigScrollPage(2)
     }
 }
 

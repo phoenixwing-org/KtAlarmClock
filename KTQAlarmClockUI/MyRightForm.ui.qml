@@ -1,3 +1,4 @@
+
 /**
 * @copyright Shanghai Kuntai Software Technology Co., Ltd. 2022
 * @license LGPL 3.0
@@ -20,15 +21,11 @@ Item {
         anchors.topMargin: 0
         anchors.bottom: parent.bottom
     }
-
-
 }
 
 /*##^##
 Designer {
-    D{
-        i: 1;anchors_height: 400
-    }
+    D{i:2;anchors_height:400;anchors_width:400;anchors_x:76;anchors_y:48}D{i:1;anchors_height:400}
 }
 ##^##*/
 
