@@ -28,6 +28,7 @@ Item {
             ToolButton {
                 id: buttonStart
                 text: qsTr("Start")
+                tooltip: "Start"
                 height: 48
                 iconSource: "image/ic_start.svg"
             }
@@ -35,6 +36,7 @@ Item {
             ToolButton {
                 id: buttonPause
                 text: qsTr("Pause")
+                tooltip: "Pause"
                 height: 48
                 iconSource: "image/ic_pause.svg"
             }
@@ -42,6 +44,7 @@ Item {
             ToolButton {
                 id: buttonStop
                 text: qsTr("Stop")
+                tooltip: qsTr("Stop")
                 height: 48
                 iconSource: "image/ic_stop.svg"
             }

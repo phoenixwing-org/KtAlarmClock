@@ -9,16 +9,31 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 Item {
-    width: 250
+    width: defaultWidth
     height: 400
+
+
+    property int minimunWidth: 50
+    property int defaultWidth: 150
     property alias toolButtonMyWork: toolButtonMyWork
     property alias toolButtonMyClass: toolButtonMyClass
     property alias toolButtonMySetting: toolButtonMySetting
+
+    Rectangle{
+        id:rect
+        color: "#000000"
+        anchors.fill: parent
+
+    }
 
     ToolBar {
         id: toolbar
         width: parent.width
         height: 200
+//        background: Rectangle{
+//            color: "#000000"
+//        }
+
         ColumnLayout {
             anchors.fill: parent
             ToolButton {
