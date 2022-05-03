@@ -29,5 +29,7 @@
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>
         <file>MyScroll.qml</file>
+        <file>MyOverPage.qml</file>
+        <file>MyOverPageForm.ui.qml</file>
     </qresource>
 </RCC>
