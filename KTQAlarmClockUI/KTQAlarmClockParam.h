@@ -76,7 +76,7 @@ public:
     /**
      * @brief Get Time Counter
      */
-    GetTimeCounter() const;
+    int GetTimeCounter() const;
 
 signals:
     /**

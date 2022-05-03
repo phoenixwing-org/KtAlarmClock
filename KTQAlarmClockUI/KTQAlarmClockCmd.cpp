@@ -55,7 +55,9 @@ ktErrorCode KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
     m_pClockDlg = new KTQAlarmClockDlg();
 
     // register m_pClockParam to qml
-    engine->rootContext()->setContextProperty("ktqAlarmClockParam", m_pClockParam);
+    engine->rootContext()->setContextProperty("myAlarmClockParam", m_pClockParam);
+    // register command to qml
+    engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
 
     const QUrl url(QStringLiteral("qrc:/MyMain.qml"));
     /*
@@ -78,4 +80,10 @@ void KTQAlarmClockCmd::debug(const QString& iMsg) {
 //------------------------------------------------
 QQuickItem* KTQAlarmClockCmd::GiveMyPanel() const {
     return m_pClockDlg;
+}
+//------------------------------------------------
+int KTQAlarmClockCmd::onStart() {
+    qDebug() << "KTQAlarmClockCmd::onStart()";
+    m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
+    return KT_S_OK;
 }

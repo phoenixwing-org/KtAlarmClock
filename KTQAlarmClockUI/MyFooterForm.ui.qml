@@ -4,16 +4,17 @@ import QtQuick.Layouts 1.12
 
 Item {
     width: 400
-    height: 200
+    height: 100
     property alias buttonStop: buttonStop
     property alias buttonPause: buttonPause
     property alias buttonStart: buttonStart
 
     Rectangle {
         id: rectangle
-        radius: 15
+        radius: 0
         width: 400
-        color: "#7ec687"
+        height: 100
+        color: "#202020"
 
         anchors.fill: parent
 

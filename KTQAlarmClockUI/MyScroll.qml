@@ -62,10 +62,10 @@ Item {
                         Layout.preferredWidth: 100
                         Layout.minimumWidth: 80
                         Layout.fillWidth: false
-                        value: ktqAlarmClockParam.WorkTime / 60
+                        value: 60
                         onValueChanged: {
-                            ktqAlarmClockParam.WorkTime = value * 60;
-                            console.log("WorkTime = " + ktqAlarmClockParam.WorkTime)
+                            myAlarmClockParam.WorkTime = value * 60;
+                            console.log("WorkTime = " + myAlarmClockParam.WorkTime)
                         }
                     }
                     Label {
@@ -89,12 +89,12 @@ Item {
                         id: spinBoxWorkBreak
                         width: 200
                         maximumValue: 86400
-                        value: ktqAlarmClockParam.WorkBreak / 60
+                        value: 10
                         Layout.preferredWidth: 100
                         Layout.fillWidth: false
                         onValueChanged: {
-                            ktqAlarmClockParam.WorkBreak = value * 60;
-                            console.log("WorkBreak = " + ktqAlarmClockParam.WorkBreak)
+                            myAlarmClockParam.WorkBreak = value * 60;
+                            console.log("WorkBreak = " + myAlarmClockParam.WorkBreak)
                         }
                     }
                     Label {
@@ -110,7 +110,10 @@ Item {
                     }
 
                     SpinBox {
-                        id: spinBox
+                        id: spinBoxTimeCounter
+                        layer.enabled: false
+                        enabled: false
+                        value: myAlarmClockParam.TimeCounter
                         maximumValue: 86400
                         Layout.preferredWidth: 100
                     }
@@ -128,7 +131,7 @@ Item {
                 anchors.top: rect0.bottom
                 width: itemTop.width
                 height: 150
-                color: "green"
+                color: "black"
                 anchors.topMargin: 5
                 border.color: "blue"
             }
@@ -138,7 +141,7 @@ Item {
                 anchors.top: rect1.bottom
                 width: itemTop.width
                 height: 300
-                color: "orange"
+                color: "black"
                 anchors.topMargin: 5
                 border.color: "blue"
 
@@ -158,15 +161,29 @@ Item {
         console.log("scrollPage("+index+")")
         if(0 === index){
             scroll.flickableItem.contentY = rect0.y
-            console.log("WorkTime =" + ktqAlarmClockParam.WorkTime)
         } else if(1 === index){
             scroll.flickableItem.contentY = rect1.y
-            console.log("WorkBreak =" + ktqAlarmClockParam.WorkBreak)
         } else{
             scroll.flickableItem.contentY = rect2.y
-            console.log( "Total =" + ktqAlarmClockParam.WorkTime + ktqAlarmClockParam.WorkBreak)
         }
     }
+    
+    // connect signal onCompleted
+    Component.onCompleted: {
+        // method 1: bind the property
+        spinBoxWorkBreak.value = myAlarmClockParam.WorkBreak / 60
+        spinBoxWorkTime.value = myAlarmClockParam.WorkTime / 60
+
+        // method 2: connect the signal
+        myAlarmClockParam.sigTimeCounter.connect(changeTimeCounter)//void
+    }
+
+    function changeTimeCounter(value){
+        console.log("changeTimeCounter(" + value + ")")
+        spinBoxTimeCounter.value = myAlarmClockParam.TimeCounter / 60
+
+    }
+
 }
 
 /*##^##

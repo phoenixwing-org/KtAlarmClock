@@ -55,6 +55,13 @@ public:
      */
     QQuickItem* GiveMyPanel() const;
 
+public slots:
+
+    /**
+     * @brief start the clock
+     */
+    int onStart();
+
 private:
     KTQAlarmClockCore*  m_pClockCore;
     KTQAlarmClockParam* m_pClockParam;
