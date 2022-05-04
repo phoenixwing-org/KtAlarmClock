@@ -1,7 +1,6 @@
 TEMPLATE = lib
-TARGET = KTQAlarmClockUI
-QT += core qml quick
-QT       += multimedia
+TARGET = KtAlarmClockUI
+QT += core qml quick multimedia
 
 DEFINES += KTQAlarmClockUI_EXPORTS
 
@@ -80,6 +79,7 @@ RESOURCES += \
     main.qrc
 
 DISTFILES += \
+    MyClock.qml \
     MyFooter.qml \
     MyFooterForm.ui.qml \
     MyLeft.qml \
@@ -89,4 +89,5 @@ DISTFILES += \
     MyWorkBreakForm.ui.qml \
     MyRight.qml \
     MyRightForm.ui.qml \
-    MyScroll.qml
+    MyScroll.qml \
+    main.qml

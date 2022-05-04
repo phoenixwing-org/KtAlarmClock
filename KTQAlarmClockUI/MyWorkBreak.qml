@@ -4,17 +4,31 @@ import QtQuick.Controls 2.12
 
 Window {
     id: root
-    width: 500
-    height: 400
-    opacity: 1
+    x:0
+    y:0
+    width: fullScreen ? Screen.width : 640 // desktopAvailableWidth
+    height: fullScreen ? Screen.height : 480 //desktopAvailableHeight
+    property bool fullScreen: true
+
     visible: false
+    //fullScreen ? Qt.FramelessWindowHint : Qt.Window
+    flags: Qt.FramelessWindowHint
 
     onVisibleChanged: {
         //console.log("MyWorkBreak.onVisibleChanged() visible = " + visible)
         myAlarmClockParam.sigDialogVisibleChange(2, visible);
     }
 
+    MouseArea{
+        id: mouseArea
+        anchors.fill: parent
+        onClicked: {
+            fullScreen = !fullScreen
+        }
+    }
+
     MyWorkBreakForm {
+        id: myWorkBreakForm
         anchors.fill: parent
 
         button.onClicked: {
@@ -24,8 +38,8 @@ Window {
     }
 
     function showWindow(){
-        this.visibility = "Maximized"
-        this.flags =Qt.FramelessWindowHint
+        //this.visibility = "Maximized"
+        //this.flags =Qt.FramelessWindowHint
         this.show()
     }
 

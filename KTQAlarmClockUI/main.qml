@@ -1,23 +1,37 @@
 import QtQuick 2.14
 import QtQuick.Window 2.14
 import QtQuick.Controls 2.12
+// import QtQuick.Dialogs 1.2 // for pop dialog
 
 Window {
     id: root
     visible: true
-    x:800
-    y:50
-    width: 150
-    height: 100
+    x: myClock.x
+    y: 0
+    width: 10
+    height: 10
     color: "transparent"
     opacity: 1
-    flags: "CustomizeWindowHint"
+    flags: Qt.FramelessWindowHint
 
     property var myWorkBreak: null
     property var myMain: null
 
     MyClock{
         id: myClock
+        visible: true
+        x: myMain.x + myMain.width - width
+        y: 0
+    }
+
+    MyWorkBreak{
+        id:myWorkBreak
+    }
+
+    MyMain{
+        id:myMain
+        x:Screen.width - width - 100
+        y:100
     }
 
     onVisibleChanged: {
@@ -26,16 +40,6 @@ Window {
 
     // connect signal onCompleted
     Component.onCompleted: {
-        var component = Qt.createComponent("MyWorkBreak.qml")
-        myWorkBreak = component.createObject(this)
-        myWorkBreak.y = 200
-        //myWorkBreak.show()
-
-        component = Qt.createComponent("MyMain.qml")
-        myMain = component.createObject(this)
-        myMain.x = myWorkBreak.x + 500
-        myMain.y = 200
-
         // signal Visible Change
         myAlarmClockParam.sigDialogVisibleChange.connect(onChangeSubVisible)
         // signal Show sub dialog
