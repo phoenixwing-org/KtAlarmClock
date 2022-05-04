@@ -6,19 +6,20 @@ Window {
     id: root
     width: 500
     height: 400
-    opacity: 0.95
+    opacity: 1
     visible: false
 
     onVisibleChanged: {
         //console.log("MyWorkBreak.onVisibleChanged() visible = " + visible)
-        myAlarmClockParam.sigVisibleChange(2, visible);
+        myAlarmClockParam.sigDialogVisibleChange(2, visible);
     }
 
     MyWorkBreakForm {
         anchors.fill: parent
 
         button.onClicked: {
-            root.close()
+            myAlarmClockParam.sigDialogShow(1, true);
+            root.hide()
         }
     }
 

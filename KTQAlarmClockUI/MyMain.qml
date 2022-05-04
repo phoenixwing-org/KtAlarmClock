@@ -23,7 +23,7 @@ ApplicationWindow {
 
     onVisibleChanged: {
         //console.log("MyMain.onVisibleChanged() visible = " + visible)
-        myAlarmClockParam.sigVisibleChange(1, visible);
+        myAlarmClockParam.sigDialogVisibleChange(1, visible);
     }
 
     MouseArea {

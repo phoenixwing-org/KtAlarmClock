@@ -113,7 +113,7 @@ Item {
                         id: spinBoxTimeCounter
                         layer.enabled: false
                         enabled: false
-                        value: myAlarmClockParam.TimeCounter
+                        value: 0
                         maximumValue: 86400
                         Layout.preferredWidth: 100
                     }

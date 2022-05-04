@@ -97,12 +97,17 @@ signals:
     /**
      * @brief Dialog's visible change
      */
-    bool sigVisibleChange(int index, bool value);
+    bool sigDialogVisibleChange(int index, bool value);
 
     /**
      * @brief Show sub dialog
      */
-    bool sigShowDialog(int index, bool value);
+    bool sigDialogShow(int index, bool value);
+
+    /**
+     * @brief clock state
+     */
+    bool sigClockState(int state);
 
 public slots:
     /**

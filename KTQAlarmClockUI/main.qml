@@ -37,9 +37,9 @@ Window {
         myMain.y = 200
 
         // signal Visible Change
-        myAlarmClockParam.sigVisibleChange.connect(onChangeSubVisible)
+        myAlarmClockParam.sigDialogVisibleChange.connect(onChangeSubVisible)
         // signal Show sub dialog
-        myAlarmClockParam.sigShowDialog.connect(onShowDialog)
+        myAlarmClockParam.sigDialogShow.connect(onShowDialog)
     }
 
     /**
@@ -49,13 +49,20 @@ Window {
         console.log("onShowDialog(" + index + "," + value +")")
         switch(index) {
         case 1:
-            myMain.visible = value
+            if(value){
+                myMain.show();
+            }
+            else{
+                myMain.hide();
+            }
             break;
         case 2:
-            if(value)
+            if(value){
                 myWorkBreak.showWindow();
-            else
-                myWorkBreak.visible = false;
+            }
+            else{
+                myWorkBreak.hide();
+            }
             break;
         default:
 
@@ -63,14 +70,15 @@ Window {
     }
 
     function onChangeSubVisible(index, value){
-        console.log("onChangeSubVisible(" + index + "," + value +")")
+        //console.log("onChangeSubVisible(" + index + "," + value +")")
         var count = 0;
         if(myWorkBreak.visible) count++
         if(myMain.visible) count++
+
         // if(myClock.visible) count++
 
-        console.log("count = " + count)
-        if(count === 0) root.close()
+        //console.log("count = " + count)
+        //if(count === 0) root.close()
     }
 
 }

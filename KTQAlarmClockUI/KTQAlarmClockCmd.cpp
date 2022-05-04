@@ -84,7 +84,11 @@ QQuickItem* KTQAlarmClockCmd::GiveMyPanel() const {
 //------------------------------------------------
 int KTQAlarmClockCmd::onStart() {
     qDebug() << "KTQAlarmClockCmd::onStart()";
-    emit m_pClockParam->sigShowDialog(2, true);
+    emit m_pClockParam->sigDialogShow(2, false);
+    emit m_pClockParam->sigDialogShow(1, false);
+
+    emit m_pClockParam->sigClockState(KTQ::WorkStepDoing);
+
     // m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
     return KT_S_OK;
 }

@@ -17,7 +17,11 @@ Item {
 
         Button {
             id: button
+            width: 150
+            height: 80
             text: qsTr("Close")
+            flat: false
+            font.pointSize: 22
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
         }

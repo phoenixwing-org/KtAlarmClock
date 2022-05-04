@@ -23,12 +23,38 @@ Rectangle{
     Timer {
         id: myTimer
         interval: 1000
-        running: true
+        running: false
         repeat: true
         onTriggered:{
             counter ++
-            label.text = counter;
+            label.text = "00:0" + counter;
+            if(counter >= 5){
+                onClockState(2)
+                running = false;
+            }
+
         }
+    }
+
+    // on state change
+    function onClockState(state){
+        switch(state) {
+        case 1:
+            counter = 0;
+            myTimer.running = true;
+            break;
+        case 2:
+            myTimer.running = false;
+            myAlarmClockParam.sigDialogShow(2, true);
+            break;
+        default:
+
+        }
+    }
+
+    // connect signal onCompleted
+    Component.onCompleted: {
+        myAlarmClockParam.sigClockState.connect(onClockState)
     }
 
 }
