@@ -94,6 +94,16 @@ signals:
      */
     bool sigTimeCounter(int iValue);
 
+    /**
+     * @brief Dialog's visible change
+     */
+    bool sigVisibleChange(int index, bool value);
+
+    /**
+     * @brief Show sub dialog
+     */
+    bool sigShowDialog(int index, bool value);
+
 public slots:
     /**
      * @brief Set Work Time

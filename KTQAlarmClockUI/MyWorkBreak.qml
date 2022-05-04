@@ -3,23 +3,26 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 
 Window {
-    id: myOverPageWindow
+    id: root
     width: 500
     height: 400
-    opacity: 0.8
+    opacity: 0.95
     visible: false
-    visibility : "Maximized"          //最大化
-    //flags : Qt.FramelessWindowHint
 
-    MyOverPageForm {
+    onVisibleChanged: {
+        //console.log("MyWorkBreak.onVisibleChanged() visible = " + visible)
+        myAlarmClockParam.sigVisibleChange(2, visible);
+    }
+
+    MyWorkBreakForm {
         anchors.fill: parent
 
         button.onClicked: {
-            myOverPageWindow.close()
+            root.close()
         }
     }
 
-    function showMyWindow(){
+    function showWindow(){
         this.visibility = "Maximized"
         this.flags =Qt.FramelessWindowHint
         this.show()

@@ -18,8 +18,13 @@ ApplicationWindow {
     title: qsTr("Kt Alarm Clock")
 
 
-    property int  mouseRegion: 5
+    property int mouseRegion: 5
     property int onlyDispalyIconWidth:450
+
+    onVisibleChanged: {
+        //console.log("MyMain.onVisibleChanged() visible = " + visible)
+        myAlarmClockParam.sigVisibleChange(1, visible);
+    }
 
     MouseArea {
         id:leftX

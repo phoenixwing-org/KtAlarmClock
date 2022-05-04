@@ -85,8 +85,8 @@ DISTFILES += \
     MyLeft.qml \
     MyLeftForm.ui.qml \
     MyMain.qml \
-    MyOverPage.qml \
-    MyOverPageForm.ui.qml \
+    MyWorkBreak.qml \
+    MyWorkBreakForm.ui.qml \
     MyRight.qml \
     MyRightForm.ui.qml \
     MyScroll.qml

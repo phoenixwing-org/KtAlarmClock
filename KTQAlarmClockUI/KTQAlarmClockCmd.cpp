@@ -59,7 +59,7 @@ ktErrorCode KTQAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
     // register command to qml
     engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
 
-    const QUrl url(QStringLiteral("qrc:/MyMain.qml"));
+    const QUrl url(QStringLiteral("qrc:/main.qml"));
     /*
      * What's the meaning?
     QObject::connect(
@@ -84,6 +84,7 @@ QQuickItem* KTQAlarmClockCmd::GiveMyPanel() const {
 //------------------------------------------------
 int KTQAlarmClockCmd::onStart() {
     qDebug() << "KTQAlarmClockCmd::onStart()";
-    m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
+    emit m_pClockParam->sigShowDialog(2, true);
+    // m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
     return KT_S_OK;
 }
