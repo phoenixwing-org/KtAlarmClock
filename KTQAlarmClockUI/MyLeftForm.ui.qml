@@ -12,7 +12,6 @@ Item {
     width: defaultWidth
     height: 400
 
-
     property int minimunWidth: 50
     property int defaultWidth: 150
     property alias toolButtonMyWork: toolButtonMyWork
@@ -29,32 +28,67 @@ Item {
     ToolBar {
         id: toolbar
         width: parent.width
-        height: 200
-//        background: Rectangle{
-//            color: "#000000"
-//        }
+        background: Rectangle{
+            color: "#000000"
+        }
 
         ColumnLayout {
             anchors.fill: parent
+
             ToolButton {
                 id: toolButtonMyWork
                 transformOrigin: Item.Left
                 Layout.fillWidth: true
+                display:"TextBesideIcon"
                 icon.source: "qrc:/image/volume-loud.svg"
+                icon.color: "transparent"
+                palette.buttonText:"#FFFFFF"
+
+                background: Rectangle{
+                    color: "#000000"
+                    border.color: "#000000"
+                    border.width: 0
+                }
                 action: actionMyWork
             }
+
             ToolButton {
                 id: toolButtonMyClass
                 Layout.fillWidth: true
+                display:"TextBesideIcon"
                 icon.source: "qrc:/image/book-opened.svg"
+                icon.color: "transparent"
+                palette.buttonText:"#FFFFFF"
+
+                background: Rectangle{
+                    color: "#000000"
+                    border.width: 0;
+                    border.color: "#000000";
+                }
+
                 action: actionMyClass
             }
+
             ToolButton {
                 id: toolButtonMySetting
                 Layout.fillWidth: true
+                display:"TextBesideIcon"
                 icon.source: "qrc:/image/settings.svg"
+                icon.color: "transparent"
+                palette.buttonText:"#FFFFFF"
+
+                background: Rectangle{
+                    color: "#000000"
+                    border.width: 0;
+                    border.color: "#000000";
+                }
+
                 action: actionSet
             }
+
+
+
+
         }
     }
 

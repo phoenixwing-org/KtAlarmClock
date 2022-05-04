@@ -16,6 +16,7 @@ ApplicationWindow {
     minimumWidth:100
     minimumHeight: 100
     title: qsTr("Kt Alarm Clock")
+    flags:Qt.FramelessWindowHint
 
 
     property int mouseRegion: 5
