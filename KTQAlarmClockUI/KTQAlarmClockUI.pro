@@ -79,6 +79,7 @@ RESOURCES += \
     main.qrc
 
 DISTFILES += \
+    KtToolButton.qml \
     MyClock.qml \
     MyFooter.qml \
     MyFooterForm.ui.qml \

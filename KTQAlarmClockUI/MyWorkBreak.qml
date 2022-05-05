@@ -14,19 +14,6 @@ Window {
     //fullScreen ? Qt.FramelessWindowHint : Qt.Window
     flags: Qt.FramelessWindowHint
 
-    onVisibleChanged: {
-        //console.log("MyWorkBreak.onVisibleChanged() visible = " + visible)
-        myAlarmClockParam.sigDialogVisibleChange(2, visible);
-    }
-
-    MouseArea{
-        id: mouseArea
-        anchors.fill: parent
-        onClicked: {
-            fullScreen = !fullScreen
-        }
-    }
-
     MyWorkBreakForm {
         id: myWorkBreakForm
         anchors.fill: parent
@@ -37,10 +24,35 @@ Window {
         }
     }
 
+    MyClock {
+        id: myClock
+        y: 0
+        visible: true
+        timeMax: 8
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
+
+    // connect signal onCompleted
+    Component.onCompleted: {
+        myClock.sigClockOut.connect(onClockTimeout)
+    }
+
     function showWindow(){
         //this.visibility = "Maximized"
         //this.flags =Qt.FramelessWindowHint
-        this.show()
+        myClock.timeMax = myAlarmClockParam.WorkBreak
+        myClock.onClockStart(3) // 3: break
+        root.show()
+    }
+
+    function onClockTimeout(state){
+        root.hide()
+        myAlarmClockParam.sigClockOut(state)
+    }
+    
+    onVisibleChanged: {
+        //console.log("MyWorkBreak.onVisibleChanged() visible = " + visible)
+        myAlarmClockParam.sigDialogVisibleChange(2, visible);
     }
 
 }

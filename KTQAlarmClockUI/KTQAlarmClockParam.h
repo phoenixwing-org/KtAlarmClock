@@ -105,9 +105,14 @@ signals:
     bool sigDialogShow(int index, bool value);
 
     /**
+     * @brief clock timeout
+     */
+    bool sigClockOut(int state);
+
+    /**
      * @brief clock state
      */
-    bool sigClockState(int state);
+    bool sigClockStart(int state);
 
 public slots:
     /**

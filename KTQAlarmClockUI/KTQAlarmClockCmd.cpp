@@ -87,7 +87,7 @@ int KTQAlarmClockCmd::onStart() {
     emit m_pClockParam->sigDialogShow(2, false);
     emit m_pClockParam->sigDialogShow(1, false);
 
-    emit m_pClockParam->sigClockState(KTQ::WorkStepDoing);
+    emit m_pClockParam->sigClockStart(KTQ::WorkStepDoing);
 
     // m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
     return KT_S_OK;

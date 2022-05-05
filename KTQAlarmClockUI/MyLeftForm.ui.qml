@@ -9,86 +9,59 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 Item {
+    id: root
     width: defaultWidth
     height: 400
 
+    property bool onlyIcon: false
     property int minimunWidth: 50
-    property int defaultWidth: 150
-    property alias toolButtonMyWork: toolButtonMyWork
-    property alias toolButtonMyClass: toolButtonMyClass
-    property alias toolButtonMySetting: toolButtonMySetting
+    property int defaultWidth: 200
+    property alias actionMyWork: actionMyWork
+    property alias actionMyClass: actionMyClass
+    property alias actionSet: actionSet
 
-    Rectangle{
-        id:rect
+    Rectangle {
+        id: rect
         color: "#000000"
         anchors.fill: parent
-
     }
 
     ToolBar {
         id: toolbar
         width: parent.width
-        background: Rectangle{
+        background: Rectangle {
             color: "#000000"
         }
 
         ColumnLayout {
-            anchors.fill: parent
+            transformOrigin: Item.Left
 
-            ToolButton {
+            KtToolButton {
                 id: toolButtonMyWork
+                onlyIcon: root.onlyIcon
+                width: root.width
                 transformOrigin: Item.Left
-                Layout.fillWidth: true
-                display:"TextBesideIcon"
                 icon.source: "qrc:/image/volume-loud.svg"
-                icon.color: "transparent"
-                palette.buttonText:"#FFFFFF"
-
-                background: Rectangle{
-                    color: "#000000"
-                    border.color: "#000000"
-                    border.width: 0
-                }
                 action: actionMyWork
             }
 
-            ToolButton {
+            KtToolButton {
                 id: toolButtonMyClass
-                Layout.fillWidth: true
-                display:"TextBesideIcon"
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
                 icon.source: "qrc:/image/book-opened.svg"
-                icon.color: "transparent"
-                palette.buttonText:"#FFFFFF"
-
-                background: Rectangle{
-                    color: "#000000"
-                    border.width: 0;
-                    border.color: "#000000";
-                }
-
                 action: actionMyClass
             }
 
-            ToolButton {
+            KtToolButton {
                 id: toolButtonMySetting
-                Layout.fillWidth: true
-                display:"TextBesideIcon"
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
                 icon.source: "qrc:/image/settings.svg"
-                icon.color: "transparent"
-                palette.buttonText:"#FFFFFF"
-
-                background: Rectangle{
-                    color: "#000000"
-                    border.width: 0;
-                    border.color: "#000000";
-                }
-
                 action: actionSet
             }
-
-
-
-
         }
     }
 

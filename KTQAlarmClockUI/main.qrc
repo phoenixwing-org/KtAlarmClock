@@ -33,5 +33,6 @@
         <file>MyWorkBreak.qml</file>
         <file>MyWorkBreakForm.ui.qml</file>
         <file>MyClock.qml</file>
+        <file>KtToolButton.qml</file>
     </qresource>
 </RCC>

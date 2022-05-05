@@ -16,7 +16,7 @@ ApplicationWindow {
     minimumWidth:100
     minimumHeight: 100
     title: qsTr("Kt Alarm Clock")
-    flags:Qt.FramelessWindowHint
+    //flags:Qt.FramelessWindowHint
 
 
     property int mouseRegion: 5
@@ -260,24 +260,6 @@ ApplicationWindow {
     MyLeft{
         id: ktLeft
         height: ktRight.height
-
-        function displayOnlyIcon()
-        {
-            width = ktLeft.minimunWidth;
-            toolButtonMyClass.display = Qt.ToolButtonIconOnly
-            toolButtonMySetting.display = Qt.ToolButtonIconOnly
-            toolButtonMyWork.display = Qt.ToolButtonIconOnly
-
-        }
-
-        function displayTextBesideIcon()
-        {
-            width = ktLeft.defaultWidth;
-            toolButtonMyClass.display = Qt.ToolButtonTextBesideIcon
-            toolButtonMySetting.display = Qt.ToolButtonTextBesideIcon
-            toolButtonMyWork.display = Qt.ToolButtonTextBesideIcon
-        }
-
     }
 
     MyRight{
@@ -286,7 +268,8 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: ktfooter.top
-        anchors.leftMargin: 0
+        anchors.bottomMargin: 1
+        anchors.leftMargin: 1
     }
 
     MyFooter{
@@ -298,23 +281,14 @@ ApplicationWindow {
 
     }
 
-
     // connect signal onCompleted
     Component.onCompleted: {
         ktLeft.sigScrollPage.connect(ktRight.myScroll.scrollPage)// pass index value
     }
 
-
-
-
     function autoDisplayLeftMenu()
     {
-        if(root.width <= root.onlyDispalyIconWidth)
-        {
-            ktLeft.displayOnlyIcon()
-        }else{
-            ktLeft.displayTextBesideIcon()
-        }
+        ktLeft.onlyIcon = (root.width <= root.onlyDispalyIconWidth)
     }
 
 }

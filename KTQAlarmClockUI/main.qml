@@ -5,22 +5,21 @@ import QtQuick.Controls 2.12
 
 Window {
     id: root
-    visible: true
-    x: myClock.x
+    x: myMain.x
     y: 0
-    width: 10
-    height: 10
+    width: myClock.width
+    height: myClock.height
+
+    visible: true
     color: "transparent"
     opacity: 1
-    flags: Qt.FramelessWindowHint
-
-    property var myWorkBreak: null
-    property var myMain: null
+    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
     MyClock{
         id: myClock
+        timeMax: 4
         visible: true
-        x: myMain.x + myMain.width - width
+        x: 0
         y: 0
     }
 
@@ -44,6 +43,23 @@ Window {
         myAlarmClockParam.sigDialogVisibleChange.connect(onChangeSubVisible)
         // signal Show sub dialog
         myAlarmClockParam.sigDialogShow.connect(onShowDialog)
+        myAlarmClockParam.sigClockStart.connect(onClockStart)
+        
+        myAlarmClockParam.sigClockOut.connect(onClockTimeout);
+
+        myClock.sigClockOut.connect(onClockTimeout)
+    }
+
+    function onClockStart(state){
+        if (1 === state){
+            myClock.timeMax = myAlarmClockParam.WorkTime;
+            myMain.hide();
+            myWorkBreak.hide();
+            myClock.onClockStart(state);
+        } else if (3 === state){
+            myWorkBreak.showWindow();
+            myMain.show();
+        }
     }
 
     /**
@@ -73,18 +89,29 @@ Window {
         }
     }
 
+    // on state change
+    function onClockTimeout(state){
+        console.log("onClockTimeout("+state+")")
+        switch(state) {
+        case 1:
+            myAlarmClockParam.sigDialogShow(2, true);
+            break;
+        case 3:
+            myAlarmClockParam.sigDialogShow(1, true);
+            break;
+        case 4:
+        }
+    }
+
     function onChangeSubVisible(index, value){
-        //console.log("onChangeSubVisible(" + index + "," + value +")")
+        console.log("onChangeSubVisible(" + index + "," + value +")")
         var count = 0;
         if(myWorkBreak.visible) count++
         if(myMain.visible) count++
 
         // if(myClock.visible) count++
 
-        //console.log("count = " + count)
-        //if(count === 0) root.close()
+        console.log("count = " + count)
+        //if(count < 1) root.close()
     }
-
 }
-
-

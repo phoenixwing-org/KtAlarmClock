@@ -2,12 +2,14 @@ import QtQuick 2.0
 import QtQuick.Window 2.14
 import QtQuick.Controls 2.12
 
-Window{
-    property int counter: 0
-
+Item{
     width: 150
     height: 50
-    flags: Qt.FramelessWindowHint
+    property int counter: 0
+    property int timeMax: 3600
+    property int state: 0
+
+    signal sigClockOut(int state)
 
     Rectangle{
         id: rectangle
@@ -31,36 +33,32 @@ Window{
             running: false
             repeat: true
             onTriggered:{
-                counter ++
-                label.text = "00:0" + counter;
-                if(counter >= 5){
-                    onClockState(2)
-                    running = false;
-                }
-
+                if(counter <= 0) onClockOut();
+                counter --
+                showTime();
             }
         }
     }
 
-    // on state change
-    function onClockState(state){
-        switch(state) {
-        case 1:
-            counter = 0;
-            myTimer.running = true;
-            break;
-        case 2:
-            myTimer.running = false;
-            myAlarmClockParam.sigDialogShow(2, true);
-            break;
-        default:
+    function onClockStart(iState){
+        counter = timeMax;
+        state = iState;
+        showTime();
+        myTimer.running = true;
+    }
 
+    function onClockOut(){
+        myTimer.running = false;
+        sigClockOut(state)
+    }
+
+    function showTime(){
+        if(counter <= 0){
+            label.text = "0:00";
+            return
         }
+        var m = Math.floor(counter / 60)
+        var s = ("00" +counter % 60).slice(-2)
+        label.text = m + ":" + s;
     }
-
-    // connect signal onCompleted
-    Component.onCompleted: {
-        myAlarmClockParam.sigClockState.connect(onClockState)
-    }
-
 }

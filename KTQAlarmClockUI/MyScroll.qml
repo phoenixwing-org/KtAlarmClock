@@ -22,7 +22,7 @@ Item {
         id: scroll
         width: 300
         clip: true
-        anchors.margins: 5
+        anchors.margins: 0
         anchors.fill: parent
 
         // rect width will affect scroll view horizontalScrollBar
@@ -132,7 +132,7 @@ Item {
                 width: itemTop.width
                 height: 150
                 color: "black"
-                anchors.topMargin: 5
+                anchors.topMargin: 1
                 border.color: "blue"
             }
 
@@ -142,7 +142,7 @@ Item {
                 width: itemTop.width
                 height: 300
                 color: "black"
-                anchors.topMargin: 5
+                anchors.topMargin: 1
                 border.color: "blue"
 
                 MouseArea {
