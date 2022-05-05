@@ -10,6 +10,7 @@
 #ifndef KTQAlarmClockParam_H
 #define KTQAlarmClockParam_H
 
+#include <QObject>
 // kt
 #include "ktCoreDefine.h"
 #include "ktErrorCode.h"
@@ -19,74 +20,149 @@
 
 namespace KTQ {
 
-enum SpeechStep {
-    SpeechFirst    = 0,
-    SpeechDelay    = 1,
-    SpeechTalking  = 2,
-    SpeechFinished = 3
+/**
+ * @brief Work Step
+ */
+enum WorkStep {
+    WorkStepNone   = 0,
+    WorkStepDoing  = 1,
+    WorkStepDelay  = 2,
+    WorkStepRest   = 3,
+    WorkStepFinish = 4
 };
 } // namespace KTQ
 
 /**
  * @brief Class KTQAlarmClockParam
  */
-class ExportedByKTQAlarmClockUI KTQAlarmClockParam {
+class ExportedByKTQAlarmClockUI KTQAlarmClockParam : public QObject {
+    Q_OBJECT;
+
+    /**
+     * @brief Work Time Property
+     */
+    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE SetWorkTime NOTIFY sigWorkTime);
+
+    /**
+     * @brief Work Break Property
+     */
+    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE SetWorkBreak NOTIFY sigWorkBreak);
+
+    /**
+     * @brief Time Counter Property
+     */
+    Q_PROPERTY(int TimeCounter READ GetTimeCounter NOTIFY sigTimeCounter);
+
 public:
     /** @brief Standard constructors and destructors */
-    KTQAlarmClockParam();
+    KTQAlarmClockParam(QObject* parent = nullptr);
     virtual ~KTQAlarmClockParam();
 
     /** @brief Copy constructor and equal operator */
-    KTQAlarmClockParam(const KTQAlarmClockParam &);
-    KTQAlarmClockParam &operator=(const KTQAlarmClockParam &);
+    KTQAlarmClockParam(const KTQAlarmClockParam&);
+    KTQAlarmClockParam& operator=(const KTQAlarmClockParam&);
+
+public:
+    /**
+     * @brief Get Work Time
+     */
+    int GetWorkTime() const;
+
+    /**
+     * @brief Get Work Break
+     */
+    int GetWorkBreak() const;
+
+    /**
+     * @brief Get Time Counter
+     */
+    int GetTimeCounter() const;
+
+signals:
+    /**
+     * @brief Work Time Signal
+     */
+    bool sigWorkTime(int iValue);
+
+    /**
+     * @brief Work Break Signal
+     */
+    bool sigWorkBreak(int iValue);
+
+    /**
+     * @brief Time Counter Signal
+     */
+    bool sigTimeCounter(int iValue);
+
+    /**
+     * @brief Dialog's visible change
+     */
+    bool sigDialogVisibleChange(int index, bool value);
+
+    /**
+     * @brief Show sub dialog
+     */
+    bool sigDialogShow(int index, bool value);
+
+    /**
+     * @brief clock timeout
+     */
+    bool sigClockOut(int state);
+
+    /**
+     * @brief clock state
+     */
+    bool sigClockStart(int state);
+
+public slots:
+    /**
+     * @brief Set Work Time
+     */
+    void SetWorkTime(int iValue);
+
+    /**
+     * @brief Set Work Break
+     */
+    void SetWorkBreak(int iValue);
+
+    /**
+     * @brief Set Time Counter
+     */
+    void SetTimeCounter(int iValue);
 
 public:
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM DECLARATION
 
     /**
-     * @brief ClassTime
+     * @brief Work Time
      * @author Kevin
      * @note 45 min
-     * @id 1
-    */
-    int ClassTime;
-
-    /**
-     * @brief Class Break
-     * @author Kevin
-     * @note 10 min
      * @id 2
     */
-    int ClassBreak;
+    int WorkTime;
+
+    /**
+     * @brief Work Break
+     * @author Kevin
+     * @note 10 min
+     * @id 3
+    */
+    int WorkBreak;
 
     /**
      * @brief Punish Time
      * @author Kevin
-     * @id 3
+     * @id 4
     */
     int PunishTime;
 
     /**
      * @brief Punish Score
      * @author Kevin
-     * @id 4
-    */
-    double PunishScore;
-
-    /**
-     * @brief Time Counter
-     * @author Kevin
      * @id 5
     */
-    int TimeCounter;
-
-    /**
-     * @brief Time Step
-     * @author Kevin
-     * @id 6
-    */
-    int TimeStep;
+    double PunishScore;
 
     /**
      * @brief Time Total
@@ -95,6 +171,20 @@ public:
      * @id 100
     */
     int TimeTotal;
+
+    /**
+     * @brief Work Step
+     * @author Kevin
+     * @id 101
+    */
+    KTQ::WorkStep WorkStep;
+
+    /**
+     * @brief Time Counter
+     * @author Kevin
+     * @id 102
+    */
+    int TimeCounter;
 
     //END KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM DECLARATION
 

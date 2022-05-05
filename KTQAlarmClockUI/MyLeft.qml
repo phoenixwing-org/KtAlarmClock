@@ -7,15 +7,37 @@ import QtQuick 2.4
 
 MyLeftForm {
 
-    signal actionClicked(int index)
-    toolButtonMySpeech.onClicked: {
-        actionClicked(0)
+    signal sigScrollPage(int index)
+
+    actionMyWork.onTriggered: {
+        sigScrollPage(0)
     }
-    toolButtonMyClass.onClicked: {
-        actionClicked(1)
+    actionMyClass.onTriggered: {
+        sigScrollPage(1)
     }
-    toolButtonMySetting.onClicked: {
-        actionClicked(2)
+    actionSet.onTriggered: {
+        sigScrollPage(2)
     }
+
+    onOnlyIconChanged: {
+        if (onlyIcon){
+            width = minimunWidth;
+        }
+        else{
+            width = defaultWidth;
+        }
+    }
+
+    function displayOnlyIcon()
+    {
+        onlyIcon = true;
+    }
+
+    function displayTextBesideIcon()
+    {
+        //width = ktLeft.defaultWidth;
+        onlyIcon = false;
+    }
+
 }
 

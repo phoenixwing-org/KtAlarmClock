@@ -21,6 +21,7 @@
         <file alias="ic_stop.svg">../image/ic_stop.svg</file>
     </qresource>
     <qresource prefix="/">
+        <file>main.qml</file>
         <file>MyFooter.qml</file>
         <file>MyFooterForm.ui.qml</file>
         <file>MyLeft.qml</file>
@@ -29,5 +30,9 @@
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>
         <file>MyScroll.qml</file>
+        <file>MyWorkBreak.qml</file>
+        <file>MyWorkBreakForm.ui.qml</file>
+        <file>MyClock.qml</file>
+        <file>KtToolButton.qml</file>
     </qresource>
 </RCC>

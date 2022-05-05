@@ -4,16 +4,17 @@ import QtQuick.Layouts 1.12
 
 Item {
     width: 400
-    height: 200
+    height: 100
     property alias buttonStop: buttonStop
     property alias buttonPause: buttonPause
     property alias buttonStart: buttonStart
 
     Rectangle {
         id: rectangle
-        radius: 15
+        radius: 0
         width: 400
-        color: "#7ec687"
+        height: 100
+        color: "#202020"
 
         anchors.fill: parent
 
@@ -27,6 +28,7 @@ Item {
             ToolButton {
                 id: buttonStart
                 text: qsTr("Start")
+                tooltip: "Start"
                 height: 48
                 iconSource: "image/ic_start.svg"
             }
@@ -34,6 +36,7 @@ Item {
             ToolButton {
                 id: buttonPause
                 text: qsTr("Pause")
+                tooltip: "Pause"
                 height: 48
                 iconSource: "image/ic_pause.svg"
             }
@@ -41,6 +44,7 @@ Item {
             ToolButton {
                 id: buttonStop
                 text: qsTr("Stop")
+                tooltip: qsTr("Stop")
                 height: 48
                 iconSource: "image/ic_stop.svg"
             }

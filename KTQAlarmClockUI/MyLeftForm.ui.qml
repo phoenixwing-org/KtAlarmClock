@@ -9,34 +9,56 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.12
 
 Item {
-    width: 250
+    id: root
+    width: defaultWidth
     height: 400
-    property alias toolButtonMySpeech: toolButtonMySpeech
-    property alias toolButtonMyClass: toolButtonMyClass
-    property alias toolButtonMySetting: toolButtonMySetting
+
+    property bool onlyIcon: false
+    property int minimunWidth: 50
+    property int defaultWidth: 200
+    property alias actionMyWork: actionMyWork
+    property alias actionMyClass: actionMyClass
+    property alias actionSet: actionSet
+
+    Rectangle {
+        id: rect
+        color: "#000000"
+        anchors.fill: parent
+    }
 
     ToolBar {
         id: toolbar
         width: parent.width
-        height: 200
+        background: Rectangle {
+            color: "#000000"
+        }
+
         ColumnLayout {
-            anchors.fill: parent
-            ToolButton {
-                id: toolButtonMySpeech
+            transformOrigin: Item.Left
+
+            KtToolButton {
+                id: toolButtonMyWork
+                onlyIcon: root.onlyIcon
+                width: root.width
                 transformOrigin: Item.Left
-                Layout.fillWidth: true
                 icon.source: "qrc:/image/volume-loud.svg"
-                action: actionMySpeech
+                action: actionMyWork
             }
-            ToolButton {
+
+            KtToolButton {
                 id: toolButtonMyClass
-                Layout.fillWidth: true
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
                 icon.source: "qrc:/image/book-opened.svg"
                 action: actionMyClass
             }
-            ToolButton {
+
+            KtToolButton {
                 id: toolButtonMySetting
-                Layout.fillWidth: true
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
                 icon.source: "qrc:/image/settings.svg"
                 action: actionSet
             }
@@ -44,8 +66,8 @@ Item {
     }
 
     Action {
-        id: actionMySpeech
-        text: "&My Speech"
+        id: actionMyWork
+        text: "&My Work"
         shortcut: StandardKey.New
     }
 

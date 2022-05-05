@@ -14,16 +14,18 @@
 #include "KTQAlarmClockParam.h"
 
 //--------------------------------------------------------------------
-KTQAlarmClockParam::KTQAlarmClockParam()
+KTQAlarmClockParam::KTQAlarmClockParam(QObject* parent)
+    : QObject(parent)
+    ,
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM CONSTRUCTOR
-    : ClassTime(4500),
-      ClassBreak(600),
+      WorkTime(2700),
+      WorkBreak(600),
       PunishTime(0),
       PunishScore(0),
-      TimeCounter(0),
-      TimeStep(0),
-      TimeTotal(5100)
+      TimeTotal(5100),
+      WorkStep(KTQ::WorkStepNone),
+      TimeCounter(0)
     //END KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM CONSTRUCTOR
 
 // clang-format on
@@ -34,32 +36,33 @@ KTQAlarmClockParam::KTQAlarmClockParam()
 KTQAlarmClockParam::~KTQAlarmClockParam() {
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM DESTRUCTOR
-    //ClassTime = 4500; //1
-    //ClassBreak = 600; //2
-    //PunishTime = 0; //3
-    //PunishScore = 0; //4
-    //TimeCounter = 0; //5
-    //TimeStep = 0; //6
+    //WorkTime = 2700; //2
+    //WorkBreak = 600; //3
+    //PunishTime = 0; //4
+    //PunishScore = 0; //5
     //TimeTotal = 5100; //100
+    //WorkStep = KTQ::WorkStepNone; //101
+    //TimeCounter = 0; //102
     //END KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM DESTRUCTOR
 
     // clang-format on
 }
 //--------------------------------------------------------------------
-KTQAlarmClockParam::KTQAlarmClockParam(const KTQAlarmClockParam &iOriginal) {
+KTQAlarmClockParam::KTQAlarmClockParam(const KTQAlarmClockParam& iOriginal)
+    : QObject(iOriginal.parent()) {
     *this = iOriginal;
 }
 //--------------------------------------------------------------------
-KTQAlarmClockParam &KTQAlarmClockParam::operator=(const KTQAlarmClockParam &iOriginal) {
+KTQAlarmClockParam& KTQAlarmClockParam::operator=(const KTQAlarmClockParam& iOriginal) {
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM EQUAL
-    this->ClassTime = iOriginal.ClassTime;
-    this->ClassBreak = iOriginal.ClassBreak;
+    this->WorkTime = iOriginal.WorkTime;
+    this->WorkBreak = iOriginal.WorkBreak;
     this->PunishTime = iOriginal.PunishTime;
     this->PunishScore = iOriginal.PunishScore;
-    this->TimeCounter = iOriginal.TimeCounter;
-    this->TimeStep = iOriginal.TimeStep;
     this->TimeTotal = iOriginal.TimeTotal;
+    this->WorkStep = iOriginal.WorkStep;
+    this->TimeCounter = iOriginal.TimeCounter;
     //END KEVIN CAA WIZARD SECTION KTQAlarmClockParam PARAM EQUAL
 
     // clang-format on
@@ -71,18 +74,51 @@ void KTQAlarmClockParam::clear() {
 }
 //--------------------------------------------------------------------
 void KTQAlarmClockParam::dump() {
-    std::cout << " {  ClassTime:" << ClassTime << ",ClassBreak: " << ClassBreak
+    std::cout << " {  WorkTime:" << WorkTime << ",WorkBreak: " << WorkBreak
               << ",PunishTime: " << PunishTime << ",:PunishScore " << PunishScore
-              << ",TimeCounter:" << TimeCounter << ", :TimeStep" << TimeStep
+              << ",TimeCounter:" << TimeCounter << ", :TimeStep" << WorkStep
               << ",TimeTotal: " << TimeTotal << " }" << std::endl;
 }
 //--------------------------------------------------------------------
 void KTQAlarmClockParam::sample() {
-    ClassTime   = 4500; // 1
-    ClassBreak  = 600;  // 2
-    PunishTime  = 0;    // 3
-    PunishScore = 0;    // 4
-    TimeCounter = 0;    // 5
-    TimeStep    = 0;    // 6
-    TimeTotal   = 5100; // 100
+    WorkTime    = 4500;              // 1
+    WorkBreak   = 600;               // 2
+    PunishTime  = 0;                 // 3
+    PunishScore = 0;                 // 4
+    TimeCounter = 0;                 // 5
+    WorkStep    = KTQ::WorkStepNone; // 6
+    TimeTotal   = 5100;              // 100
+}
+//--------------------------------------------------------------------
+int KTQAlarmClockParam::GetWorkTime() const {
+    return WorkTime;
+}
+//--------------------------------------------------------------------
+void KTQAlarmClockParam::SetWorkTime(int iValue) {
+    if (WorkTime != iValue) {
+        WorkTime = iValue;
+        emit sigWorkTime(iValue);
+    }
+}
+//--------------------------------------------------------------------
+int KTQAlarmClockParam::GetWorkBreak() const {
+    return WorkBreak;
+}
+//--------------------------------------------------------------------
+void KTQAlarmClockParam::SetWorkBreak(int iValue) {
+    if (WorkBreak != iValue) {
+        WorkBreak = iValue;
+        emit sigWorkBreak(iValue);
+    }
+}
+//--------------------------------------------------------------------
+int KTQAlarmClockParam::GetTimeCounter() const {
+    return TimeCounter;
+}
+//--------------------------------------------------------------------
+void KTQAlarmClockParam::SetTimeCounter(int iValue) {
+    if (TimeCounter != iValue) {
+        TimeCounter = iValue;
+        emit sigTimeCounter(iValue);
+    }
 }

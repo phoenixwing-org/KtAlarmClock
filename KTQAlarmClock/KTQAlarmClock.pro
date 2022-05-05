@@ -1,4 +1,5 @@
 QT += quick
+TARGET = KtAlarmClock
 
 CONFIG += c++11
 
@@ -32,10 +33,10 @@ CONFIG(release, debug|release){
     RCC_DIR =  "$$OUT_PWD/tmp/release/.qrc"
 }
 
-# message(KTQAlarmClock.OUT_PWD=$$OUT_PWD)
+# message($${TARGET}.OUT_PWD=$$OUT_PWD)
 
 # L:Folder, l:filename
-LIBS += -L$$DESTDIR -lKTQAlarmClockUI
+LIBS += -L$$DESTDIR -l$${TARGET}UI
 
 # message(KTQAlarmClock.LIBS=$$LIBS)
 # KT_BASE_INCLUDE for deferent system
@@ -50,7 +51,7 @@ win32 {
 }
 
 INCLUDEPATH += \
-         ../KTQAlarmClockUI \
+         ../$${TARGET}UI \
          $${KT_BASE_INCLUDE} \
 
 # Additional import path used to resolve QML modules in Qt Creator's code model

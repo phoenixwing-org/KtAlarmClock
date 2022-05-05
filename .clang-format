@@ -48,7 +48,7 @@ KeepEmptyLinesAtTheStartOfBlocks: true
 MaxEmptyLinesToKeep: 1
 ObjCBlockIndentWidth: 4
 ObjCSpaceAfterProperty: true
-PointerAlignment: Right
+PointerAlignment: Left
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true
 SpacesInContainerLiterals: true
