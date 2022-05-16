@@ -83,6 +83,8 @@ Window {
 
         // start clock:
         onClockStart(Kt.WorkTime);
+
+        myAlarmClockCmd.SetAutoStart(true);
     }
 
     function closeAllWindows(){

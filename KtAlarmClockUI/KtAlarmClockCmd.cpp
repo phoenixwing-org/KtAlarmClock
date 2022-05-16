@@ -9,6 +9,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QSettings>
+
 // Kt
 #include "KtAlarmClock.h"
 #include "KtAlarmClockCmd.h"
@@ -21,7 +23,8 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     : QObject(parent)
     , m_pClockCore(NULL)
     , m_pClockParam(NULL)
-    , m_pClockDlg(NULL) {
+    , m_pClockDlg(NULL)
+    , m_ExePath() {
     qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
     // new
     m_pClockParam = new KtAlarmClockParam();
@@ -82,6 +85,16 @@ void KtAlarmClockCmd::debug(const QString& iMsg) {
 //------------------------------------------------
 QQuickItem* KtAlarmClockCmd::GiveMyPanel() const {
     return m_pClockDlg;
+}
+//------------------------------------------------
+int KtAlarmClockCmd::SetAutoStart(bool iValue) {
+    qDebug() << "KtAlarmClockCmd::SetAutoStart" << iValue;
+    qDebug() << "Auto Start Path = " << m_ExePath;
+    QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                  QSettings::NativeFormat);
+
+    reg.setValue("KtAlarmClock", m_ExePath);
+    return 0; // ok
 }
 //------------------------------------------------
 int KtAlarmClockCmd::onStart() {
