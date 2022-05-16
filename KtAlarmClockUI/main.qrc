@@ -1,0 +1,56 @@
+<RCC>
+    <qresource prefix="/image">
+        <file alias="back.svg">../image/back.svg</file>
+        <file alias="book-opened.svg">../image/book-opened.svg</file>
+        <file alias="chevron-left.svg">../image/chevron-left.svg</file>
+        <file alias="chevron-right.svg">../image/chevron-right.svg</file>
+        <file alias="coffee.svg">../image/coffee.svg</file>
+        <file alias="grid.svg">../image/grid.svg</file>
+        <file alias="justify.svg">../image/justify.svg</file>
+        <file alias="next.svg">../image/next.svg</file>
+        <file alias="pause.svg">../image/pause.svg</file>
+        <file alias="play.svg">../image/play.svg</file>
+        <file alias="previous.svg">../image/previous.svg</file>
+        <file alias="stop.svg">../image/stop.svg</file>
+        <file alias="vertical.svg">../image/vertical.svg</file>
+        <file alias="volume-loud.svg">../image/volume-loud.svg</file>
+        <file alias="ic_pause.svg">../image/ic_pause.svg</file>
+        <file alias="ic_start.svg">../image/ic_start.svg</file>
+        <file alias="ic_stop.svg">../image/ic_stop.svg</file>
+        <file alias="bike.svg">../image/bike.svg</file>
+        <file alias="cancel.svg">../image/cancel.svg</file>
+        <file alias="win-close.svg">../image/win-close.svg</file>
+        <file alias="win-normal.svg">../image/win-normal.svg</file>
+        <file alias="win-min.svg">../image/win-min.svg</file>
+        <file alias="win-max.svg">../image/win-max.svg</file>
+        <file alias="alarm-clock.svg">../image/alarm-clock.svg</file>
+        <file alias="menus.svg">../image/menus.svg</file>
+        <file alias="unlock.svg">../image/unlock.svg</file>
+        <file alias="kt.svg">../image/kt.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MyFooter.qml</file>
+        <file>MyFooterForm.ui.qml</file>
+        <file>MyLeft.qml</file>
+        <file>MyLeftForm.ui.qml</file>
+        <file>MyMain.qml</file>
+        <file>MyRight.qml</file>
+        <file>MyRightForm.ui.qml</file>
+        <file>MyScroll.qml</file>
+        <file>MyOverItem.qml</file>
+        <file>MyClock.qml</file>
+        <file>KtToolButton.qml</file>
+        <file>KtWindow.qml</file>
+        <file>KtSpinBox.qml</file>
+        <file>KtMouseAreaMove.qml</file>
+        <file>KtTimeSlide.qml</file>
+        <file>KtWindowBase.qml</file>
+        <file>KtWindowOver.qml</file>
+        <file>MyOver0.qml</file>
+        <file>MyOver1.qml</file>
+        <file>MyClockWindow.qml</file>
+        <file>MyWindowMenu.qml</file>
+        <file>MySystemTrayIcon.qml</file>
+    </qresource>
+</RCC>

@@ -4,5 +4,11 @@
         "algorithm": "cpp",
         "iostream": "cpp"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "cSpell.words": [
+        "flickable",
+        "Frameless",
+        "Kuntai"
+    ],
+    "svg.preview.background": "editor"
 }
