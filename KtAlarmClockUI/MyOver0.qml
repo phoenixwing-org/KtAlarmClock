@@ -1,0 +1,276 @@
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.12
+import KtAlarmClock 1.0
+
+KtWindowOver {
+    id: root
+    width:600
+    height:400
+    property alias myClock: myClock
+
+    property alias labelFormula: labelFormula
+    property alias labelMsg: labelMsg
+    property alias textEditResult: textEditResult
+    property int counterForce: 0
+    property int formulaValue: 3300
+    property bool canClose: false
+    property bool running: value
+    property bool showFormula: counterForce<=0
+    
+    modality: Qt.WindowModal //Block other windows
+    title: "First Over"
+
+    Rectangle {
+        id: rectangle
+        width: root.width
+        height: root.height
+        color: "#000000"
+        anchors.fill: parent
+        opacity: 1
+
+        Rectangle {
+            id: footer
+            width: parent.width
+            height: 80
+            color: "#111111"
+            anchors.bottom: parent.bottom
+
+            Image {
+                id: ktLogo
+                x: 5
+                y: 5
+                width: 36
+                height: 36
+                sourceSize.height: 36
+                sourceSize.width: 36
+                source: "qrc:/image/kt.svg"
+
+                KtMouseAreaMove{}
+            }
+
+            Label {
+                id: kt
+                color: "#AAAAAA"
+                text: qsTr("上海锟钛软件科技有限公司")
+                anchors.verticalCenter: ktLogo.verticalCenter
+                anchors.left: ktLogo.right
+                anchors.leftMargin: 10
+                font.pointSize: 12
+            }
+
+            Item {
+                id: element
+                visible: counterForce <= 0
+                width: labelFormula.width + rectangleResult.width + 20
+                height: 50
+                clip: false
+                anchors.horizontalCenter: footer.horizontalCenter
+                anchors.verticalCenter: footer.verticalCenter
+
+                Label {
+                    id: labelFormula
+                    color: "#AAAAAA"
+                    text: qsTr("2200 + 1100 =")
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 20
+
+                    anchors.verticalCenter: element.verticalCenter
+                }
+
+                Rectangle {
+                    id: rectangleResult
+                    width: 80
+                    height: 40
+                    anchors.left: labelFormula.right
+                    anchors.leftMargin: 10
+                    color: "#555555"
+                    visible: true
+
+                    anchors.verticalCenter: element.verticalCenter
+                    TextEdit {
+                        id: textEditResult
+                        x: 159
+                        y: 15
+                        height: 40
+                        color: "#ffffff"
+                        text: ""
+                        anchors.rightMargin: 5
+                        anchors.leftMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        anchors.left: parent.left
+                        font.family: "Arial"
+                        font.pixelSize: 30
+                        wrapMode: Text.NoWrap
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+
+
+            KtToolButton {
+                id: buttonStop
+                icon.source: "qrc:/image/unlock.svg"
+                icon.height: 50
+                icon.width: 50
+                visible: showFormula
+                text: qsTr("Unlock")
+                flat: false
+                font.pointSize: 22
+
+                anchors.verticalCenter: footer.verticalCenter
+                anchors.right: footer.right
+                anchors.rightMargin: 5
+                onClicked: stopOverPage()
+            }
+
+            Label {
+                id: labelForce
+                width: parent.width
+                visible: !showFormula
+                color: "#AAAAAA"
+                text: counterForce
+                anchors.horizontalCenter: buttonStop.horizontalCenter
+                anchors.verticalCenter: buttonStop.verticalCenter
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pointSize: 10
+            }
+
+        }
+
+        Label {
+            id: labelMsg
+            y: 189
+            color: "#AAAAAA"
+            text: qsTr("")
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: footer.top
+            anchors.bottomMargin: 0
+            font.pointSize: 20
+        }
+
+        Image {
+            id: image
+            x: root.width/2
+            y: root.height/2
+            width: 100
+            height: 100
+            sourceSize.height: 100
+            sourceSize.width: 100
+            source: "qrc:/image/coffee.svg"
+
+            KtMouseAreaMove{}
+        }
+    }
+
+    MyClock{
+        id: myClock
+        timeMax: 4
+        visible: true
+        x: root.width/2
+        y: 0
+        KtMouseAreaMove{}
+    }
+
+     Component.onCompleted: {
+        initialFormula()
+
+    }
+
+    //@disable-check M16
+    onClosing: function(closeEvent){
+        closeEvent.accepted = canClose
+        console.log("MyOver0.closeEvent.accepted =",closeEvent.accepted)
+        if(!canClose){
+            console.log("MyOver0.closeEvent.accepted =",closeEvent.accepted)
+        }
+    }
+
+    //@disable-check M204
+    Timer {
+        id: timerForce
+        interval: 1000
+        running: false
+        repeat: true
+        onTriggered:{
+            root.counterForce--
+            //console.log("counterForce", root.counterForce)
+            if(root.counterForce <= 0) {
+                stop();
+            }
+        }
+    }
+
+
+    onRunningChanged: {
+        console.log("MyOver0.running = ", running)
+        if(running){
+            console.log("MyOver0.running")
+        }
+        else{
+            root.canClose = true;
+            myClock.onClockPause();
+            root.hide()
+        }
+    }
+
+    function stopOverPage(){
+        console.log("MyOver0.stopOverPage()")
+        if (root.counterForce > 0){
+            root.canClose = false;
+            return
+        }
+
+        //check answer
+        var value = parseInt(textEditResult.text)
+        root.canClose = (value == root.formulaValue)
+        console.log("canClose = ",value, root.canClose)
+
+        root.textEditResult.text = ""
+        if(canClose){
+            myAlarmClockParam.sigClockOut(Kt.WorkBreak) // clock out from break
+            root.running = false
+            myClock.onClockPause()
+            showMessage("")
+        }
+        else{
+            showMessage("Result is wrong! Please try agin.")
+        }
+    }
+
+    /*
+     * Show Window 0
+     */
+    function showOver0(){
+        console.log("MyOver0.showOver0()")
+        
+        root.canClose = false;
+        initialFormula();
+        if(debug){
+            flags= Qt.Window
+        }
+        else{
+        }
+
+        if(counterForce > 0){
+            timerForce.start();
+        }
+        return showOver()
+    }
+
+    function initialFormula(){
+        let a = Math.floor(1000 * Math.random());
+        let b = Math.floor(1000 * Math.random());
+        formulaValue = a + b;
+        labelFormula.text = a + " + " + b + " ="
+    }
+
+    function showMessage(msg){
+        labelMsg.text = msg
+    }
+}

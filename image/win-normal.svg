@@ -1,0 +1,5 @@
+<svg width="48px" height="48px" viewBox="0 0 24 24" stroke="white" stroke-width="1.5" stroke-linecap="square"
+    stroke-linejoin="miter" fill="none" color="white">
+    <rect width="12" height="14" x="5" y="7" />
+    <polyline points="9 7 9 3 21 3 21 17 18 17" />
+</svg>

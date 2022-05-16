@@ -1,0 +1,70 @@
+QT += quick
+TARGET = KtAlarmClock
+
+CONFIG += c++11
+
+# The following define makes your compiler emit warnings if you use
+# any Qt feature that has been marked deprecated (the exact warnings
+# depend on your compiler). Refer to the documentation for the
+# deprecated API to know how to port your code away from it.
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# You can also make your code fail to compile if it uses deprecated APIs.
+# In order to do so, uncomment the following line.
+# You can also select to disable deprecated APIs only up to a certain version of Qt.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+SOURCES += \
+        main.cpp
+
+# DESTDIR: define the out exe or dll folder
+CONFIG(debug, debug|release){
+    DESTDIR = $$PWD/../../bin/debug
+    MOC_DIR = "$$OUT_PWD/tmp/debug/.moc"
+    OBJECTS_DIR =  "$$OUT_PWD/tmp/debug/.obj"
+    UI_DIR  = "$$OUT_PWD/tmp/debug/.ui"
+    RCC_DIR = "$$OUT_PWD/tmp/debug/.qrc"
+}
+CONFIG(release, debug|release){
+    DESTDIR = $$PWD/../../bin/release
+    MOC_DIR = "$$OUT_PWD/tmp/release/.moc"
+    OBJECTS_DIR = "$$OUT_PWD/tmp/release/.obj"
+    UI_DIR  = "$$OUT_PWD/tmp/release/.ui"
+    RCC_DIR = "$$OUT_PWD/tmp/release/.qrc"
+}
+
+# message($${TARGET}.OUT_PWD=$$OUT_PWD)
+
+# L:Folder, l:filename
+LIBS += -L$$DESTDIR -lKtAlarmClockUI
+
+# message(KtAlarmClock.LIBS=$$LIBS)
+# KT_BASE_INCLUDE for deferent system
+unix {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+}
+macx {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+}
+win32 {
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+}
+
+INCLUDEPATH += \
+         ../KtAlarmClockUI \
+         $${KT_BASE_INCLUDE} \
+
+# Additional import path used to resolve QML modules in Qt Creator's code model
+QML_IMPORT_PATH =
+
+# Additional import path used to resolve QML modules just for Qt Quick Designer
+QML_DESIGNER_IMPORT_PATH =
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    main.rc
+

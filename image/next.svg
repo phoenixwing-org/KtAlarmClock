@@ -1,7 +1,5 @@
-<svg role="img" xmlns="http://www.w3.org/2000/svg" width="56px" height="56px" viewBox="0 0 24 24"
-    aria-labelledby="nextIconTitle" stroke="#FFFFFF" stroke-width="1.2857142857142858" stroke-linecap="square"
+<svg width="56px" height="56px" viewBox="0 0 24 24" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="square"
     stroke-linejoin="miter" fill="none" color="#FFFFFF">
-    <title id="nextIconTitle">Next</title>
     <path d="M17 11.5L6 18V5z" />
     <path d="M18 18V5" />
 </svg>

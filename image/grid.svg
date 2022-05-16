@@ -1,7 +1,5 @@
-<svg role="img" xmlns="http://www.w3.org/2000/svg" width="56px" height="56px" viewBox="0 0 24 24"
-    aria-labelledby="gridLargeIconTitle" stroke="#FFFFFF" stroke-width="1.2857142857142858" stroke-linecap="square"
+<svg width="56px" height="56px" viewBox="0 0 24 24" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="square"
     stroke-linejoin="miter" fill="none" color="#FFFFFF">
-    <title id="gridLargeIconTitle">Large Grid</title>
     <rect width="7" height="7" x="3" y="3" />
     <rect width="7" height="7" x="14" y="3" />
     <rect width="7" height="7" x="3" y="14" />

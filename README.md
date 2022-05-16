@@ -1,4 +1,4 @@
-# KTQAlarmClock
+# KtAlarmClock
 
 #### 介绍
 KT闹钟程序
@@ -29,13 +29,15 @@ KT闹钟程序
 - 子目录的顺序就是编译的顺序。要把底层动态库放到前面。
 ```
 SUBDIRS += \
-    KTQAlarmClockUI \
-    KTQAlarmClock
+    KtAlarmClockUI \
+    KtAlarmClock
 ```
 #### include path
 
 区分系统见KT_BASE_INCLUDE的配置。
-
+#### property
+- QML对象的构造顺序：id->属性声明->信号声明->JavaScript函数->对象属性->子对象->状态->状态切换
+- 私有属性使用两个下划线开头: __
 #### 参与贡献
 
 1.  kevin
