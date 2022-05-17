@@ -6,18 +6,28 @@ import Qt.labs.platform 1.1
 SystemTrayIcon {
     id:trayIcon
     visible: true
-    icon.source: "qrc:/image/kt.svg"
+    icon.source: "qrc:/image/kt-blue.svg"
 
     signal sigAction(int index)
 
     menu: Menu {
         MenuItem {
-            text: qsTr("Have a rest right now")
+            text: qsTr("锟钛护眼闹钟")
+            iconSource: "qrc:/image/kt.svg"
+            onTriggered: {
+                trayIcon.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
+                                     "http://www.kuntaisoft.cn")
+            }
+        }
+        
+        MenuSeparator{}
+        MenuItem {
+            text: qsTr("立刻休息")
             iconSource: "qrc:/image/coffee.svg"
             onTriggered: sigAction(Kt.ActionBreak)
         }
         MenuItem {
-            text: qsTr("Setting")
+            text: qsTr("显示设置界面")
             iconSource: "qrc:/image/menus.svg"
             onTriggered: {
                 sigAction(Kt.ActionMainDlg)
@@ -26,24 +36,29 @@ SystemTrayIcon {
 
         MenuSeparator{}
         MenuItem {
-            text: qsTr("Help")
-            iconSource: "qrc:/image/kt.svg"
+            text: qsTr("在线帮助")
             onTriggered: {
-                trayIcon.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
-                                     "http://www.kuntaisoft.cn")
+                Qt.openUrlExternally("https://gitee.com/kuntaisoft/KtAlarmClock/wikis/Home")
+            }
+        }
+
+        MenuItem {
+            text: qsTr("访问锟钛网站")
+            onTriggered: {
+                Qt.openUrlExternally("http://www.kuntaisoft.cn")
             }
         }
 
         MenuSeparator{}
         MenuItem {
-            text: qsTr("Quit Kt Clock")
+            text: qsTr("退出锟钛护眼闹钟")
             iconSource: "qrc:/image/cancel.svg"
             onTriggered: sigAction(Kt.ActionClose)
         }
     }
     
     onActivated: {}
-    onMessageClicked: console.log("Message clicked")
+    onMessageClicked: {}
     Component.onCompleted:{
     }
 }

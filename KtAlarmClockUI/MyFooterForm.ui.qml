@@ -26,7 +26,7 @@ Item {
             height: 48
             sourceSize.height: 48
             sourceSize.width: 48
-            source: "qrc:/image/kt.svg"
+            source: "qrc:/image/kt-blue.svg"
 
             KtMouseAreaMove{}
         }

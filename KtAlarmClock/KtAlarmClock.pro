@@ -48,6 +48,7 @@ macx {
 }
 win32 {
     KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+    RC_FILE += main.rc
 }
 
 INCLUDEPATH += \
@@ -66,5 +67,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    kt.ico \
     main.rc
 

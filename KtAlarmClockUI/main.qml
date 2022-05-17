@@ -83,6 +83,8 @@ Window {
 
         // start clock:
         onClockStart(Kt.WorkTime);
+
+        myAlarmClockCmd.SetAutoStart(true);
     }
 
     function closeAllWindows(){
@@ -180,8 +182,6 @@ Window {
             break;
         case Kt.ActionClose:
             closeAllWindows()
-            break;
-        case Kt.ActionHelp:
             break;
         default:
         }

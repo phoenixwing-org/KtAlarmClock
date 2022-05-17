@@ -7,6 +7,7 @@
  */
 
 // Qt
+#include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 // kt
@@ -14,12 +15,18 @@
 // Kt
 #include "KtAlarmClockCmd.h"
 
+// std
+#include <iostream>
+
 int main(int argc, char* argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication       app(argc, argv);
     QQmlApplicationEngine engine;
     KtAlarmClockCmd       cmd;
+
+    // qDebug() << argv[ 0 ];
+    cmd.SetExePath(argv[ 0 ]); // set path
 
     // cmd.debug(" Clock");      // debug
     ktErrorCode ec = cmd.BuildDialog(&engine); // build diglog

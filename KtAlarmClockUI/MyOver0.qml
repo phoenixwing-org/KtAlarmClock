@@ -40,11 +40,11 @@ KtWindowOver {
                 id: ktLogo
                 x: 5
                 y: 5
-                width: 36
-                height: 36
-                sourceSize.height: 36
-                sourceSize.width: 36
-                source: "qrc:/image/kt.svg"
+                width: 70
+                height: 70
+                sourceSize.height: 70
+                sourceSize.width: 70
+                source: "qrc:/image/kt-blue.svg"
 
                 KtMouseAreaMove{}
             }

@@ -65,7 +65,7 @@ Window {
             }
             Image{
                 id: rootIcon
-                source: "qrc:/image/kt.svg"
+                source: "qrc:/image/kt-blue.svg"
                 width:24
                 height:24
                 sourceSize.height: 24
