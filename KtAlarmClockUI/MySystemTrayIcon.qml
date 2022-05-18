@@ -51,7 +51,7 @@ SystemTrayIcon {
 
         MenuSeparator{}
         MenuItem {
-            text: qsTr("退出锟钛护眼闹钟")
+            text: qsTr("退出")
             iconSource: "qrc:/image/cancel.svg"
             onTriggered: sigAction(Kt.ActionClose)
         }

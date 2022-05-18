@@ -53,5 +53,7 @@
         <file>MyClockWindow.qml</file>
         <file>MyWindowMenu.qml</file>
         <file>MySystemTrayIcon.qml</file>
+        <file>KtAlarmTheme.qml</file>
+        <file>qmldir</file>
     </qresource>
 </RCC>

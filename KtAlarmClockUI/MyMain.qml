@@ -24,28 +24,39 @@ KtWindow{
     // Left
     MyLeft{
         id: ktLeft
+        y: ktRight.y
+
         parent: center
         height: ktRight.height
+        anchors.left: parent.left
+        anchors.leftMargin: 1
     }
 
     MyRight{
         id: ktRight
         parent: center
         anchors.left: ktLeft.right
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 1
         anchors.leftMargin: 1
+        anchors.right: parent.right
+        anchors.rightMargin: 1
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
     }
 
     MyFooter{
         id:ktfooter
         parent: footer
-        height:60
-        width: parent.width
+
+        anchors.top: parent.top
+        anchors.topMargin: 1
+        anchors.right: parent.right
+        anchors.rightMargin: 1
         anchors.left: parent.left
+        anchors.leftMargin: 1
         anchors.bottom: parent.bottom
+        anchors.bottomMargin: 1
 
     }
 

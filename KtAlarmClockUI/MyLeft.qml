@@ -4,6 +4,7 @@
 * @author Kuntai
 */
 import QtQuick 2.14
+import KtAlarmClock 1.0
 
 MyLeftForm {
 

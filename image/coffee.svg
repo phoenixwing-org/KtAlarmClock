@@ -1,5 +1,5 @@
-<svg role="img" width="48px" height="48px" viewBox="0 0 24 24" fill="none" stroke="#BBBBBB" stroke-width="1.3"
-    stroke-linecap="square" stroke-linejoin="miter" color="#BBBBBB">
+<svg role="img" width="48px" height="48px" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.3"
+    stroke-linecap="square" stroke-linejoin="miter" color="white">
     <path d="M5 12H17V17C17 20 15 22 12 22H10C7.2 22 5 20 5 17V12Z" />
     <path d="M17 13H19C20.1 13 21 13.9 21 15V15C21 16 20.1 17 19 17H17" />
     <path d="M9 9C9 9 8 8.5 8 7C8 5.5 9 5 9 5" />

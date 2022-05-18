@@ -137,7 +137,7 @@ Window {
 
         Rectangle{
             id: rectangle
-            color: "blue"
+            color: KtAlarmTheme.colorBorder
             anchors.fill: parent
         }
     }
@@ -152,7 +152,7 @@ Window {
         anchors.bottomMargin: mouseRegion
 
         Rectangle{
-            color: "green"
+            color: KtAlarmTheme.colorBorder
             anchors.fill: parent
         }
     }

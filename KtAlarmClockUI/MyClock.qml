@@ -28,7 +28,7 @@ Item{
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.left: parent.left
             anchors.leftMargin: 5
-            font.pointSize: 12
+            font.pointSize: KtAlarmTheme.fontPixelNormal
             anchors.verticalCenter: parent.verticalCenter
         }
 
