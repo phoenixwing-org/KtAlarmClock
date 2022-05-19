@@ -67,11 +67,10 @@ KtWindowOver {
 
             Label {
                 id: kt
+                x: 80
                 color: KtAlarmTheme.colorText
                 text: qsTr("上海锟钛软件科技有限公司")
-                anchors.verticalCenter: ktLogo.verticalCenter
-                anchors.left: ktLogo.right
-                anchors.leftMargin: 10
+                anchors.verticalCenter: footer.verticalCenter
                 font.pointSize: KtAlarmTheme.fontPixelNormal
             }
 
@@ -101,7 +100,9 @@ KtWindowOver {
                     height: 40
                     anchors.left: labelFormula.right
                     anchors.leftMargin: 10
-                    color: "#555555"
+                    color: "#112a3f"
+                    border.color: KtAlarmTheme.colorBorder
+                    border.width: 1
                     visible: true
 
                     anchors.verticalCenter: element.verticalCenter
@@ -146,7 +147,7 @@ KtWindowOver {
             Label {
                 id: labelForce
                 width: parent.width
-                visible: !showFormula
+                visible: true
                 color: KtAlarmTheme.colorText
                 text: counterForce
                 anchors.horizontalCenter: buttonStop.horizontalCenter
@@ -204,6 +205,7 @@ KtWindowOver {
             //console.log("counterForce", root.counterForce)
             if(root.counterForce <= 0) {
                 stop();
+                labelForce.visible = false
             }
         }
     }
@@ -259,9 +261,13 @@ KtWindowOver {
         else{
         }
 
-        if(counterForce > 0){
+        if(counterForce > 0 && counterForce < myClock.timeMax){
+            labelForce.visible = true
             timerForce.start();
+        } else{
+            labelForce.visible = false
         }
+
         return showOver()
     }
 

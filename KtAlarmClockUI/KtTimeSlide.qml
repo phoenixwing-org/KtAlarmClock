@@ -34,7 +34,7 @@ Rectangle {
             Label {
                 id: label0
                 height: 16
-                color: "#ffffff"
+                color: KtAlarmTheme.colorTextDlg
                 text: title
                 anchors.verticalCenter: parent.verticalCenter
                 Layout.fillWidth: false
@@ -49,9 +49,8 @@ Rectangle {
                 id: labelTime
                 x: 144
                 y: 13
-                width: widthTime
                 height: 16
-                color: "#ffffff"
+                color: KtAlarmTheme.colorTextDlg
                 text: "0:00"
 
                 anchors.bottom: elementTitle.bottom
@@ -82,7 +81,7 @@ Rectangle {
             }
 
         }
-        Slider{
+        KtSlider{
             id: slider
             width: parent.width
             Layout.fillWidth: true

@@ -55,5 +55,6 @@
         <file>MySystemTrayIcon.qml</file>
         <file>KtAlarmTheme.qml</file>
         <file>qmldir</file>
+        <file>KtSlider.qml</file>
     </qresource>
 </RCC>

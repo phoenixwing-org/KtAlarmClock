@@ -13,14 +13,12 @@ SpinBox {
         text: control.textFromValue(control.value, control.locale)
 
         font: control.font
-        color: "#ffffff"
+        color: KtAlarmTheme.colorTextDlg
         selectionColor: "#ffffff"
         selectedTextColor: "#000000"
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         padding: 5
-
-
         readOnly: !control.editable
         validator: control.validator
         inputMethodHints: Qt.ImhFormattedNumbersOnly
@@ -31,13 +29,13 @@ SpinBox {
         height: parent.height
         implicitWidth: 40
         implicitHeight: 40
-        color: control.up.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? "#ffffff" : "#bdbebf"
+        color: control.up.pressed ? "#3e3837" : KtAlarmTheme.colorBackground
+        border.color: KtAlarmTheme.colorBorder
         border.width: 1
 
         Text {
             text: "+"
-            color: "#ffffff"
+            color: enabled?KtAlarmTheme.colorTextDlg:KtAlarmTheme.colorBackground
             font.pixelSize: control.font.pixelSize * 2
             anchors.fill: parent
             fontSizeMode: Text.Fit
@@ -51,15 +49,14 @@ SpinBox {
         height: parent.height
         implicitWidth: 40
         implicitHeight: 40
-        color: control.down.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? "#ffffff" : "#bdbebf"
+        color: control.down.pressed ? "#3e3837" : KtAlarmTheme.colorBackground
+        border.color: KtAlarmTheme.colorBorder
         border.width: 1
-
 
         Text {
             text: "-"
             font.pixelSize: control.font.pixelSize * 2
-            color: "#ffffff"
+            color: enabled?KtAlarmTheme.colorTextDlg:KtAlarmTheme.colorBackground
             anchors.fill: parent
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
@@ -69,8 +66,8 @@ SpinBox {
 
     background: Rectangle {
         implicitWidth: 140
-        border.color: "#ffffff"
-        color: "#000000"
+        border.color: KtAlarmTheme.colorBorder
+        color: KtAlarmTheme.colorBackground
         border.width: 1
     }
 }

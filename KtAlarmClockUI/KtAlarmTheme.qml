@@ -5,7 +5,11 @@ pragma Singleton
 import QtQuick 2.14
 
 QtObject {
+    property color colorPrimary: "#2878bb"
+    property color colorPrimaryU: "#46aef6"
+    property color colorPrimaryD: "#123551"
     property color colorIcon: debug? "red" : "#2878bb"
+    property color colorIconLight: "#46aef6"
     property color colorText: debug? "yellow" : "#2878bb"
     property color colorTextDlg:  debug? "pink" :"#b9d9f0"
     property color colorBackground: "black"

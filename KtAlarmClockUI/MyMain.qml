@@ -12,7 +12,7 @@ import KtAlarmClock 1.0
 KtWindow{
     id: root
     visible: true
-    width: 640
+    width: 480
     height: 480
     property int debug: 0
 
