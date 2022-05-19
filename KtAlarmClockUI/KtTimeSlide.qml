@@ -49,7 +49,6 @@ Rectangle {
                 id: labelTime
                 x: 144
                 y: 13
-                width: widthTime
                 height: 16
                 color: KtAlarmTheme.colorTextDlg
                 text: "0:00"
@@ -82,7 +81,7 @@ Rectangle {
             }
 
         }
-        Slider{
+        KtSlider{
             id: slider
             width: parent.width
             Layout.fillWidth: true

@@ -83,6 +83,7 @@ RESOURCES += \
 DISTFILES += \
     KtAlarmTheme.qml \
     KtMouseAreaMove.qml \
+    KtSlider.qml \
     KtSpinBox.qml \
     KtTimeSlide.qml \
     KtToolButton.qml \

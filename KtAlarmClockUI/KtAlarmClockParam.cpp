@@ -21,7 +21,7 @@ KtAlarmClockParam::KtAlarmClockParam(QObject* parent)
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM CONSTRUCTOR
       WorkTime(2700),
       WorkBreak(600),
-      TimeForce(60),
+      TimeForce(300),
       TimeTotal(5100),
       WorkStep(1),
       TimeCounter(0)
@@ -37,7 +37,7 @@ KtAlarmClockParam::~KtAlarmClockParam() {
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM DESTRUCTOR
     //WorkTime = 2700; //2
     //WorkBreak = 600; //3
-    //TimeForce = 60; //4
+    //TimeForce = 300; //4
     //TimeTotal = 5100; //100
     //WorkStep = 1; //101
     //TimeCounter = 0; //102

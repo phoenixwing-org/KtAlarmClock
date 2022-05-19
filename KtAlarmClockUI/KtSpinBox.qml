@@ -19,8 +19,6 @@ SpinBox {
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         padding: 5
-
-
         readOnly: !control.editable
         validator: control.validator
         inputMethodHints: Qt.ImhFormattedNumbersOnly
@@ -31,13 +29,13 @@ SpinBox {
         height: parent.height
         implicitWidth: 40
         implicitHeight: 40
-        color: control.up.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? KtAlarmTheme.colorBorder : "#112a3f"
+        color: control.up.pressed ? "#3e3837" : KtAlarmTheme.colorBackground
+        border.color: KtAlarmTheme.colorBorder
         border.width: 1
 
         Text {
             text: "+"
-            color: KtAlarmTheme.colorTextDlg
+            color: enabled?KtAlarmTheme.colorTextDlg:KtAlarmTheme.colorBackground
             font.pixelSize: control.font.pixelSize * 2
             anchors.fill: parent
             fontSizeMode: Text.Fit
@@ -51,15 +49,14 @@ SpinBox {
         height: parent.height
         implicitWidth: 40
         implicitHeight: 40
-        color: control.down.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? KtAlarmTheme.colorBorder : "#112a3f"
+        color: control.down.pressed ? "#3e3837" : KtAlarmTheme.colorBackground
+        border.color: KtAlarmTheme.colorBorder
         border.width: 1
-
 
         Text {
             text: "-"
             font.pixelSize: control.font.pixelSize * 2
-            color: KtAlarmTheme.colorTextDlg
+            color: enabled?KtAlarmTheme.colorTextDlg:KtAlarmTheme.colorBackground
             anchors.fill: parent
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
@@ -70,7 +67,7 @@ SpinBox {
     background: Rectangle {
         implicitWidth: 140
         border.color: KtAlarmTheme.colorBorder
-        color: "#000000"
+        color: KtAlarmTheme.colorBackground
         border.width: 1
     }
 }

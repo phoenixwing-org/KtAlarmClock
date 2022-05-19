@@ -147,7 +147,7 @@ KtWindowOver {
             Label {
                 id: labelForce
                 width: parent.width
-                visible: !showFormula
+                visible: true
                 color: KtAlarmTheme.colorText
                 text: counterForce
                 anchors.horizontalCenter: buttonStop.horizontalCenter
@@ -205,6 +205,7 @@ KtWindowOver {
             //console.log("counterForce", root.counterForce)
             if(root.counterForce <= 0) {
                 stop();
+                labelForce.visible = false
             }
         }
     }
@@ -260,9 +261,13 @@ KtWindowOver {
         else{
         }
 
-        if(counterForce > 0){
+        if(counterForce > 0 && counterForce < myClock.timeMax){
+            labelForce.visible = true
             timerForce.start();
+        } else{
+            labelForce.visible = false
         }
+
         return showOver()
     }
 

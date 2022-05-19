@@ -10,21 +10,21 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Window 2.14
 
-Item {
-    id: itemTop
+Rectangle {
+    id: root
+    width: 625
+    height: 400
+    color: KtAlarmTheme.colorBackground
     property alias rect2: rect2
     property alias rect1: rect1
     property alias rect0: rect0
     property alias scroll: scroll
-    width: 625
-    height: 400
 
     ScrollView {
         id: scroll
         clip: true
         anchors.margins: 0
         anchors.fill: parent
-        property int widthTime: 200
         height: 250
 
         flickableItem.interactive: true
@@ -35,10 +35,10 @@ Item {
             width: parent.width
             height: scroll.height
             clip: false
-            color: "grey"
+            color: "transparent"
             Rectangle {
                 id: rect0
-                width: itemTop.width
+                width: root.width
                 height: ktTimeSlideMyWork.height
                 anchors.top: rect.top
                 color: "#000000"
@@ -48,12 +48,15 @@ Item {
 
                 KtTimeSlide {
                     id: ktTimeSlideMyWork
-                    width: widthTime
                     value: 2400
                     from: 5
-                    to: 3600
+                    to: 5400
                     stepSize: 300
                     title: qsTr("Work:")
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
                     onValueChanged: {
                         myAlarmClockParam.WorkTime = value;
                     }
@@ -63,7 +66,7 @@ Item {
             Rectangle {
                 id: rect1
                 anchors.top: rect0.bottom
-                width: itemTop.width
+                width: root.width
                 height: ktTimeSlideMyExercise.height
                 color: "black"
                 border.width: 0
@@ -72,12 +75,15 @@ Item {
 
                 KtTimeSlide {
                     id: ktTimeSlideMyExercise
-                    width: widthTime
                     value: 600
-                    from: 5
-                    to: 1200
+                    from: 10
+                    to: 3600
                     stepSize: 60
-                    title: qsTr("Sports:")
+                    title: qsTr("Sports:")                    
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
                     onValueChanged: {
                         myAlarmClockParam.WorkBreak = value;
                     }
@@ -86,7 +92,7 @@ Item {
 
             Rectangle {
                 id: rect2
-                width: itemTop.width
+                width: root.width
                 color: "black"
                 border.width: 0
                 anchors.top: rect1.bottom
@@ -95,12 +101,15 @@ Item {
                 anchors.bottom: parent.bottom
                 KtTimeSlide {
                     id: ktTimeSlideMyForce
-                    width: widthTime
-                    value: 60
+                    value: 300
                     from: 0
-                    to: 120
+                    to: 3600
                     stepSize: 10
                     title: qsTr("Force:")
+                    anchors.right: parent.right
+                    anchors.rightMargin: 10
+                    anchors.left: parent.left
+                    anchors.leftMargin: 5
                     onValueChanged: {
                         myAlarmClockParam.TimeForce = value;
                     }
@@ -135,3 +144,9 @@ Item {
 
 
 
+
+/*##^##
+Designer {
+    D{i:4;anchors_width:615}
+}
+##^##*/
