@@ -8,7 +8,7 @@ Window {
     id: root
     x:0
     y:0
-    width: 240
+    width: 200
     height: layout.height+5
     flags: Qt.Window | Qt.FramelessWindowHint
     color: "black"
@@ -24,12 +24,10 @@ Window {
         KtToolButton {
             id: buttonBreak
             Layout.preferredHeight: 40
-            Layout.preferredWidth: 100
             visible: true
-            icon.source: "image/bike.svg"
-            text: "Have a sports now!"
+            icon.source: "qrc:/image/bike.svg"
+            text: "立刻休息"
             transformOrigin: Item.Left
-            Layout.fillWidth: true
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
                 sigAction(Kt.ActionBreak)
@@ -40,16 +38,38 @@ Window {
         KtToolButton {
             id: buttonSetting
             Layout.preferredHeight: 40
-            Layout.preferredWidth: 100
             visible: true
-            text: "Open Setting Dialog"
+            text: "显示设置界面"
             transformOrigin: Item.Left
-            Layout.fillWidth: true
-            icon.source: "image/grid.svg"
+            icon.source: "qrc:/image/grid.svg"
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
                 sigAction(Kt.ActionMainDlg)
                 root.hide()
+            }
+        }
+        KtToolButton {
+            Layout.preferredHeight: 40
+            visible: true
+            text: "在线帮助"
+            transformOrigin: Item.Left
+            icon.source: "qrc:/image/alarm-clock.svg"
+            display: Qt.ToolButtonTextBesideIcon
+            onClicked: {
+                root.hide()
+                Qt.openUrlExternally("https://gitee.com/kuntaisoft/KtAlarmClock/wikis/Home")
+            }
+        }
+        KtToolButton {
+            Layout.preferredHeight: 40
+            visible: true
+            text: "访问锟钛网站"
+            transformOrigin: Item.Left
+            icon.source: "qrc:/image/kt.svg"
+            display: Qt.ToolButtonTextBesideIcon
+            onClicked: {
+                root.hide()
+                Qt.openUrlExternally("http://www.kuntaisoft.cn")
             }
         }
     }

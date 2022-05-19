@@ -81,6 +81,7 @@ RESOURCES += \
     main.qrc
 
 DISTFILES += \
+    KtAlarmTheme.qml \
     KtMouseAreaMove.qml \
     KtSpinBox.qml \
     KtTimeSlide.qml \

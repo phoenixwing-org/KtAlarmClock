@@ -2,6 +2,7 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.12
 import KtAlarmClock 1.0
+import QtGraphicalEffects 1.14
 
 KtWindowOver {
     id: root
@@ -25,9 +26,37 @@ KtWindowOver {
         id: rectangle
         width: root.width
         height: root.height
-        color: "#000000"
+        color: KtAlarmTheme.colorBackground
         anchors.fill: parent
         opacity: 1
+
+        Label {
+            id: labelMsg
+            y: 189
+            color: KtAlarmTheme.colorText
+            text: qsTr("")
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: footer.top
+            anchors.bottomMargin: 0
+            font.pointSize: KtAlarmTheme.fontPixelLarge
+        }
+
+        Image {
+            x: root.width/2
+            y: root.height/2
+            width: 100
+            height: 100
+            sourceSize.height: 100
+            sourceSize.width: 100
+            source: "qrc:/image/coffee.svg"
+            ColorOverlay {
+                 anchors.fill: parent
+                 source: parent
+                 color: KtAlarmTheme.colorIcon
+             }
+
+            KtMouseAreaMove{}
+        }
 
         Rectangle {
             id: footer
@@ -36,27 +65,13 @@ KtWindowOver {
             color: "#111111"
             anchors.bottom: parent.bottom
 
-            Image {
-                id: ktLogo
-                x: 5
-                y: 5
-                width: 36
-                height: 36
-                sourceSize.height: 36
-                sourceSize.width: 36
-                source: "qrc:/image/kt.svg"
-
-                KtMouseAreaMove{}
-            }
-
             Label {
                 id: kt
-                color: "#AAAAAA"
+                x: 80
+                color: KtAlarmTheme.colorText
                 text: qsTr("上海锟钛软件科技有限公司")
-                anchors.verticalCenter: ktLogo.verticalCenter
-                anchors.left: ktLogo.right
-                anchors.leftMargin: 10
-                font.pointSize: 12
+                anchors.verticalCenter: footer.verticalCenter
+                font.pointSize: KtAlarmTheme.fontPixelNormal
             }
 
             Item {
@@ -70,11 +85,11 @@ KtWindowOver {
 
                 Label {
                     id: labelFormula
-                    color: "#AAAAAA"
+                    color: KtAlarmTheme.colorText
                     text: qsTr("2200 + 1100 =")
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: 20
+                    font.pointSize: KtAlarmTheme.fontPixelLarge
 
                     anchors.verticalCenter: element.verticalCenter
                 }
@@ -85,7 +100,9 @@ KtWindowOver {
                     height: 40
                     anchors.left: labelFormula.right
                     anchors.leftMargin: 10
-                    color: "#555555"
+                    color: "#112a3f"
+                    border.color: KtAlarmTheme.colorBorder
+                    border.width: 1
                     visible: true
 
                     anchors.verticalCenter: element.verticalCenter
@@ -94,7 +111,7 @@ KtWindowOver {
                         x: 159
                         y: 15
                         height: 40
-                        color: "#ffffff"
+                        color: KtAlarmTheme.colorText
                         text: ""
                         anchors.rightMargin: 5
                         anchors.leftMargin: 0
@@ -111,7 +128,6 @@ KtWindowOver {
                 }
             }
 
-
             KtToolButton {
                 id: buttonStop
                 icon.source: "qrc:/image/unlock.svg"
@@ -120,8 +136,8 @@ KtWindowOver {
                 visible: showFormula
                 text: qsTr("Unlock")
                 flat: false
-                font.pointSize: 22
-
+                font.pointSize: KtAlarmTheme.fontPixelLarge
+                
                 anchors.verticalCenter: footer.verticalCenter
                 anchors.right: footer.right
                 anchors.rightMargin: 5
@@ -132,39 +148,27 @@ KtWindowOver {
                 id: labelForce
                 width: parent.width
                 visible: !showFormula
-                color: "#AAAAAA"
+                color: KtAlarmTheme.colorText
                 text: counterForce
                 anchors.horizontalCenter: buttonStop.horizontalCenter
                 anchors.verticalCenter: buttonStop.verticalCenter
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: 10
+                font.pointSize: KtAlarmTheme.fontPixelNormal
             }
 
-        }
-
-        Label {
-            id: labelMsg
-            y: 189
-            color: "#AAAAAA"
-            text: qsTr("")
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: footer.top
-            anchors.bottomMargin: 0
-            font.pointSize: 20
-        }
-
-        Image {
-            id: image
-            x: root.width/2
-            y: root.height/2
-            width: 100
-            height: 100
-            sourceSize.height: 100
-            sourceSize.width: 100
-            source: "qrc:/image/coffee.svg"
-
-            KtMouseAreaMove{}
+            Image {
+                id: ktLogo
+                x: 5
+                y: 5
+                z: 100
+                width: 70
+                height: 70
+                sourceSize.height: 70
+                sourceSize.width: 70
+                source: "qrc:/image/kt-blue.svg"
+                KtMouseAreaMove{}
+            }
         }
     }
 
@@ -177,9 +181,8 @@ KtWindowOver {
         KtMouseAreaMove{}
     }
 
-     Component.onCompleted: {
+    Component.onCompleted: {
         initialFormula()
-
     }
 
     //@disable-check M16

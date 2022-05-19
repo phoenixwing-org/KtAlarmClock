@@ -27,6 +27,7 @@
         <file alias="menus.svg">../image/menus.svg</file>
         <file alias="unlock.svg">../image/unlock.svg</file>
         <file alias="kt.svg">../image/kt.svg</file>
+        <file alias="kt-blue.svg">../image/kt-blue.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>main.qml</file>
@@ -52,5 +53,7 @@
         <file>MyClockWindow.qml</file>
         <file>MyWindowMenu.qml</file>
         <file>MySystemTrayIcon.qml</file>
+        <file>KtAlarmTheme.qml</file>
+        <file>qmldir</file>
     </qresource>
 </RCC>

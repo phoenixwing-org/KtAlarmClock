@@ -40,10 +40,11 @@ Item {
             KtToolButton {
                 id: toolButtonMyWork
                 onlyIcon: root.onlyIcon
-                width: root.width
+                width: defaultWidth
                 transformOrigin: Item.Left
                 icon.source: "qrc:/image/book-opened.svg"
-                font.pointSize: 14
+                font.pointSize: KtAlarmTheme.fontPixelNormal
+
                 action: actionMyWork
             }
 
@@ -53,7 +54,7 @@ Item {
                 width: root.width
                 transformOrigin: Item.Left
                 icon.source: "qrc:/image/bike.svg"
-                font.pointSize: 14
+                font.pointSize: KtAlarmTheme.fontPixelNormal
                 action: actionMyExercise
             }
 
@@ -63,7 +64,7 @@ Item {
                 width: root.width
                 transformOrigin: Item.Left
                 icon.source: "qrc:/image/cancel.svg"
-                font.pointSize: 14
+                font.pointSize: KtAlarmTheme.fontPixelNormal
                 action: actionMyForce
             }
         }
@@ -71,18 +72,18 @@ Item {
 
     Action {
         id: actionMyWork
-        text: "&Work Time"
+        text: "工作时长"
         shortcut: StandardKey.New
     }
 
     Action {
         id: actionMyExercise
-        text: "&Exercise time"
+        text: "休息时长"
         shortcut: StandardKey.Open
     }
     Action {
         id: actionMyForce
-        text: "&Force"
+        text: "强制休息时长"
         shortcut: StandardKey.Save
     }
 }

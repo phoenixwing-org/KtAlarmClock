@@ -15,20 +15,20 @@ Item{
 
     Rectangle{
         id: rectangle
-        color: "#444444"
+        color: "#222222"
         radius: 15
         anchors.fill: parent
 
         Label{
             id:label
-            color: "#e6e6e6"
+            color: KtAlarmTheme.colorIconLight
             text: "00:00"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.left: parent.left
             anchors.leftMargin: 5
-            font.pointSize: 12
+            font.pointSize: KtAlarmTheme.fontPixelNormal
             anchors.verticalCenter: parent.verticalCenter
         }
 

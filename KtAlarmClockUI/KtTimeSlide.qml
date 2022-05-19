@@ -34,12 +34,12 @@ Rectangle {
             Label {
                 id: label0
                 height: 16
-                color: "#ffffff"
+                color: KtAlarmTheme.colorTextDlg
                 text: title
                 anchors.verticalCenter: parent.verticalCenter
                 Layout.fillWidth: false
                 Layout.fillHeight: true
-                font.pointSize: 16
+                font.pointSize: KtAlarmTheme.fontPixelNormal
                 Layout.maximumWidth: 80
                 Layout.preferredWidth: 60
                 Layout.minimumWidth: 60
@@ -51,7 +51,7 @@ Rectangle {
                 y: 13
                 width: widthTime
                 height: 16
-                color: "#ffffff"
+                color: KtAlarmTheme.colorTextDlg
                 text: "0:00"
 
                 anchors.bottom: elementTitle.bottom
@@ -59,7 +59,7 @@ Rectangle {
                 anchors.right: elementTitle.right
                 anchors.rightMargin: 5
 
-                font.pointSize: 16
+                font.pointSize: KtAlarmTheme.fontPixelNormal
                 verticalAlignment: Text.AlignVCenter
             }
         }
@@ -90,7 +90,7 @@ Rectangle {
             value: root.value
             smooth: true
             scale: 1
-            font.pointSize: 7
+            font.pointSize: KtAlarmTheme.fontPixelSmall
             snapMode: Slider.NoSnap
             stepSize: root.stepSize
             from: root.from

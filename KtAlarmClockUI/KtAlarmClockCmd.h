@@ -55,6 +55,10 @@ public:
      */
     QQuickItem* GiveMyPanel() const;
 
+    void SetExePath(const QString& iPath) {
+        m_ExePath = iPath;
+    };
+
 public slots:
 
     /**
@@ -62,10 +66,16 @@ public slots:
      */
     int onStart();
 
+    /**
+     * @brief auto start
+     */
+    int SetAutoStart(bool iValue);
+
 private:
     KtAlarmClockCore*  m_pClockCore;
     KtAlarmClockParam* m_pClockParam;
     KtAlarmClockDlg*   m_pClockDlg;
+    QString            m_ExePath;
 };
 
 #endif // KtAlarmClockCmd_H

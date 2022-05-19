@@ -22,7 +22,7 @@ Window {
         id: clockDlg
         x: mainDlg.x + mainDlg.width - width
         y: 0
-        visible: !overItem.visible 
+        visible: !overItem.visible
         canClose: root.canClose
         debug: root.debug
         target: mainDlg
@@ -37,7 +37,7 @@ Window {
     MyMain{
         id:mainDlg
         x:100
-        y:100        
+        y:100
         visible:false
         debug: root.debug
 
@@ -45,7 +45,7 @@ Window {
         onClosing: function(closeEvent){
             closeEvent.accepted = canClose
             if(!canClose)hide()
-         }
+        }
     }
 
     MySystemTrayIcon {
@@ -55,8 +55,8 @@ Window {
     //@disable-check M16
     onClosing: function(closeEvent){
         closeEvent.accepted = root.canClose //accept the close
-        if(!canClose)
-            console.log("main.closeEvent.accepted = false")
+        //if(!canClose)
+        //    console.log("main.closeEvent.accepted = false")
     }
 
     // connect signal onCompleted
@@ -83,6 +83,8 @@ Window {
 
         // start clock:
         onClockStart(Kt.WorkTime);
+
+        myAlarmClockCmd.SetAutoStart(true);
     }
 
     function closeAllWindows(){
@@ -110,7 +112,7 @@ Window {
             overItem.customShow();
             return
         case Kt.WorkTime:
-            console.log("overItem.visible", overItem.visible)
+            //console.log("overItem.visible", overItem.visible)
             clockDlg.clock.timeMax = myAlarmClockParam.WorkTime;
             clockDlg.clock.onClockStart(state);
             overItem.customHide();
@@ -123,7 +125,7 @@ Window {
 
     // on state change
     function onClockTimeout(state){
-        console.log("onClockTimeout("+state+")")
+        // console.log("onClockTimeout("+state+")")
         switch(state) {
         case Kt.WorkTime:
             onClockStart(Kt.WorkBreak) // break
@@ -180,8 +182,6 @@ Window {
             break;
         case Kt.ActionClose:
             closeAllWindows()
-            break;
-        case Kt.ActionHelp:
             break;
         default:
         }

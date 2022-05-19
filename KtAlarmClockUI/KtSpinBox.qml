@@ -13,7 +13,7 @@ SpinBox {
         text: control.textFromValue(control.value, control.locale)
 
         font: control.font
-        color: "#ffffff"
+        color: KtAlarmTheme.colorTextDlg
         selectionColor: "#ffffff"
         selectedTextColor: "#000000"
         horizontalAlignment: Qt.AlignHCenter
@@ -32,12 +32,12 @@ SpinBox {
         implicitWidth: 40
         implicitHeight: 40
         color: control.up.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? "#ffffff" : "#bdbebf"
+        border.color: enabled ? KtAlarmTheme.colorBorder : "#112a3f"
         border.width: 1
 
         Text {
             text: "+"
-            color: "#ffffff"
+            color: KtAlarmTheme.colorTextDlg
             font.pixelSize: control.font.pixelSize * 2
             anchors.fill: parent
             fontSizeMode: Text.Fit
@@ -52,14 +52,14 @@ SpinBox {
         implicitWidth: 40
         implicitHeight: 40
         color: control.down.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? "#ffffff" : "#bdbebf"
+        border.color: enabled ? KtAlarmTheme.colorBorder : "#112a3f"
         border.width: 1
 
 
         Text {
             text: "-"
             font.pixelSize: control.font.pixelSize * 2
-            color: "#ffffff"
+            color: KtAlarmTheme.colorTextDlg
             anchors.fill: parent
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
@@ -69,7 +69,7 @@ SpinBox {
 
     background: Rectangle {
         implicitWidth: 140
-        border.color: "#ffffff"
+        border.color: KtAlarmTheme.colorBorder
         color: "#000000"
         border.width: 1
     }

@@ -65,7 +65,7 @@ Window {
             }
             Image{
                 id: rootIcon
-                source: "qrc:/image/kt.svg"
+                source: "qrc:/image/kt-blue.svg"
                 width:24
                 height:24
                 sourceSize.height: 24
@@ -137,7 +137,7 @@ Window {
 
         Rectangle{
             id: rectangle
-            color: "blue"
+            color: KtAlarmTheme.colorBorder
             anchors.fill: parent
         }
     }
@@ -152,7 +152,7 @@ Window {
         anchors.bottomMargin: mouseRegion
 
         Rectangle{
-            color: "green"
+            color: KtAlarmTheme.colorBorder
             anchors.fill: parent
         }
     }

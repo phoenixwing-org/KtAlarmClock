@@ -10,7 +10,7 @@ ToolButton {
     icon.color: "transparent"
 
     //@disable-check M17
-    palette.buttonText:"#FFFFFF"
+    palette.buttonText: KtAlarmTheme.colorTextDlg
 
     background: Rectangle{
         color: root.hovered? "#555555":"transparent"
