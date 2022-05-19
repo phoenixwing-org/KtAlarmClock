@@ -49,23 +49,14 @@ SpinBox {
         height: parent.height
         implicitWidth: 40
         implicitHeight: 40
-<<<<<<< HEAD
         color: control.down.pressed ? "#3e3837" : KtAlarmTheme.colorBackground
         border.color: KtAlarmTheme.colorBorder
-=======
-        color: control.down.pressed ? "#3e3837" : "#000000"
-        border.color: enabled ? KtAlarmTheme.colorBorder : "#112a3f"
->>>>>>> master
         border.width: 1
 
         Text {
             text: "-"
             font.pixelSize: control.font.pixelSize * 2
-<<<<<<< HEAD
             color: enabled?KtAlarmTheme.colorTextDlg:KtAlarmTheme.colorBackground
-=======
-            color: KtAlarmTheme.colorTextDlg
->>>>>>> master
             anchors.fill: parent
             fontSizeMode: Text.Fit
             horizontalAlignment: Text.AlignHCenter
@@ -76,11 +67,7 @@ SpinBox {
     background: Rectangle {
         implicitWidth: 140
         border.color: KtAlarmTheme.colorBorder
-<<<<<<< HEAD
         color: KtAlarmTheme.colorBackground
-=======
-        color: "#000000"
->>>>>>> master
         border.width: 1
     }
 }
