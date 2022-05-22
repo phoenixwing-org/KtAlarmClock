@@ -14,7 +14,6 @@ Window {
     property var target: null
 
     property bool canClose: true
-    property int debug: 1 // or or 1
     color: "transparent"
     visible:  true 
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
@@ -24,7 +23,6 @@ Window {
         visible: true
         x: 0
         y: 0
-        debug: root.debug
         KtMouseAreaMove{
             id:clockMove
             targetFill: parent

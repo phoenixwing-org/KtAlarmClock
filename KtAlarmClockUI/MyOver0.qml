@@ -9,6 +9,7 @@ KtWindowOver {
     width:600
     height:400
     property alias myClock: myClock
+    readonly property alias clockRunning: myClock.clockRunning
 
     property alias labelFormula: labelFormula
     property alias labelMsg: labelMsg
@@ -16,7 +17,6 @@ KtWindowOver {
     property int counterForce: 0
     property int formulaValue: 3300
     property bool canClose: false
-    property bool running: value
     property bool showFormula: counterForce<=0
     
     modality: Qt.WindowModal //Block other windows
@@ -141,7 +141,7 @@ KtWindowOver {
                 anchors.verticalCenter: footer.verticalCenter
                 anchors.right: footer.right
                 anchors.rightMargin: 5
-                onClicked: stopOverPage()
+                onClicked: unlockPage()
             }
 
             Label {
@@ -210,37 +210,39 @@ KtWindowOver {
         }
     }
 
+    onActiveFocusItemChanged: {
+        //console.log("MyOver0.activeFocusItem is changed to  ", activeFocusItem)
 
-    onRunningChanged: {
-        console.log("MyOver0.running = ", running)
-        if(running){
-            console.log("MyOver0.running")
-        }
-        else{
-            root.canClose = true;
-            myClock.onClockPause();
-            root.hide()
-        }
+        // clockRunning and not active, user want to escape the lock
+
+        // console.log("clockRunning =  ", clockRunning)
+        // console.log("clockRunning && !activeFocusItem =  ", (clockRunning && !activeFocusItem))
+        //if(clockRunning && !activeFocusItem){
+        //    console.log("I am in (clockRunning && !activeFocusItem)")
+        //   / this.hide();
+        //    //console.log("MyOver0: Try to Run showOver()  ")
+        //    
+        //    //root.showFullScreen()
+        //}
     }
 
-    function stopOverPage(){
-        console.log("MyOver0.stopOverPage()")
+    function unlockPage(){
+        console.log("MyOver0.unlockPage()")
         if (root.counterForce > 0){
             root.canClose = false;
             return
         }
 
-        //check answer
+        // check answer
         var value = parseInt(textEditResult.text)
         root.canClose = (value == root.formulaValue)
-        console.log("canClose = ",value, root.canClose)
+        // console.log("canClose = ",value, root.canClose)
 
         root.textEditResult.text = ""
         if(canClose){
-            myAlarmClockParam.sigClockOut(Kt.WorkBreak) // clock out from break
-            root.running = false
-            myClock.onClockPause()
             showMessage("")
+            myClock.onClockPause()
+            myAlarmClockParam.sigClockOut(Kt.WorkBreak) // clock out from break
         }
         else{
             showMessage("Result is wrong! Please try agin.")
@@ -251,14 +253,13 @@ KtWindowOver {
      * Show Window 0
      */
     function showOver0(){
-        console.log("MyOver0.showOver0()")
+        //console.log("MyOver0.showOver0()")
         
         root.canClose = false;
+        showMessage("")
         initialFormula();
-        if(debug){
+        if(KtAlarmTheme.debug){
             flags= Qt.Window
-        }
-        else{
         }
 
         if(counterForce > 0 && counterForce < myClock.timeMax){
@@ -269,6 +270,19 @@ KtWindowOver {
         }
 
         return showOver()
+    }
+
+    function stopPage0(){
+        console.log("MyOver0.stopPage0()")
+
+        root.canClose = true;
+        if(clockRunning){
+            myClock.onClockPause()
+        }
+        if(visible){
+            showMessage("")
+            this.hide()
+        }
     }
 
     function initialFormula(){
