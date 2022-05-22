@@ -9,7 +9,7 @@ Item{
     property int counter: 0
     property int timeMax: 3600
     property int state: Kt.None
-    property int debug: 0
+    readonly property alias clockRunning: myTimer.running
 
     signal sigClockOut(int state)
 
@@ -46,7 +46,7 @@ Item{
     }
 
     function onClockStart(iState){
-        counter = debug? 5 : timeMax;
+        counter = timeMax;
         state = iState;
         if(iState === Kt.None){
             myTimer.running = false;

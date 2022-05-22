@@ -12,6 +12,14 @@ MyRightForm {
     {
         console.log("mySlot("+index+")")
     }
+        
+    /**
+     * update parameter information
+     */
+    function updateInfor()
+    {
+        myScroll.updateInfor()
+    }
 
 }
 

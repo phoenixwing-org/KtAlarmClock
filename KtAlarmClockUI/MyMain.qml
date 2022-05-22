@@ -14,7 +14,6 @@ KtWindow{
     visible: true
     width: 480
     height: 480
-    property int debug: 0
 
     title: qsTr("Kt Alarm Clock")
 
@@ -74,5 +73,12 @@ KtWindow{
             root.__menuBarType = onlyIcon? 0:1
         }
     }
-
+    
+    /**
+     * update parameter information
+     */
+    function updateInfor()
+    {
+        ktRight.updateInfor()
+    }
 }

@@ -25,7 +25,7 @@ KtWindowBase {
      * Show Window
      */
     function showOver(){
-        console.log("KtWindowOver.showOver()")
+        // console.log("KtWindowOver.showOver()")
         let ok = checkoutScreen();
         if(!ok) {
             root.hide()

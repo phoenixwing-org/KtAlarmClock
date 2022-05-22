@@ -11,7 +11,6 @@ Window {
     width: 50
     height: 50
     property bool canClose: false
-    property int debug: 0 // or or 1
 
     visible: true
     color: "transparent"
@@ -24,14 +23,12 @@ Window {
         y: 0
         visible: !overItem.visible
         canClose: root.canClose
-        debug: root.debug
         target: mainDlg
     }
 
     MyOverItem{
         id:overItem
         visible: false
-        debug: root.debug
     }
 
     MyMain{
@@ -39,7 +36,6 @@ Window {
         x:100
         y:100
         visible:false
-        debug: root.debug
 
         //@disable-check M16
         onClosing: function(closeEvent){
@@ -61,7 +57,7 @@ Window {
 
     // connect signal onCompleted
     Component.onCompleted: {
-        if(debug){
+        if(KtAlarmTheme.debug){
             myAlarmClockParam.WorkBreak = 5
             myAlarmClockParam.TimeForce = 1
             myAlarmClockParam.WorkTime = 5
@@ -103,16 +99,16 @@ Window {
     }
 
     function onClockStart(state){
-
         switch(state){
         case Kt.WorkBreak:
             clockDlg.clock.onClockPause()
+            mainDlg.updateInfor()
             overItem.timeMax= myAlarmClockParam.WorkBreak;
             overItem.timeForce= myAlarmClockParam.TimeForce;
             overItem.customShow();
             return
         case Kt.WorkTime:
-            //console.log("overItem.visible", overItem.visible)
+            //mainDlg.updateInfor()
             clockDlg.clock.timeMax = myAlarmClockParam.WorkTime;
             clockDlg.clock.onClockStart(state);
             overItem.customHide();

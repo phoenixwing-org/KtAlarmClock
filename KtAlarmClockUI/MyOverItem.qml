@@ -11,8 +11,6 @@ Item {
     property int timeForce: 0
     property int timeMax: 3600
     property bool canClose: false
-    property int debug: 0
-    property bool running: value
 
     visible: true
 
@@ -30,6 +28,15 @@ Item {
             //if over0 hide, hide the second one
             if(!visible) over1.hide();
         }
+
+        onClockRunningChanged: {
+            // console.log("MyOver0.onClockRunningChanged = ", clockRunning)
+            if(!clockRunning){
+                root.canClose = true
+                root.customHide()
+                myAlarmClockParam.sigClockOut(Kt.WorkBreak)
+            }
+        }
     }
 
     MyOver1 {
@@ -38,36 +45,21 @@ Item {
         screenId: 1
     }
 
-    // connect signal onCompleted
-    Component.onCompleted: {
-         over0.myClock.sigClockOut.connect(onClockTimeout)
-    }
-
-    onRunningChanged: {
-        if(root.running){
-            customShow()
-        } else{
-            customHide()
-        }
-    }
-
-    // on state change
-    function onClockTimeout(state){
-        root.customHide()
-        myAlarmClockParam.sigClockOut(Kt.WorkBreak)
-    }
     /*
      * Show Window
      */
     function customHide(){
         root.visible = false
         root.canClose = true;
-        over0.canClose = true;
+        over0.canClose = root.canClose;
+        over1.canClose = root.canClose;
 
-        over0.running = false
-        over1.canClose = true;
-        over0.hide()
         over1.hide();
+        if(over0.clockRunning){
+            over0.stopPage0()
+        } else{
+            over0.hide()
+        }
     }
 
     /*
@@ -90,7 +82,6 @@ Item {
         if(over0.screenOK){
             over0.canClose = false;// cannot close
             over0.counterForce = root.timeForce
-            over0.running = root.running
             over0.showOver0()
 
             over0.myClock.timeMax = root.timeMax;

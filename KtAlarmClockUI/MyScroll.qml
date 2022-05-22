@@ -139,6 +139,16 @@ Rectangle {
         ktTimeSlideMyExercise.value = myAlarmClockParam.WorkBreak
         ktTimeSlideMyForce.value = myAlarmClockParam.TimeForce
     }
+ 
+    /**
+     * update parameter information
+     */
+    function updateInfor()
+    {        
+        myAlarmClockParam.WorkTime = ktTimeSlideMyWork.value
+        myAlarmClockParam.WorkBreak = ktTimeSlideMyExercise.value
+        myAlarmClockParam.TimeForce = ktTimeSlideMyForce.value
+    }
 }
 
 

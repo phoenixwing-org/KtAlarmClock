@@ -97,7 +97,10 @@ Rectangle {
 
             onPositionChanged: {
                 //console.log("onPositionChanged,slider.value=",value)
-                ktSpinBox.value= value;
+                if(root.value != slider.value){
+                    var v1 = slider.value
+                    root.value = v1
+                }
             }
         }
     }
