@@ -8,7 +8,7 @@ KtWindowOver {
         x:parent.width*0.5
         y:parent.height*0.5
         color: KtAlarmTheme.colorText
-        text: "休息吧！\r\n除了工作，还有诗歌和远方！";
+        text: "休息吧！\r\n除了工作，还有诗歌和远方！"
         font.pointSize: KtAlarmTheme.fontPixelNormal
 
         KtMouseAreaMove{}

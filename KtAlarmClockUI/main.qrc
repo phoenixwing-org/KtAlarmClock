@@ -50,7 +50,6 @@
         <file>KtWindowOver.qml</file>
         <file>MyOver0.qml</file>
         <file>MyOver1.qml</file>
-        <file>MyClockWindow.qml</file>
         <file>MyWindowMenu.qml</file>
         <file>MySystemTrayIcon.qml</file>
         <file>KtAlarmTheme.qml</file>

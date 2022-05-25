@@ -19,7 +19,7 @@ KtWindowOver {
     property bool canClose: false
     property bool showFormula: counterForce<=0
     
-    modality: Qt.WindowModal //Block other windows
+    //modality: Qt.WindowModal //Block other windows
     title: "First Over"
 
     Rectangle {
@@ -188,7 +188,7 @@ KtWindowOver {
     //@disable-check M16
     onClosing: function(closeEvent){
         closeEvent.accepted = canClose
-        console.log("MyOver0.closeEvent.accepted =",closeEvent.accepted)
+        // console.log("MyOver0.closeEvent.accepted =",closeEvent.accepted)
         if(!canClose){
             console.log("MyOver0.closeEvent.accepted =",closeEvent.accepted)
         }
@@ -227,7 +227,7 @@ KtWindowOver {
     }
 
     function unlockPage(){
-        console.log("MyOver0.unlockPage()")
+        // console.log("MyOver0.unlockPage()")
         if (root.counterForce > 0){
             root.canClose = false;
             return

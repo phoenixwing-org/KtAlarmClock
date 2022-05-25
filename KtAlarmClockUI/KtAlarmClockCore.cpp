@@ -14,7 +14,7 @@
 KtAlarmClockCore::KtAlarmClockCore()
     : k_pClockParam(NULL)
     , m_Pretreat(KT_E_FAIL) {
-    qDebug() << "KtAlarmClockCore::KtAlarmClockCore()";
+    // qDebug() << "KtAlarmClockCore::KtAlarmClockCore()";
 }
 //------------------------------------------------
 KtAlarmClockCore::~KtAlarmClockCore() {

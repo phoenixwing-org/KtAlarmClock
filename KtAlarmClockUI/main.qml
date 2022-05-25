@@ -6,24 +6,46 @@ import Qt.labs.platform 1.1
 
 Window {
     id: root
-    x: 10
-    y: 10
-    width: 50
-    height: 50
+    x: mainDlg.x + mainDlg.width - clock.width - 5
+    y: 2
+    width: clock.width
+    height: clock.height
     property bool canClose: false
 
     visible: true
     color: "transparent"
     opacity: 1
-    flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
-    MyClockWindow {
-        id: clockDlg
-        x: mainDlg.x + mainDlg.width - width
+    KtMouseAreaMove{
+        targetFill: root.contentItem
+        targetMove: root
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        // 该属性设置为false的话，则鼠标的进入 离开 移动不能捕获到
+        hoverEnabled: false
+        onClicked: {
+            if(mouse.button===Qt.RightButton){
+                let x1 = root.x - menuTest.width + root.width
+                menuTest.x = x1
+                menuTest.y = root.y + root.height+5
+                menuTest.show()
+            }
+        }
+    }
+
+    MyWindowMenu{
+        id:menuTest
+        visible: false
+        onSigAction:{
+            myAlarmClockParam.sigAction(index)
+        }
+    }
+
+    MyClock{
+        id: clock
+        x: 0
         y: 0
-        visible: !overItem.visible
-        canClose: root.canClose
-        target: mainDlg
     }
 
     MyOverItem{
@@ -63,7 +85,7 @@ Window {
             myAlarmClockParam.WorkTime = 5
         }
 
-        clockDlg.show();
+        root.show();
         var x = Math.floor(Screen.width - mainDlg.width - 100)
         mainDlg.x = x;
 
@@ -74,7 +96,7 @@ Window {
         myAlarmClockParam.sigClockOut.connect(onClockTimeout);
         myAlarmClockParam.sigAction.connect(onSigAction);
 
-        clockDlg.clock.sigClockOut.connect(onClockTimeout)
+        clock.sigClockOut.connect(onClockTimeout)
         trayIcon.sigAction.connect(onSigAction)
 
         // start clock:
@@ -84,24 +106,26 @@ Window {
     }
 
     function closeAllWindows(){
+
+        KtAlarmTheme.clockStep = Kt.None
+
         // can close
         root.canClose = true;
         overItem.canClose = true;
-        clockDlg.canClose = true;
 
         //hide
         trayIcon.hide()
         overItem.customHide()
         mainDlg.hide()
-        clockDlg.hide()
         root.close()
         
     }
 
     function onClockStart(state){
+        KtAlarmTheme.clockStep = state
         switch(state){
         case Kt.WorkBreak:
-            clockDlg.clock.onClockPause()
+            clock.onClockPause()
             mainDlg.updateInfor()
             overItem.timeMax= myAlarmClockParam.WorkBreak;
             overItem.timeForce= myAlarmClockParam.TimeForce;
@@ -109,12 +133,12 @@ Window {
             return
         case Kt.WorkTime:
             //mainDlg.updateInfor()
-            clockDlg.clock.timeMax = myAlarmClockParam.WorkTime;
-            clockDlg.clock.onClockStart(state);
+            clock.timeMax = myAlarmClockParam.WorkTime;
+            clock.onClockStart(state);
             overItem.customHide();
             break;
         default:
-            clockDlg.clock.onClockPause()
+            clock.onClockPause()
             overItem.customHide();
         }
     }
@@ -167,6 +191,9 @@ Window {
      */
     function onSigAction(index){
         // console.log("main.onSigAction(" + index + ")")
+        if ( KtAlarmTheme.clockStep == Kt.WorkBreak){
+            return
+        }
         switch(index) {
         case Kt.ActionBreak:
             onClockStart(Kt.WorkBreak)

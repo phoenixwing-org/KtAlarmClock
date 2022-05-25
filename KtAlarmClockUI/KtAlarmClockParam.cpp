@@ -29,7 +29,7 @@ KtAlarmClockParam::KtAlarmClockParam(QObject* parent)
 
 // clang-format on
 {
-    qDebug() << "KtAlarmClockParam::KtAlarmClockParam()";
+    // qDebug() << "KtAlarmClockParam::KtAlarmClockParam()";
 }
 //--------------------------------------------------------------------
 KtAlarmClockParam::~KtAlarmClockParam() {
