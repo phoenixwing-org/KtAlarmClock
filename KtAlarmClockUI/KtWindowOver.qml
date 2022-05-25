@@ -12,7 +12,6 @@ KtWindowBase {
     fullScreen: true
 
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
-    //modality: Qt.WindowModal //Block other windows
 
     /*
      * Show Window
@@ -38,8 +37,6 @@ KtWindowBase {
             width = screen.width
             height = screen.height
             root.showFullScreen();
-            //canClose = true;
-
         }
         else{
             root.show()

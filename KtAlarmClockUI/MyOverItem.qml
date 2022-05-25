@@ -6,8 +6,6 @@ Item {
     id: root
     width: 10
     height: 10
-    property bool fullScreen: false //true
-    property alias clockPosition: clockPosition
     property int timeForce: 0
     property int timeMax: 3600
     property bool canClose: false

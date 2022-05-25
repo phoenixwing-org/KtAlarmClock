@@ -120,9 +120,8 @@ Rectangle {
 
 
     // change Sub Item
-    function scrollPage(index)
-    {
-        console.log("scrollPage("+index+")")
+    function scrollPage(index) {
+        // console.log("scrollPage("+index+")")
         if(0 === index){
             scroll.flickableItem.contentY = rect0.y
         } else if(1 === index){

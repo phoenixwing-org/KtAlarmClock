@@ -25,8 +25,8 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     , m_pClockParam(NULL)
     , m_pClockDlg(NULL)
     , m_ExePath() {
-    qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
-    // new
+    // qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
+    //  new
     m_pClockParam = new KtAlarmClockParam();
     m_pClockCore  = new KtAlarmClockCore();
     // set value
@@ -35,8 +35,8 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
 }
 //------------------------------------------------
 KtAlarmClockCmd::~KtAlarmClockCmd() {
-    qDebug() << "KtAlarmClockCmd::~KtAlarmClockCmd()";
-    // delete
+    // qDebug() << "KtAlarmClockCmd::~KtAlarmClockCmd()";
+    //  delete
     KTDelete(m_pClockParam);
     KTDelete(m_pClockCore);
 
@@ -45,7 +45,7 @@ KtAlarmClockCmd::~KtAlarmClockCmd() {
 }
 //------------------------------------------------
 ktErrorCode KtAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
-    qDebug() << "KtAlarmClockCmd::BuildDialog()";
+    // qDebug() << "KtAlarmClockCmd::BuildDialog()";
     if (NULL != m_pClockDlg) {
         return KT_S_OK;
     }
@@ -88,7 +88,7 @@ QQuickItem* KtAlarmClockCmd::GiveMyPanel() const {
 }
 //------------------------------------------------
 int KtAlarmClockCmd::SetAutoStart(bool iValue) {
-    qDebug() << "KtAlarmClockCmd::SetAutoStart" << iValue;
+    // qDebug() << "KtAlarmClockCmd::SetAutoStart" << iValue;
     qDebug() << "Auto Start Path = " << m_ExePath;
     QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
                   QSettings::NativeFormat);
@@ -98,7 +98,7 @@ int KtAlarmClockCmd::SetAutoStart(bool iValue) {
 }
 //------------------------------------------------
 int KtAlarmClockCmd::onStart() {
-    qDebug() << "KtAlarmClockCmd::onStart()";
+    // qDebug() << "KtAlarmClockCmd::onStart()";
     emit m_pClockParam->sigDialogShow(KtAlarmClock::DlgBreak, false);
     emit m_pClockParam->sigDialogShow(KtAlarmClock::DlgMain, false);
 

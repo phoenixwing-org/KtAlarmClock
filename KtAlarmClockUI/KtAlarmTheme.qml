@@ -3,6 +3,7 @@
  */
 pragma Singleton
 import QtQuick 2.14
+import KtAlarmClock 1.0
 
 QtObject {
     property color colorPrimary: "#2878bb"
@@ -19,4 +20,7 @@ QtObject {
     property int fontPixelNormal: 12
     property int fontPixelLarge: 20
     property int debug: 0
+
+    // clock property
+    property int clockStep: Kt.None
 }

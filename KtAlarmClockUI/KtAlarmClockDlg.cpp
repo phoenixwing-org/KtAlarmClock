@@ -7,13 +7,6 @@
 
 #include "KtAlarmClockDlg.h"
 
-#define ForTestTimter 0
-#if ForTestTimter
-#define ShowSubDialog show // showFullScreen
-#else
-#define ShowSubDialog showFullScreen // showFullScreen
-#endif
-
 //---------------------------------------------------------
 KtAlarmClockDlg::KtAlarmClockDlg(QQuickItem* parent)
     : QQuickItem(parent) {
