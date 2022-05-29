@@ -119,6 +119,10 @@ public slots:
      */
     void dump();
 
+    void registerRead();
+
+    void registerWrite();
+
     /**
      * @brief Set Work Time
      */

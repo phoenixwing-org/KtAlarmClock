@@ -6,6 +6,8 @@
  */
 // Qt
 #include <QDebug>
+#include <QSettings>
+
 // std
 #include <fstream>
 #include <iostream>
@@ -86,6 +88,26 @@ void KtAlarmClockParam::sample() {
 //--------------------------------------------------------------------
 int KtAlarmClockParam::GetWorkTime() const {
     return WorkTime;
+}
+//--------------------------------------------------------------------
+void KtAlarmClockParam::registerRead() {
+    qDebug() << "KtAlarmClockParam::registerRead() ";
+    QSettings setting("HKEY_CURRENT_USER\\SOFTWARE\\KuntaiSoft\\KtAlarmClock",
+                      QSettings::NativeFormat); // open
+
+    WorkBreak = setting.value("WorkBreak").toInt();
+    TimeForce = setting.value("TimeForce").toInt();
+    WorkTime  = setting.value("WorkTime").toInt();
+}
+//--------------------------------------------------------------------
+void KtAlarmClockParam::registerWrite() {
+    qDebug() << "KtAlarmClockParam::registerWrite() ";
+    QSettings setting("HKEY_CURRENT_USER\\SOFTWARE\\KuntaiSoft\\KtAlarmClock",
+                      QSettings::NativeFormat); // open
+
+    setting.setValue("WorkBreak", WorkBreak);
+    setting.setValue("TimeForce", TimeForce);
+    setting.setValue("WorkTime", WorkTime);
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::SetWorkTime(int iValue) {

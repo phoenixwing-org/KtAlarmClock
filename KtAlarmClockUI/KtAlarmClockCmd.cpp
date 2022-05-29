@@ -79,6 +79,8 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     // qDebug() << "KtAlarmClockCmd load(url)-end";
 
     // after load, all the qml is complete load,
+    m_pClockParam->registerRead(); // read param
+
     // all the signal is connect to the socket
     m_pClockParam->sigUpdateDialog(); // update dialog
 
@@ -109,5 +111,8 @@ int KtAlarmClockCmd::onStart(int state) {
     // qDebug() << "KtAlarmClockCmd::onStart(" << state << ")";
     m_pClockParam->sigUpdateInfos(); // get infos from dialog
     emit m_pClockParam->sigClockStart(state);
+    if (state == KtAlarmClock::WorkTime) {
+        m_pClockParam->registerWrite();
+    }
     return KT_S_OK;
 }
