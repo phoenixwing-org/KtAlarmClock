@@ -114,6 +114,12 @@ signals:
 public slots:
 
     /**
+     * @brief set default value for debug
+     * @return void
+     */
+    void setDefault();
+
+    /**
      * @brief cout class members for debug
      * @return void
      */
@@ -197,11 +203,5 @@ public: // functions
      * @return void
      */
     void clear();
-
-    /**
-     * @brief set sample value for debug
-     * @return void
-     */
-    void sample();
 };
 #endif

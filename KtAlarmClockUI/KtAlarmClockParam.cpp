@@ -78,12 +78,12 @@ void KtAlarmClockParam::dump() {
               << ",\"TimeTotal\": " << TimeTotal << " }" << std::endl;
 }
 //--------------------------------------------------------------------
-void KtAlarmClockParam::sample() {
-    WorkTime  = 4500; // 1
+void KtAlarmClockParam::setDefault() {
+    WorkTime  = 2700; // 1
     WorkBreak = 600;  // 2
     TimeForce = 600;  // 3
     WorkStep  = 0;    // 6
-    TimeTotal = 5100; // 100
+    TimeTotal = 3300; // 100
 }
 //--------------------------------------------------------------------
 int KtAlarmClockParam::GetWorkTime() const {

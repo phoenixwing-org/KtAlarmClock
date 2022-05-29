@@ -111,8 +111,5 @@ int KtAlarmClockCmd::onStart(int state) {
     // qDebug() << "KtAlarmClockCmd::onStart(" << state << ")";
     m_pClockParam->sigUpdateInfos(); // get infos from dialog
     emit m_pClockParam->sigClockStart(state);
-    if (state == KtAlarmClock::WorkTime) {
-        m_pClockParam->registerWrite();
-    }
     return KT_S_OK;
 }

@@ -20,6 +20,16 @@ MyLeftForm {
         sigScrollPage(2)
     }
 
+    actionDefault.onTriggered: {
+        myAlarmClockParam.setDefault()
+        myAlarmClockParam.sigUpdateDialog()
+    }
+
+    actionSave.onTriggered: {
+        myAlarmClockParam.sigUpdateInfos()
+        myAlarmClockParam.registerWrite()
+    }
+
     onOnlyIconChanged: {
         if (onlyIcon){
             width = minimumWidth;
