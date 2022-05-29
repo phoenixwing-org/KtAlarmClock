@@ -193,17 +193,12 @@ Window {
      */
     function onSigAction(index){
         // console.log("main.onSigAction(" + index + ")")
-        //if ( KtAlarmTheme.clockStep == KtAlarmClock.WorkBreak){
-        //    return
-        //}
         switch(index) {
         case KtAlarmClock.ActionBreak:
-            onClockStart(KtAlarmClock.WorkBreak)
+            myAlarmClockCmd.onStart(KtAlarmClock.WorkBreak)
             break;
         case KtAlarmClock.ActionMainDlg:
             mainDlg.show()
-            mainDlg.raise()
-            mainDlg.requestActivate()
             break;
         case KtAlarmClock.ActionClose:
             closeAllWindows()

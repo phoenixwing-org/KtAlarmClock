@@ -8,6 +8,7 @@ KtWindowOver {
     id: root
     width:600
     height:400
+    color: KtAlarmTheme.colorBackground
     property alias myClock: myClock
     readonly property alias clockRunning: myClock.clockRunning
 
@@ -41,22 +42,6 @@ KtWindowOver {
             font.pointSize: KtAlarmTheme.fontPixelLarge
         }
 
-        Image {
-            x: root.width/2
-            y: root.height/2
-            width: 100
-            height: 100
-            sourceSize.height: 100
-            sourceSize.width: 100
-            source: "qrc:/image/coffee.svg"
-            ColorOverlay {
-                 anchors.fill: parent
-                 source: parent
-                 color: KtAlarmTheme.colorIcon
-             }
-
-            KtMouseAreaMove{}
-        }
 
         Rectangle {
             id: footer
@@ -157,19 +142,18 @@ KtWindowOver {
                 font.pointSize: KtAlarmTheme.fontPixelNormal
             }
 
-            Image {
-                id: ktLogo
-                x: 5
-                y: 5
-                z: 100
-                width: 70
-                height: 70
-                sourceSize.height: 70
-                sourceSize.width: 70
-                source: "qrc:/image/kt-blue.svg"
-                KtMouseAreaMove{}
-            }
         }
+    }
+        
+    Image {
+        x: root.width/2
+        y: root.height/2
+        width: 100
+        height: 100
+        sourceSize.height: 100
+        sourceSize.width: 100
+        source: "qrc:/image/coffee.svg"
+        KtMouseAreaMove{}
     }
 
     MyClock{
@@ -178,6 +162,19 @@ KtWindowOver {
         visible: true
         x: root.width/2
         y: 0
+        KtMouseAreaMove{}
+    }
+
+    Image {
+        id: ktLogo
+        x: 5
+        y: root.height - 80
+        z: 100
+        width: 70
+        height: 70
+        sourceSize.height: 70
+        sourceSize.width: 70
+        source: "qrc:/image/kt-blue.svg"
         KtMouseAreaMove{}
     }
 
