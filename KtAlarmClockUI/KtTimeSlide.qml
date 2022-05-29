@@ -75,12 +75,12 @@ Rectangle {
             Layout.fillWidth: true
             onValueChanged: {
                 if(root.value != ktSpinBox.value){
-                    var v1 = ktSpinBox.value
+                    let v1 = ktSpinBox.value
                     root.value = v1
                 }
             }
-
         }
+
         KtSlider{
             id: slider
             width: parent.width
@@ -98,7 +98,7 @@ Rectangle {
             onPositionChanged: {
                 //console.log("onPositionChanged,slider.value=",value)
                 if(root.value != slider.value){
-                    var v1 = slider.value
+                    let v1 = slider.value
                     root.value = v1
                 }
             }

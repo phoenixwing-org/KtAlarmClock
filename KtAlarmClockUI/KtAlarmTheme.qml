@@ -22,5 +22,6 @@ QtObject {
     property int debug: 0
 
     // clock property
-    property int clockStep: Kt.None
+    property int clockStep: KtAlarmClock.None
+    property bool clockForce: false
 }

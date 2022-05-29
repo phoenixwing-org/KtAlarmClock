@@ -101,7 +101,6 @@ DISTFILES += \
     MyOverItem.qml \
     MyRight.qml \
     MyRightForm.ui.qml \
-    MyScroll.qml \
     MySystemTrayIcon.qml \
     MyWindowMenu.qml \
     main.qml

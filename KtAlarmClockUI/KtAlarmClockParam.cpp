@@ -71,9 +71,9 @@ void KtAlarmClockParam::clear() {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::dump() {
-    std::cout << " {  WorkTime:" << WorkTime << ",WorkBreak: " << WorkBreak
-              << ",TimeForce: " << TimeForce << ", :TimeStep" << WorkStep
-              << ",TimeTotal: " << TimeTotal << " }" << std::endl;
+    std::cout << "{\"WorkTime\":" << WorkTime << ",\"WorkBreak\":" << WorkBreak
+              << ",\"TimeForce\": " << TimeForce << ", \"TimeStep\":" << WorkStep
+              << ",\"TimeTotal\": " << TimeTotal << " }" << std::endl;
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::sample() {

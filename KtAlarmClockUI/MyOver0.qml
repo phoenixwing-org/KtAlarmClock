@@ -242,7 +242,7 @@ KtWindowOver {
         if(canClose){
             showMessage("")
             myClock.onClockPause()
-            myAlarmClockParam.sigClockOut(Kt.WorkBreak) // clock out from break
+            myAlarmClockParam.sigClockOut(KtAlarmClock.WorkBreak) // clock out from break
         }
         else{
             showMessage("Result is wrong! Please try agin.")

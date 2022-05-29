@@ -31,7 +31,7 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     m_pClockCore  = new KtAlarmClockCore();
     // set value
     m_pClockCore->k_pClockParam = m_pClockParam;
-    qmlRegisterType<KtAlarmClock>("KtAlarmClock", 1, 0, "Kt");
+    qmlRegisterType<KtAlarmClock>("KtAlarmClock", 1, 0, "KtAlarmClock");
 }
 //------------------------------------------------
 KtAlarmClockCmd::~KtAlarmClockCmd() {
@@ -44,8 +44,8 @@ KtAlarmClockCmd::~KtAlarmClockCmd() {
     KTSetNULL(m_pClockDlg);
 }
 //------------------------------------------------
-ktErrorCode KtAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
-    // qDebug() << "KtAlarmClockCmd::BuildDialog()";
+ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
+    // qDebug() << "KtAlarmClockCmd::buildDialog()";
     if (NULL != m_pClockDlg) {
         return KT_S_OK;
     }
@@ -64,6 +64,7 @@ ktErrorCode KtAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
     // register command to qml
     engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
 
+    // qDebug() << "KtAlarmClockCmd load(url)";
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     /*
      * What's the meaning?
@@ -75,6 +76,13 @@ ktErrorCode KtAlarmClockCmd::BuildDialog(QQmlApplicationEngine* engine) {
         Qt::QueuedConnection);
     */
     engine->load(url);
+    // qDebug() << "KtAlarmClockCmd load(url)-end";
+
+    // after load, all the qml is complete load,
+    // all the signal is connect to the socket
+    m_pClockParam->sigUpdateDialog(); // update dialog
+
+    emit m_pClockParam->sigClockStart(KtAlarmClock::WorkTime); // start to work
 
     return KT_S_OK;
 }
@@ -83,12 +91,12 @@ void KtAlarmClockCmd::debug(const QString& iMsg) {
     qDebug() << "Hello to KtAlarmClockCmd. msg = " << iMsg;
 }
 //------------------------------------------------
-QQuickItem* KtAlarmClockCmd::GiveMyPanel() const {
+QQuickItem* KtAlarmClockCmd::giveMyPanel() const {
     return m_pClockDlg;
 }
 //------------------------------------------------
-int KtAlarmClockCmd::SetAutoStart(bool iValue) {
-    // qDebug() << "KtAlarmClockCmd::SetAutoStart" << iValue;
+int KtAlarmClockCmd::setAutoStart(bool iValue) {
+    // qDebug() << "KtAlarmClockCmd::setAutoStart" << iValue;
     qDebug() << "Auto Start Path = " << m_ExePath;
     QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
                   QSettings::NativeFormat);
@@ -97,13 +105,9 @@ int KtAlarmClockCmd::SetAutoStart(bool iValue) {
     return 0; // ok
 }
 //------------------------------------------------
-int KtAlarmClockCmd::onStart() {
-    // qDebug() << "KtAlarmClockCmd::onStart()";
-    emit m_pClockParam->sigDialogShow(KtAlarmClock::DlgBreak, false);
-    emit m_pClockParam->sigDialogShow(KtAlarmClock::DlgMain, false);
-
-    emit m_pClockParam->sigClockStart(KtAlarmClock::WorkTime);
-
-    // m_pClockParam->SetTimeCounter(m_pClockParam->TimeCounter + 60);
+int KtAlarmClockCmd::onStart(int state) {
+    // qDebug() << "KtAlarmClockCmd::onStart(" << state << ")";
+    m_pClockParam->sigUpdateInfos(); // get infos from dialog
+    emit m_pClockParam->sigClockStart(state);
     return KT_S_OK;
 }

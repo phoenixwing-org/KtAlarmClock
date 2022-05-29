@@ -48,14 +48,14 @@ public:
     /**
      * @brief Build Dialog
      */
-    ktErrorCode BuildDialog(QQmlApplicationEngine* engine);
+    ktErrorCode buildDialog(QQmlApplicationEngine* engine);
 
     /**
      * @brief Give My Panel
      */
-    QQuickItem* GiveMyPanel() const;
+    QQuickItem* giveMyPanel() const;
 
-    void SetExePath(const QString& iPath) {
+    void setExePath(const QString& iPath) {
         m_ExePath = iPath;
     };
 
@@ -64,12 +64,12 @@ public slots:
     /**
      * @brief start the clock
      */
-    int onStart();
+    int onStart(int state);
 
     /**
      * @brief auto start
      */
-    int SetAutoStart(bool iValue);
+    int setAutoStart(bool iValue);
 
 private:
     KtAlarmClockCore*  m_pClockCore;

@@ -79,10 +79,11 @@ Window {
 
     // connect signal onCompleted
     Component.onCompleted: {
+        //console.log("main.onCompleted()")
         if(KtAlarmTheme.debug){
-            myAlarmClockParam.WorkBreak = 5
-            myAlarmClockParam.TimeForce = 1
-            myAlarmClockParam.WorkTime = 5
+            myAlarmClockParam.WorkBreak = 10
+            myAlarmClockParam.TimeForce = 2
+            myAlarmClockParam.WorkTime = 15
         }
 
         root.show();
@@ -99,15 +100,14 @@ Window {
         clock.sigClockOut.connect(onClockTimeout)
         trayIcon.sigAction.connect(onSigAction)
 
-        // start clock:
-        onClockStart(Kt.WorkTime);
-
-        myAlarmClockCmd.SetAutoStart(true);
+        myAlarmClockCmd.setAutoStart(true);
+        
+        //console.log("main.onCompleted()-end")
     }
 
     function closeAllWindows(){
 
-        KtAlarmTheme.clockStep = Kt.None
+        KtAlarmTheme.clockStep = KtAlarmClock.None
 
         // can close
         root.canClose = true;
@@ -123,16 +123,16 @@ Window {
 
     function onClockStart(state){
         KtAlarmTheme.clockStep = state
+        //myAlarmClockParam.dump() // dump
+
         switch(state){
-        case Kt.WorkBreak:
+        case KtAlarmClock.WorkBreak:
             clock.onClockPause()
-            mainDlg.updateInfor()
             overItem.timeMax= myAlarmClockParam.WorkBreak;
             overItem.timeForce= myAlarmClockParam.TimeForce;
             overItem.customShow();
             return
-        case Kt.WorkTime:
-            //mainDlg.updateInfor()
+        case KtAlarmClock.WorkTime:
             clock.timeMax = myAlarmClockParam.WorkTime;
             clock.onClockStart(state);
             overItem.customHide();
@@ -147,14 +147,16 @@ Window {
     function onClockTimeout(state){
         // console.log("onClockTimeout("+state+")")
         switch(state) {
-        case Kt.WorkTime:
-            onClockStart(Kt.WorkBreak) // break
+        case KtAlarmClock.WorkTime:
+            myAlarmClockParam.sigUpdateInfos() // get infos
+            onClockStart(KtAlarmClock.WorkBreak) // break
             break;
-        case Kt.WorkBreak:
-            onClockStart(Kt.WorkTime) // work time
+        case KtAlarmClock.WorkBreak:
+            myAlarmClockParam.sigUpdateInfos() // get infos
+            onClockStart(KtAlarmClock.WorkTime) // work time
             break;
         default:
-            onClockStart(Kt.None) // None
+            onClockStart(KtAlarmClock.None) // None
             break;
         }
     }
@@ -165,7 +167,7 @@ Window {
     function onShowDialog(index, value){
         //console.log("onShowDialog(" + index + "," + value +")")
         switch(index) {
-        case Kt.DlgMain:
+        case KtAlarmClock.DlgMain:
             if(value){
                 mainDlg.show();
             }
@@ -173,7 +175,7 @@ Window {
                 mainDlg.hide();
             }
             break;
-        case Kt.DlgBreak:
+        case KtAlarmClock.DlgBreak:
             if(value){
                 overItem.customShow();
             }
@@ -191,19 +193,19 @@ Window {
      */
     function onSigAction(index){
         // console.log("main.onSigAction(" + index + ")")
-        if ( KtAlarmTheme.clockStep == Kt.WorkBreak){
-            return
-        }
+        //if ( KtAlarmTheme.clockStep == KtAlarmClock.WorkBreak){
+        //    return
+        //}
         switch(index) {
-        case Kt.ActionBreak:
-            onClockStart(Kt.WorkBreak)
+        case KtAlarmClock.ActionBreak:
+            onClockStart(KtAlarmClock.WorkBreak)
             break;
-        case Kt.ActionMainDlg:
+        case KtAlarmClock.ActionMainDlg:
             mainDlg.show()
             mainDlg.raise()
             mainDlg.requestActivate()
             break;
-        case Kt.ActionClose:
+        case KtAlarmClock.ActionClose:
             closeAllWindows()
             break;
         default:

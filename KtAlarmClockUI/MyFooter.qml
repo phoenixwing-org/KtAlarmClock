@@ -3,23 +3,18 @@ import KtAlarmClock 1.0
 
 MyFooterForm {
     buttonStart.onClicked:{
-        myAlarmClockCmd.onStart();
+        myAlarmClockCmd.onStart(KtAlarmClock.WorkTime);
     }
 
     buttonPause.onClicked: {
-        myAlarmClockCmd.onStart();
+        console.log("buttonPause.onClicked")
     }
 
     buttonStop.onClicked:{
-        myAlarmClockParam.sigClockStart(4); //4:stop
+        myAlarmClockCmd.onStart(KtAlarmClock.None);
     }
     buttonRest.onClicked:{
-        myAlarmClockParam.sigAction(Kt.ActionBreak);
+        myAlarmClockCmd.onStart(KtAlarmClock.WorkBreak);
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/

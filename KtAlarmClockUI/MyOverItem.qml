@@ -32,7 +32,7 @@ Item {
             if(!clockRunning){
                 root.canClose = true
                 root.customHide()
-                myAlarmClockParam.sigClockOut(Kt.WorkBreak)
+                myAlarmClockParam.sigClockOut(KtAlarmClock.WorkBreak)
             }
         }
     }
@@ -83,7 +83,7 @@ Item {
             over0.showOver0()
 
             over0.myClock.timeMax = root.timeMax;
-            over0.myClock.onClockStart(Kt.WorkBreak);
+            over0.myClock.onClockStart(KtAlarmClock.WorkBreak);
             return
         }
     }

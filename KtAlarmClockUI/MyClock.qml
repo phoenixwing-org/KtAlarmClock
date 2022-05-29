@@ -8,7 +8,7 @@ Item{
     height: 30
     property int counter: 0
     property int timeMax: 3600
-    property int state: Kt.None
+    property int state: KtAlarmClock.None
     readonly property alias clockRunning: myTimer.running
 
     signal sigClockOut(int state)
@@ -48,9 +48,9 @@ Item{
     function onClockStart(iState){
         counter = timeMax;
         state = iState;
-        if(iState === Kt.None){
+        if(iState === KtAlarmClock.None){
             myTimer.running = false;
-            sigClockOut(Kt.None)
+            sigClockOut(KtAlarmClock.None)
         }
 
         showTime();
