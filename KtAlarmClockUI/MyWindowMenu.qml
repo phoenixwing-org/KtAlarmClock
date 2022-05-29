@@ -30,7 +30,7 @@ Window {
             transformOrigin: Item.Left
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
-                sigAction(Kt.ActionBreak)
+                sigAction(KtAlarmClock.ActionBreak)
                 root.hide()
             }
         }
@@ -44,7 +44,7 @@ Window {
             icon.source: "qrc:/image/grid.svg"
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
-                sigAction(Kt.ActionMainDlg)
+                sigAction(KtAlarmClock.ActionMainDlg)
                 root.hide()
             }
         }

@@ -26,10 +26,10 @@ int main(int argc, char* argv[]) {
     KtAlarmClockCmd       cmd;
 
     // qDebug() << argv[ 0 ];
-    cmd.SetExePath(argv[ 0 ]); // set path
+    cmd.setExePath(argv[ 0 ]); // set path
 
     // cmd.debug(" Clock");      // debug
-    ktErrorCode ec = cmd.BuildDialog(&engine); // build diglog
+    ktErrorCode ec = cmd.buildDialog(&engine); // build diglog
     if (KT_FAILED(ec)) {
         QCoreApplication::exit(-1);
     }

@@ -27,7 +27,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/coffee.svg"
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(Kt.ActionBreak)
+                sigAction(KtAlarmClock.ActionBreak)
             }
         }
         MenuItem {
@@ -35,7 +35,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/menus.svg"
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(Kt.ActionMainDlg)
+                sigAction(KtAlarmClock.ActionMainDlg)
             }
         }
 
@@ -62,7 +62,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/cancel.svg"
             onTriggered:{
                 if(checkForbiden()) return
-                sigAction(Kt.ActionClose)
+                sigAction(KtAlarmClock.ActionClose)
             }
         }
     }
@@ -73,6 +73,7 @@ SystemTrayIcon {
     }
 
     function checkForbiden(){
-        return (KtAlarmTheme.clockStep == Kt.WorkBreak)
+        if(KtAlarmTheme.debug ===1) return false
+        return (KtAlarmTheme.clockStep == KtAlarmClock.WorkBreak)
     }
 }

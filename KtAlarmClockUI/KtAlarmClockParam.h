@@ -101,7 +101,24 @@ signals:
      */
     bool sigAction(int state);
 
+    /**
+     * @brief Update Infos
+     */
+    bool sigUpdateInfos();
+
+    /**
+     * @brief Update dialog
+     */
+    bool sigUpdateDialog();
+
 public slots:
+
+    /**
+     * @brief cout class members for debug
+     * @return void
+     */
+    void dump();
+
     /**
      * @brief Set Work Time
      */
@@ -176,12 +193,6 @@ public: // functions
      * @return void
      */
     void clear();
-
-    /**
-     * @brief cout class members for debug
-     * @return void
-     */
-    void dump();
 
     /**
      * @brief set sample value for debug

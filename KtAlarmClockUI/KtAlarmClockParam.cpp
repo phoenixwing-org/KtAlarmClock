@@ -21,7 +21,7 @@ KtAlarmClockParam::KtAlarmClockParam(QObject* parent)
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM CONSTRUCTOR
       WorkTime(2700),
       WorkBreak(600),
-      TimeForce(300),
+      TimeForce(600),
       TimeTotal(5100),
       WorkStep(1),
       TimeCounter(0)
@@ -37,7 +37,7 @@ KtAlarmClockParam::~KtAlarmClockParam() {
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM DESTRUCTOR
     //WorkTime = 2700; //2
     //WorkBreak = 600; //3
-    //TimeForce = 300; //4
+    //TimeForce = 600; //4
     //TimeTotal = 5100; //100
     //WorkStep = 1; //101
     //TimeCounter = 0; //102
@@ -71,15 +71,15 @@ void KtAlarmClockParam::clear() {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::dump() {
-    std::cout << " {  WorkTime:" << WorkTime << ",WorkBreak: " << WorkBreak
-              << ",TimeForce: " << TimeForce << ", :TimeStep" << WorkStep
-              << ",TimeTotal: " << TimeTotal << " }" << std::endl;
+    std::cout << "{\"WorkTime\":" << WorkTime << ",\"WorkBreak\":" << WorkBreak
+              << ",\"TimeForce\": " << TimeForce << ", \"TimeStep\":" << WorkStep
+              << ",\"TimeTotal\": " << TimeTotal << " }" << std::endl;
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::sample() {
     WorkTime  = 4500; // 1
     WorkBreak = 600;  // 2
-    TimeForce = 0;    // 3
+    TimeForce = 600;  // 3
     WorkStep  = 0;    // 6
     TimeTotal = 5100; // 100
 }

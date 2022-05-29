@@ -61,8 +61,10 @@ KtWindow{
 
     // connect signal onCompleted
     Component.onCompleted: {
-        ktLeft.sigScrollPage.connect(ktRight.myScroll.scrollPage)// pass index value
+        //console.log("MyMain.onCompleted()")
+        ktLeft.sigScrollPage.connect(ktRight.scrollPage)// pass index value
         root.sigWindowSizeChanged.connect(root.autoDisplayLeftMenu)
+        //console.log("MyMain.onCompleted()-end")
     }
 
     function autoDisplayLeftMenu()
@@ -72,13 +74,5 @@ KtWindow{
             ktLeft.onlyIcon = onlyIcon;
             root.__menuBarType = onlyIcon? 0:1
         }
-    }
-    
-    /**
-     * update parameter information
-     */
-    function updateInfor()
-    {
-        ktRight.updateInfor()
     }
 }

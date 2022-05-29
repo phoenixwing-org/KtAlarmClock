@@ -38,7 +38,6 @@
         <file>MyMain.qml</file>
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>
-        <file>MyScroll.qml</file>
         <file>MyOverItem.qml</file>
         <file>MyClock.qml</file>
         <file>KtToolButton.qml</file>
