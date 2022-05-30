@@ -114,10 +114,20 @@ signals:
 public slots:
 
     /**
+     * @brief set default value for debug
+     * @return void
+     */
+    void setDefault();
+
+    /**
      * @brief cout class members for debug
      * @return void
      */
     void dump();
+
+    void registerRead();
+
+    void registerWrite();
 
     /**
      * @brief Set Work Time
@@ -193,11 +203,5 @@ public: // functions
      * @return void
      */
     void clear();
-
-    /**
-     * @brief set sample value for debug
-     * @return void
-     */
-    void sample();
 };
 #endif

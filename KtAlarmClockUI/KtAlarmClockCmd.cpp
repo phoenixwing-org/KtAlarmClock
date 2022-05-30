@@ -79,6 +79,8 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     // qDebug() << "KtAlarmClockCmd load(url)-end";
 
     // after load, all the qml is complete load,
+    m_pClockParam->registerRead(); // read param
+
     // all the signal is connect to the socket
     m_pClockParam->sigUpdateDialog(); // update dialog
 

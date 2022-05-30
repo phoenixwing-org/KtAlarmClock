@@ -19,6 +19,8 @@ Item {
     property alias actionMyWork: actionMyWork
     property alias actionMyExercise: actionMyExercise
     property alias actionMyForce: actionMyForce
+    property alias actionDefault: actionDefault
+    property alias actionSave: actionSave
 
     Rectangle {
         id: rect
@@ -67,6 +69,24 @@ Item {
                 font.pointSize: KtAlarmTheme.fontPixelNormal
                 action: actionMyForce
             }
+
+            KtToolButton {
+                id: toolButtonDefault
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
+                font.pointSize: KtAlarmTheme.fontPixelNormal
+                action: actionDefault
+            }
+
+            KtToolButton {
+                id: toolButtonSave
+                onlyIcon: root.onlyIcon
+                width: root.width
+                transformOrigin: Item.Left
+                font.pointSize: KtAlarmTheme.fontPixelNormal
+                action: actionSave
+            }
         }
     }
 
@@ -85,5 +105,15 @@ Item {
         id: actionMyForce
         text: "强制休息时长"
         shortcut: StandardKey.Save
+    }
+    
+    Action {
+        id: actionDefault
+        text: "恢复默认设置"
+    }  
+
+    Action {
+        id: actionSave
+        text: "保存当前设置"
     }
 }
