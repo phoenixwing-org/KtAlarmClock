@@ -1,6 +1,6 @@
 {
     "files.associations": {
-        "*.qml": "coffeescript",
+        "*.qml": "qml",
         "*.qrc": "xml",
         "xutility": "cpp",
         "algorithm": "cpp",

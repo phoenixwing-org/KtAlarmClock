@@ -28,16 +28,16 @@ KtWindow{
         parent: center
         height: ktRight.height
         anchors.left: parent.left
-        anchors.leftMargin: 1
+        anchors.leftMargin: 0
     }
 
     MyRight{
         id: ktRight
         parent: center
         anchors.left: ktLeft.right
-        anchors.leftMargin: 1
+        anchors.leftMargin: 0
         anchors.right: parent.right
-        anchors.rightMargin: 1
+        anchors.rightMargin: 0
         anchors.top: parent.top
         anchors.topMargin: 0
         anchors.bottom: parent.bottom
@@ -51,11 +51,11 @@ KtWindow{
         anchors.top: parent.top
         anchors.topMargin: 1
         anchors.right: parent.right
-        anchors.rightMargin: 1
+        anchors.rightMargin: 0
         anchors.left: parent.left
-        anchors.leftMargin: 1
+        anchors.leftMargin: 0
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 1
+        anchors.bottomMargin: 0
 
     }
 

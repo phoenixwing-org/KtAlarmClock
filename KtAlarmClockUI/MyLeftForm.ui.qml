@@ -75,6 +75,7 @@ Item {
                 onlyIcon: root.onlyIcon
                 width: root.width
                 transformOrigin: Item.Left
+                icon.source: "qrc:/image/KtCloudLoad.svg"
                 font.pointSize: KtAlarmTheme.fontPixelNormal
                 action: actionDefault
             }
@@ -84,6 +85,7 @@ Item {
                 onlyIcon: root.onlyIcon
                 width: root.width
                 transformOrigin: Item.Left
+                icon.source: "qrc:/image/KtSave.svg"
                 font.pointSize: KtAlarmTheme.fontPixelNormal
                 action: actionSave
             }

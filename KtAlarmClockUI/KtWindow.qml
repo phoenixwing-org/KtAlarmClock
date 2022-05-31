@@ -7,14 +7,14 @@ Window {
     visible: true
     width: 640
     height: 480
-    color: "transparent"
+    color: KtAlarmTheme.colorPrimary
     property alias footer: footer
     property alias header: header
     property alias center: center
     property var left: null
     property var right: null
 
-    property int mouseRegion: 10
+    property int mouseRegion: 5
     property int onlyDisplayIconWidth: 450
     property int __menuBarType: 1
 
@@ -33,6 +33,7 @@ Window {
      */
     Item{
         id:header
+        z:9999
         height: 40
         anchors.topMargin: mouseRegion
 
@@ -65,22 +66,21 @@ Window {
             }
             Image{
                 id: rootIcon
+                x: imageMenus.x + imageMenus.width + 5
+                y: imageMenus.y
                 source: "qrc:/image/kt-blue.svg"
                 width:24
                 height:24
                 sourceSize.height: 24
                 sourceSize.width: 24
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: imageMenus.right
-                anchors.leftMargin: 5
+                KtMouseAreaMove{}
             }
             Text {
-                id: name
+                id: name    
+                x: imageMenus.x + imageMenus.width + rootIcon.width +15
                 text: root.title
-                color: "#EEEEEE"
+                color: KtAlarmTheme.colorTextDlg
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.left: rootIcon.right
-                anchors.leftMargin: 10
             }
         }
 
