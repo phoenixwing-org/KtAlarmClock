@@ -45,7 +45,7 @@ Item {
             KtTimeSlide {
                 id: ktTimeSlideMyWork
                 value: 2400
-                from: 5
+                from: 60
                 to: 5400
                 stepSize: 300
                 title: qsTr("Work:")

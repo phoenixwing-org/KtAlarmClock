@@ -39,11 +39,15 @@ public:
     };
 
     enum ActionID {
-        ActionNone    = 0,
-        ActionClose   = 1,
-        ActionMainDlg = 2,
-        ActionBreak   = 3,
-        ActionHelp    = 4
+        ActionNone      = 0,
+        ActionClose     = 1,
+        ActionMainDlg   = 2,
+        ActionBreak     = 3,
+        ActionHelp      = 4,
+        ActionNextLoop  = 5,
+        ActionPlayPause = 6,
+        ActionForward   = 7,
+        ActionBackward  = 8,
     };
 signals:
 };

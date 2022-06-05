@@ -28,13 +28,16 @@
         <file alias="unlock.svg">../image/unlock.svg</file>
         <file alias="kt.svg">../image/kt.svg</file>
         <file alias="kt-blue.svg">../image/kt-blue.svg</file>
+        <file alias="KtCloudLoad.svg">../image/KtCloudLoad.svg</file>
+        <file alias="KtCloudSave.svg">../image/KtCloudSave.svg</file>
+        <file alias="KtSave.svg">../image/KtSave.svg</file>
+        <file alias="kt-backward.svg">../image/kt-backward.svg</file>
+        <file alias="kt-forward.svg">../image/kt-forward.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MyFooter.qml</file>
-        <file>MyFooterForm.ui.qml</file>
         <file>MyLeft.qml</file>
-        <file>MyLeftForm.ui.qml</file>
         <file>MyMain.qml</file>
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>

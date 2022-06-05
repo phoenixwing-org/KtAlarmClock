@@ -114,7 +114,7 @@ KtWindowOver {
             }
 
             KtToolButton {
-                id: buttonStop
+                id: buttonUnlock
                 icon.source: "qrc:/image/unlock.svg"
                 icon.height: 50
                 icon.width: 50
@@ -135,8 +135,8 @@ KtWindowOver {
                 visible: true
                 color: KtAlarmTheme.colorText
                 text: counterForce
-                anchors.horizontalCenter: buttonStop.horizontalCenter
-                anchors.verticalCenter: buttonStop.verticalCenter
+                anchors.horizontalCenter: buttonUnlock.horizontalCenter
+                anchors.verticalCenter: buttonUnlock.verticalCenter
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: KtAlarmTheme.fontPixelNormal

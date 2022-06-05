@@ -92,9 +92,7 @@ DISTFILES += \
     KtWindowOver.qml \
     MyClock.qml \
     MyFooter.qml \
-    MyFooterForm.ui.qml \
     MyLeft.qml \
-    MyLeftForm.ui.qml \
     MyMain.qml \
     MyOver0.qml \
     MyOver1.qml \

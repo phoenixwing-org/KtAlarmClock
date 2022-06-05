@@ -95,9 +95,14 @@ void KtAlarmClockParam::registerRead() {
     QSettings setting("HKEY_CURRENT_USER\\SOFTWARE\\KuntaiSoft\\KtAlarmClock",
                       QSettings::NativeFormat); // open
 
+    WorkTime = setting.value("WorkTime").toInt();
+    if (WorkTime < 60) { // no setting for WorkTime
+        this->setDefault();
+        return;
+    }
+
     WorkBreak = setting.value("WorkBreak").toInt();
     TimeForce = setting.value("TimeForce").toInt();
-    WorkTime  = setting.value("WorkTime").toInt();
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::registerWrite() {
