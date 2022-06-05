@@ -31,6 +31,8 @@
         <file alias="KtCloudLoad.svg">../image/KtCloudLoad.svg</file>
         <file alias="KtCloudSave.svg">../image/KtCloudSave.svg</file>
         <file alias="KtSave.svg">../image/KtSave.svg</file>
+        <file alias="kt-backward.svg">../image/kt-backward.svg</file>
+        <file alias="kt-forward.svg">../image/kt-forward.svg</file>
     </qresource>
     <qresource prefix="/">
         <file>main.qml</file>

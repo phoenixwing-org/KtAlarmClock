@@ -234,6 +234,16 @@ Window {
             clock.counter = myAlarmClockParam.WorkTime; // reset
             onClockStart(KtAlarmClock.WorkTime);
             break;
+        case KtAlarmClock.ActionForward:
+            KtAlarmTheme.loop = true
+            clock.counter -= 60; // 60s
+            onClockStart(KtAlarmClock.WorkTime);
+            break;
+        case KtAlarmClock.ActionBackward:
+            KtAlarmTheme.loop = true
+            clock.counter += 60; // 60s
+            onClockStart(KtAlarmClock.WorkTime);
+            break;
         case KtAlarmClock.ActionMainDlg:
             mainDlg.show()
             break;
@@ -241,8 +251,6 @@ Window {
             closeAllWindows()
             break;
         case KtAlarmClock.ActionHelp:
-            break;
-        case KtAlarmClock.ActionMainDlg:
             break;
         case KtAlarmClock.ActionKtWeb:
             break;

@@ -46,6 +46,8 @@ public:
         ActionHelp      = 4,
         ActionNextLoop  = 5,
         ActionPlayPause = 6,
+        ActionForward   = 7,
+        ActionBackward  = 8,
     };
 signals:
 };

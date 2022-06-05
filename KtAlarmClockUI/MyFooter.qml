@@ -45,38 +45,51 @@ Item {
             KtToolButton {
                 id: buttonBreak
                 text: qsTr("Rest")
-                Layout.preferredHeight: buttonSize
-                Layout.preferredWidth: buttonSize
-                Image {
-                    width: iconSize
-                    height: iconSize
-                    sourceSize.height: iconSize
-                    sourceSize.width: iconSize
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: "qrc:/image/coffee.svg"
-                }
-
+                icon.source: "qrc:/image/coffee.svg"
+                icon.width: iconSize
+                icon.height: iconSize
                 action: actionBreak
             }
 
             KtToolButton {
-                id: buttonStart
-                text: qsTr("Start")
-                Layout.preferredHeight: buttonSize
-                Layout.preferredWidth: buttonSize
+                id: buttonBackward
+                text: qsTr("play / pause")
+                onlyIcon: true
+                icon.source: "qrc:/image/kt-backward.svg"
+                icon.width: iconSize
+                icon.height: iconSize
+                action: ActionBackward
+                onClicked: KtAlarmTheme.sigAction(KtAlarmClock.ActionBackward)
+            }
 
-                Image {
-                    width: iconSize
-                    height: iconSize
-                    sourceSize.height: iconSize
-                    sourceSize.width: iconSize
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    source: KtAlarmTheme.loop ? "qrc:/image/pause.svg" : "qrc:/image/play.svg"
-                }
+            KtToolButton {
+                id: buttonStart
+                text: qsTr("play / pause")
+                onlyIcon: true
+                icon.source: KtAlarmTheme.loop ? "qrc:/image/pause.svg" : "qrc:/image/play.svg"
+                icon.width: iconSize
+                icon.height: iconSize
                 action: actionPlayPause
             }
+            KtToolButton {
+                id: buttonForward
+                text: qsTr("play / pause")
+                onlyIcon: true
+                icon.source: "qrc:/image/kt-forward.svg"
+                icon.width: iconSize
+                icon.height: iconSize
+                onClicked: KtAlarmTheme.sigAction(KtAlarmClock.ActionForward)
+            }
+
+            KtToolButton {
+                id: buttonReset
+                onlyIcon: true
+                icon.source: "qrc:/image/next.svg"
+                icon.width: iconSize
+                icon.height: iconSize
+                action: actionNextLoop
+            }
+
         }
     }
 

@@ -67,16 +67,6 @@ Item {
             }
 
             KtToolButton {
-                id: toolButtonReset
-                onlyIcon: root.onlyIcon
-                width: root.width
-                transformOrigin: Item.Left
-                icon.source: "qrc:/image/next.svg"
-                font.pointSize: KtAlarmTheme.fontPixelNormal
-                action: ActionNextLoop
-            }
-
-            KtToolButton {
                 id: toolButtonDefault
                 onlyIcon: root.onlyIcon
                 width: root.width
