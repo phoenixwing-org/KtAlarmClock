@@ -35,9 +35,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>MyFooter.qml</file>
-        <file>MyFooterForm.ui.qml</file>
         <file>MyLeft.qml</file>
-        <file>MyLeftForm.ui.qml</file>
         <file>MyMain.qml</file>
         <file>MyRight.qml</file>
         <file>MyRightForm.ui.qml</file>

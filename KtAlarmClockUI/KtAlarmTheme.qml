@@ -3,6 +3,7 @@
  */
 pragma Singleton
 import QtQuick 2.14
+import QtQuick.Controls 2.14
 import KtAlarmClock 1.0
 
 QtObject {
@@ -24,4 +25,8 @@ QtObject {
     // clock property
     property int clockStep: KtAlarmClock.None
     property bool clockForce: false
+    property bool loop: false
+
+    signal sigAction(int index)
+
 }

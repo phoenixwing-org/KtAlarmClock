@@ -46,6 +46,7 @@ Window {
         id: clock
         x: 0
         y: 0
+        counter: -100
     }
 
     MyOverItem{
@@ -96,6 +97,7 @@ Window {
         
         myAlarmClockParam.sigClockOut.connect(onClockTimeout);
         myAlarmClockParam.sigAction.connect(onSigAction);
+        KtAlarmTheme.sigAction.connect(onSigAction);
 
         clock.sigClockOut.connect(onClockTimeout)
         trayIcon.sigAction.connect(onSigAction)
@@ -133,7 +135,7 @@ Window {
             overItem.customShow();
             return
         case KtAlarmClock.WorkTime:
-            clock.timeMax = myAlarmClockParam.WorkTime;
+            clock.timeMax = clock.counter;
             clock.onClockStart(state);
             overItem.customHide();
             break;
@@ -153,6 +155,8 @@ Window {
             break;
         case KtAlarmClock.WorkBreak:
             myAlarmClockParam.sigUpdateInfos() // get infos
+
+            clock.counter = myAlarmClockParam.WorkTime; // reset
             onClockStart(KtAlarmClock.WorkTime) // work time
             break;
         default:
@@ -172,6 +176,7 @@ Window {
                 mainDlg.show();
             }
             else{
+                onClockStart()
                 mainDlg.hide();
             }
             break;
@@ -192,16 +197,54 @@ Window {
      * @brief Action signal treatment
      */
     function onSigAction(index){
-        // console.log("main.onSigAction(" + index + ")")
+        console.log("main.onSigAction(" + index + ")")
         switch(index) {
+        case KtAlarmClock.ActionPlayPause:
+            if(clock.counter <= -100){
+                // first time to paly
+                KtAlarmTheme.loop = true
+
+                myAlarmClockParam.sigUpdateInfos() // get infos
+                clock.counter = myAlarmClockParam.WorkTime; // reset
+            } else{
+                // change state
+                KtAlarmTheme.loop = !(KtAlarmTheme.loop)
+            }
+
+            console.log("To : loop = " + KtAlarmTheme.loop + ", counter = ", clock.counter)
+            if(KtAlarmTheme.loop){
+                onClockStart(KtAlarmClock.WorkTime);
+            }
+            else{
+                // change to pause
+                clock.onClockPause()
+                overItem.customHide();
+            }
+
+            break;
         case KtAlarmClock.ActionBreak:
-            myAlarmClockCmd.onStart(KtAlarmClock.WorkBreak)
+            myAlarmClockParam.sigUpdateInfos() // get infos
+            KtAlarmTheme.loop = true
+            onClockStart(KtAlarmClock.WorkBreak)
+            break;
+        case KtAlarmClock.ActionNextLoop:
+            KtAlarmTheme.loop = true
+            
+            myAlarmClockParam.sigUpdateInfos() // get infos
+            clock.counter = myAlarmClockParam.WorkTime; // reset
+            onClockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionMainDlg:
             mainDlg.show()
             break;
         case KtAlarmClock.ActionClose:
             closeAllWindows()
+            break;
+        case KtAlarmClock.ActionHelp:
+            break;
+        case KtAlarmClock.ActionMainDlg:
+            break;
+        case KtAlarmClock.ActionKtWeb:
             break;
         default:
         }

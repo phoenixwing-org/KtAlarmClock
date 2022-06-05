@@ -84,7 +84,7 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     // all the signal is connect to the socket
     m_pClockParam->sigUpdateDialog(); // update dialog
 
-    emit m_pClockParam->sigClockStart(KtAlarmClock::WorkTime); // start to work
+    emit m_pClockParam->sigAction(KtAlarmClock::ActionPlayPause); // start to work
 
     return KT_S_OK;
 }
