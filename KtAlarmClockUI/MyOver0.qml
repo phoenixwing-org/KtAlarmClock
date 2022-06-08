@@ -23,131 +23,114 @@ KtWindowOver {
     //modality: Qt.WindowModal //Block other windows
     title: "First Over"
 
+    Label {
+        id: labelMsg
+        color: KtAlarmTheme.colorText
+        text: qsTr("")
+        anchors.horizontalCenter: footer.horizontalCenter
+        anchors.bottom: footer.top
+        anchors.bottomMargin: 5
+        font.pointSize: KtAlarmTheme.fontPixelLarge
+    }
+
     Rectangle {
-        id: rectangle
-        width: root.width
-        height: root.height
-        color: KtAlarmTheme.colorBackground
-        anchors.fill: parent
-        opacity: 1
+        id: footer
+        x: (root.width - width) * 0.5
+        y: root.height - 100
+        width: 500
+        height: 80
+        color: "#111111"
+        visible: showFormula
 
-        Label {
-            id: labelMsg
-            y: 189
-            color: KtAlarmTheme.colorText
-            text: qsTr("")
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: footer.top
-            anchors.bottomMargin: 0
-            font.pointSize: KtAlarmTheme.fontPixelLarge
-        }
+        KtMouseAreaMove{}
 
-
-        Rectangle {
-            id: footer
-            width: parent.width
-            height: 80
-            color: "#111111"
-            anchors.bottom: parent.bottom
+        Item {
+            id: element
+            visible: counterForce <= 0
+            width: labelFormula.width + rectangleResult.width + 20
+            height: 50
+            clip: false
+            anchors.horizontalCenter: footer.horizontalCenter
+            anchors.verticalCenter: footer.verticalCenter
 
             Label {
-                id: kt
-                x: 80
+                id: labelFormula
                 color: KtAlarmTheme.colorText
-                text: qsTr("上海锟钛软件科技有限公司")
-                anchors.verticalCenter: footer.verticalCenter
-                font.pointSize: KtAlarmTheme.fontPixelNormal
-            }
-
-            Item {
-                id: element
-                visible: counterForce <= 0
-                width: labelFormula.width + rectangleResult.width + 20
-                height: 50
-                clip: false
-                anchors.horizontalCenter: footer.horizontalCenter
-                anchors.verticalCenter: footer.verticalCenter
-
-                Label {
-                    id: labelFormula
-                    color: KtAlarmTheme.colorText
-                    text: qsTr("2200 + 1100 =")
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font.pointSize: KtAlarmTheme.fontPixelLarge
-
-                    anchors.verticalCenter: element.verticalCenter
-                }
-
-                Rectangle {
-                    id: rectangleResult
-                    width: 80
-                    height: 40
-                    anchors.left: labelFormula.right
-                    anchors.leftMargin: 10
-                    color: "#112a3f"
-                    border.color: KtAlarmTheme.colorBorder
-                    border.width: 1
-                    visible: true
-
-                    anchors.verticalCenter: element.verticalCenter
-                    TextEdit {
-                        id: textEditResult
-                        x: 159
-                        y: 15
-                        height: 40
-                        color: KtAlarmTheme.colorText
-                        text: ""
-                        anchors.rightMargin: 5
-                        anchors.leftMargin: 0
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.top: parent.top
-                        anchors.right: parent.right
-                        anchors.left: parent.left
-                        font.family: "Arial"
-                        font.pixelSize: 30
-                        wrapMode: Text.NoWrap
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-            }
-
-            KtToolButton {
-                id: buttonUnlock
-                icon.source: "qrc:/image/unlock.svg"
-                icon.height: 50
-                icon.width: 50
-                visible: showFormula
-                text: qsTr("Unlock")
-                flat: false
-                font.pointSize: KtAlarmTheme.fontPixelLarge
-                
-                anchors.verticalCenter: footer.verticalCenter
-                anchors.right: footer.right
-                anchors.rightMargin: 5
-                onClicked: unlockPage()
-            }
-
-            Label {
-                id: labelForce
-                width: parent.width
-                visible: true
-                color: KtAlarmTheme.colorText
-                text: counterForce
-                anchors.horizontalCenter: buttonUnlock.horizontalCenter
-                anchors.verticalCenter: buttonUnlock.verticalCenter
+                text: qsTr("2200 + 1100 =")
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-                font.pointSize: KtAlarmTheme.fontPixelNormal
+                font.pointSize: KtAlarmTheme.fontPixelLarge
+
+                anchors.verticalCenter: element.verticalCenter
             }
 
+            Rectangle {
+                id: rectangleResult
+                width: 80
+                height: 40
+                anchors.left: labelFormula.right
+                anchors.leftMargin: 10
+                color: "#112a3f"
+                border.color: KtAlarmTheme.colorBorder
+                border.width: 1
+                visible: true
+
+                anchors.verticalCenter: element.verticalCenter
+                TextEdit {
+                    id: textEditResult
+                    x: 159
+                    y: 15
+                    height: 40
+                    color: KtAlarmTheme.colorText
+                    text: ""
+                    anchors.rightMargin: 5
+                    anchors.leftMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    anchors.left: parent.left
+                    font.family: "Arial"
+                    font.pixelSize: 30
+                    wrapMode: Text.NoWrap
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
+
+        KtToolButton {
+            id: buttonUnlock
+            icon.source: "qrc:/image/unlock.svg"
+            icon.height: 50
+            icon.width: 50
+            visible: showFormula
+            text: qsTr("Unlock")
+            flat: false
+            font.pointSize: KtAlarmTheme.fontPixelLarge
+            
+            anchors.verticalCenter: footer.verticalCenter
+            anchors.right: footer.right
+            anchors.rightMargin: 5
+            onClicked: unlockPage()
+        }
+
+        Label {
+            id: labelForce
+            width: parent.width
+            visible: true
+            color: KtAlarmTheme.colorText
+            text: counterForce
+            anchors.horizontalCenter: buttonUnlock.horizontalCenter
+            anchors.verticalCenter: buttonUnlock.verticalCenter
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignHCenter
+            font.pointSize: KtAlarmTheme.fontPixelNormal
         }
     }
-        
+
     Image {
         x: root.width/2
-        y: root.height/2
+        y: root.height * 0.667
         width: 100
         height: 100
         sourceSize.height: 100
@@ -160,21 +143,18 @@ KtWindowOver {
         id: myClock
         timeMax: 4
         visible: true
-        x: root.width/2
-        y: 0
+        x: root.width * 0.5
+        y: root.height * 0.5
         KtMouseAreaMove{}
     }
 
     Image {
-        id: ktLogo
         x: 5
         y: root.height - 80
         z: 100
-        width: 70
-        height: 70
-        sourceSize.height: 70
-        sourceSize.width: 70
-        source: "qrc:/image/kt-blue.svg"
+        width: 36
+        height: 36
+        source: "qrc:/image/alarm-clock.svg"
         KtMouseAreaMove{}
     }
 

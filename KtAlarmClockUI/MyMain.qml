@@ -15,7 +15,7 @@ KtWindow{
     width: 480
     height: 480
 
-    title: qsTr("Kt Alarm Clock")
+    title: qsTr("护眼闹钟")
 
     left:ktLeft
     right: ktRight
@@ -56,7 +56,6 @@ KtWindow{
         anchors.leftMargin: 0
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 0
-
     }
 
     // connect signal onCompleted
