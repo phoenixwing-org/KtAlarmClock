@@ -21,20 +21,6 @@ Item {
 
         anchors.fill: parent
 
-        Image {
-            id: ktLogo
-            x: 5
-            y: 5
-            z: 9998
-            width: buttonSize
-            height: buttonSize
-            sourceSize.height: buttonSize
-            sourceSize.width: buttonSize
-            source: "qrc:/image/kt.svg"
-
-            KtMouseAreaMove {}
-        }
-
         RowLayout {
             id: rowLayout
             height: buttonSize
