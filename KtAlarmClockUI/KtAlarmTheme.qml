@@ -23,10 +23,9 @@ QtObject {
     property int debug: 0
 
     // clock property
-    property int clockStep: KtAlarmClock.None
+    property int workStep: KtAlarmClock.None
     property bool clockForce: false
     property bool loop: false
 
     signal sigAction(int index)
-
 }

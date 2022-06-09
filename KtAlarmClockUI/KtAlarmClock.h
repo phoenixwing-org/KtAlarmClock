@@ -23,8 +23,7 @@ public:
     enum WorkStep {
         None      = 0,
         WorkTime  = 1,
-        WorkBreak = 3,
-        WorkPause = 4
+        WorkBreak = 2
     };
 
     enum WindowsVisible {

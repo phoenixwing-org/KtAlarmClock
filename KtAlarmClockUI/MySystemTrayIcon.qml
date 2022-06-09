@@ -74,6 +74,6 @@ SystemTrayIcon {
 
     function checkForbiden(){
         if(KtAlarmTheme.debug ===1) return false
-        return (KtAlarmTheme.clockStep == KtAlarmClock.WorkBreak)
+        return (KtAlarmTheme.workStep == KtAlarmClock.WorkBreak)
     }
 }

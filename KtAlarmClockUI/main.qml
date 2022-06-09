@@ -71,6 +71,13 @@ Window {
         id:trayIcon
     }
 
+    Connections {
+        target: KtAlarmTheme
+        onWorkStepChanged: {
+            actionWorkStepChanged();
+        }
+    }
+
     //@disable-check M16
     onClosing: function(closeEvent){
         closeEvent.accepted = root.canClose //accept the close
@@ -107,9 +114,35 @@ Window {
         //console.log("main.onCompleted()-end")
     }
 
+    function actionWorkStepChanged(){
+
+        console.log("main:actionWorkStepChanged(), workStep=",KtAlarmTheme.workStep)
+        let showClock = false
+        let showOver = false
+
+        if( KtAlarmTheme.workStep == KtAlarmClock.WorkTime){
+            showClock = true
+        }
+        else if( KtAlarmTheme.workStep == KtAlarmClock.WorkBreak){
+            showOver = true
+        }
+
+        if(clock.visible !== showClock) {
+            console.log("change clock.visible to ", showClock)
+            clock.visible = showClock
+        }
+        if(overItem.visible !== showOver) {
+            console.log("change over.visible  to ", showOver)
+            overItem.visible = showOver
+            if(!showOver){
+                overItem.customHide();
+            }
+        }
+    }
+
     function closeAllWindows(){
 
-        KtAlarmTheme.clockStep = KtAlarmClock.None
+        KtAlarmTheme.workStep = KtAlarmClock.None
 
         // can close
         root.canClose = true;
@@ -117,14 +150,13 @@ Window {
 
         //hide
         trayIcon.hide()
-        overItem.customHide()
         mainDlg.hide()
         root.close()
         
     }
 
     function onClockStart(state){
-        KtAlarmTheme.clockStep = state
+        KtAlarmTheme.workStep = state
         //myAlarmClockParam.dump() // dump
 
         switch(state){
@@ -137,11 +169,9 @@ Window {
         case KtAlarmClock.WorkTime:
             clock.timeMax = clock.counter;
             clock.onClockStart(state);
-            overItem.customHide();
             break;
         default:
             clock.onClockPause()
-            overItem.customHide();
         }
     }
 
@@ -218,7 +248,6 @@ Window {
             else{
                 // change to pause
                 clock.onClockPause()
-                overItem.customHide();
             }
 
             break;

@@ -129,6 +129,7 @@ KtWindowOver {
     }
 
     Image {
+        id: imgCoffee
         x: root.width/2
         y: root.height * 0.667
         width: 100
@@ -136,6 +137,18 @@ KtWindowOver {
         sourceSize.height: 100
         sourceSize.width: 100
         source: "qrc:/image/coffee.svg"
+        KtMouseAreaMove{}
+
+    }
+
+    Image {
+        id: imgClock
+        x: imgCoffee.x + 35
+        y: imgCoffee.y + 56
+        z: 100
+        width: 24
+        height: 24
+        source: "qrc:/image/alarm-clock.svg"
         KtMouseAreaMove{}
     }
 
@@ -148,15 +161,7 @@ KtWindowOver {
         KtMouseAreaMove{}
     }
 
-    Image {
-        x: 5
-        y: root.height - 80
-        z: 100
-        width: 36
-        height: 36
-        source: "qrc:/image/alarm-clock.svg"
-        KtMouseAreaMove{}
-    }
+
 
     Component.onCompleted: {
         initialFormula()
