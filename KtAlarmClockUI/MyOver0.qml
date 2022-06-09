@@ -192,22 +192,6 @@ KtWindowOver {
         }
     }
 
-    onActiveFocusItemChanged: {
-        //console.log("MyOver0.activeFocusItem is changed to  ", activeFocusItem)
-
-        // clockRunning and not active, user want to escape the lock
-
-        // console.log("clockRunning =  ", clockRunning)
-        // console.log("clockRunning && !activeFocusItem =  ", (clockRunning && !activeFocusItem))
-        //if(clockRunning && !activeFocusItem){
-        //    console.log("I am in (clockRunning && !activeFocusItem)")
-        //   / this.hide();
-        //    //console.log("MyOver0: Try to Run showOver()  ")
-        //    
-        //    //root.showFullScreen()
-        //}
-    }
-
     function unlockPage(){
         // console.log("MyOver0.unlockPage()")
         if (root.counterForce > 0){

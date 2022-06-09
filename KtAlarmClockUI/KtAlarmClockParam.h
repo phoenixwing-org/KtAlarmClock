@@ -28,17 +28,17 @@ class ExportedByKtAlarmClockUI KtAlarmClockParam : public QObject {
     /**
      * @brief Work Time Property
      */
-    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE SetWorkTime NOTIFY sigWorkTime);
+    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE setWorkTime NOTIFY sigWorkTime);
 
     /**
      * @brief Work Break Property
      */
-    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE SetWorkBreak NOTIFY sigWorkBreak);
+    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE setWorkBreak NOTIFY sigWorkBreak);
 
     /**
      * @brief Time Force Property
      */
-    Q_PROPERTY(int TimeForce READ GetTimeForce WRITE SetTimeForce NOTIFY sigTimeForce);
+    Q_PROPERTY(int TimeForce READ GetTimeForce WRITE setTimeForce NOTIFY sigTimeForce);
 
 public:
     /** @brief Standard constructors and destructors */
@@ -132,17 +132,17 @@ public slots:
     /**
      * @brief Set Work Time
      */
-    void SetWorkTime(int iValue);
+    void setWorkTime(int iValue);
 
     /**
      * @brief Set Work Break
      */
-    void SetWorkBreak(int iValue);
+    void setWorkBreak(int iValue);
 
     /**
      * @brief Set Time Counter
      */
-    void SetTimeForce(int iValue);
+    void setTimeForce(int iValue);
 
 public:
     // clang-format off

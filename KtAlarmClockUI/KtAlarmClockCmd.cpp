@@ -106,10 +106,3 @@ int KtAlarmClockCmd::setAutoStart(bool iValue) {
     reg.setValue("KtAlarmClock", m_ExePath);
     return 0; // ok
 }
-//------------------------------------------------
-int KtAlarmClockCmd::onStart(int state) {
-    // qDebug() << "KtAlarmClockCmd::onStart(" << state << ")";
-    m_pClockParam->sigUpdateInfos(); // get infos from dialog
-    emit m_pClockParam->sigClockStart(state);
-    return KT_S_OK;
-}

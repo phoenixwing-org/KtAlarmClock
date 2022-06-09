@@ -37,7 +37,7 @@ Window {
     MyWindowMenu{
         id:menuTest
         visible: false
-        onSigAction:{
+        actAction:{
             myAlarmClockParam.sigAction(index)
         }
     }
@@ -73,9 +73,7 @@ Window {
 
     Connections {
         target: KtAlarmTheme
-        onWorkStepChanged: {
-            actionWorkStepChanged();
-        }
+        onWorkStepChanged: actWorkStepChanged
     }
 
     //@disable-check M16
@@ -99,24 +97,24 @@ Window {
         mainDlg.x = x;
 
         // signal Show sub dialog
-        myAlarmClockParam.sigDialogShow.connect(onShowDialog)
-        myAlarmClockParam.sigClockStart.connect(onClockStart)
+        myAlarmClockParam.sigDialogShow.connect(actShowDialog)
+        myAlarmClockParam.sigClockStart.connect(actClockStart)
         
-        myAlarmClockParam.sigClockOut.connect(onClockTimeout);
-        myAlarmClockParam.sigAction.connect(onSigAction);
-        KtAlarmTheme.sigAction.connect(onSigAction);
+        myAlarmClockParam.sigClockOut.connect(actClockTimeout);
+        myAlarmClockParam.sigAction.connect(actAction);
+        KtAlarmTheme.sigAction.connect(actAction);
 
-        clock.sigClockOut.connect(onClockTimeout)
-        trayIcon.sigAction.connect(onSigAction)
+        clock.sigClockOut.connect(actClockTimeout)
+        trayIcon.sigAction.connect(actAction)
 
         myAlarmClockCmd.setAutoStart(true);
         
         //console.log("main.onCompleted()-end")
     }
 
-    function actionWorkStepChanged(){
+    function actWorkStepChanged(){
 
-        console.log("main:actionWorkStepChanged(), workStep=",KtAlarmTheme.workStep)
+        console.log("main:actWorkStepChanged(), workStep=",KtAlarmTheme.workStep)
         let showClock = false
         let showOver = false
 
@@ -155,7 +153,7 @@ Window {
         
     }
 
-    function onClockStart(state){
+    function actClockStart(state){
         KtAlarmTheme.workStep = state
         //myAlarmClockParam.dump() // dump
 
@@ -168,7 +166,7 @@ Window {
             return
         case KtAlarmClock.WorkTime:
             clock.timeMax = clock.counter;
-            clock.onClockStart(state);
+            clock.actClockStart(state);
             break;
         default:
             clock.onClockPause()
@@ -176,21 +174,21 @@ Window {
     }
 
     // on state change
-    function onClockTimeout(state){
-        // console.log("onClockTimeout("+state+")")
+    function actClockTimeout(state){
+        // console.log("actClockTimeout("+state+")")
         switch(state) {
         case KtAlarmClock.WorkTime:
             myAlarmClockParam.sigUpdateInfos() // get infos
-            onClockStart(KtAlarmClock.WorkBreak) // break
+            actClockStart(KtAlarmClock.WorkBreak) // break
             break;
         case KtAlarmClock.WorkBreak:
             myAlarmClockParam.sigUpdateInfos() // get infos
 
             clock.counter = myAlarmClockParam.WorkTime; // reset
-            onClockStart(KtAlarmClock.WorkTime) // work time
+            actClockStart(KtAlarmClock.WorkTime) // work time
             break;
         default:
-            onClockStart(KtAlarmClock.None) // None
+            actClockStart(KtAlarmClock.None) // None
             break;
         }
     }
@@ -198,15 +196,15 @@ Window {
     /**
      * @brief Show sub dialog
      */
-    function onShowDialog(index, value){
-        //console.log("onShowDialog(" + index + "," + value +")")
+    function actShowDialog(index, value){
+        //console.log("actShowDialog(" + index + "," + value +")")
         switch(index) {
         case KtAlarmClock.DlgMain:
             if(value){
                 mainDlg.show();
             }
             else{
-                onClockStart()
+                actClockStart()
                 mainDlg.hide();
             }
             break;
@@ -226,8 +224,8 @@ Window {
     /**
      * @brief Action signal treatment
      */
-    function onSigAction(index){
-        console.log("main.onSigAction(" + index + ")")
+    function actAction(index){
+        console.log("main.actAction(" + index + ")")
         switch(index) {
         case KtAlarmClock.ActionPlayPause:
             if(clock.counter <= -100){
@@ -243,7 +241,7 @@ Window {
 
             console.log("To : loop = " + KtAlarmTheme.loop + ", counter = ", clock.counter)
             if(KtAlarmTheme.loop){
-                onClockStart(KtAlarmClock.WorkTime);
+                actClockStart(KtAlarmClock.WorkTime);
             }
             else{
                 // change to pause
@@ -254,24 +252,24 @@ Window {
         case KtAlarmClock.ActionBreak:
             myAlarmClockParam.sigUpdateInfos() // get infos
             KtAlarmTheme.loop = true
-            onClockStart(KtAlarmClock.WorkBreak)
+            actClockStart(KtAlarmClock.WorkBreak)
             break;
         case KtAlarmClock.ActionNextLoop:
             KtAlarmTheme.loop = true
             
             myAlarmClockParam.sigUpdateInfos() // get infos
             clock.counter = myAlarmClockParam.WorkTime; // reset
-            onClockStart(KtAlarmClock.WorkTime);
+            actClockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionForward:
             KtAlarmTheme.loop = true
             clock.counter -= 60; // 60s
-            onClockStart(KtAlarmClock.WorkTime);
+            actClockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionBackward:
             KtAlarmTheme.loop = true
             clock.counter += 60; // 60s
-            onClockStart(KtAlarmClock.WorkTime);
+            actClockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionMainDlg:
             mainDlg.show()

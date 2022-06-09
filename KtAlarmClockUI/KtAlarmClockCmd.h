@@ -62,11 +62,6 @@ public:
 public slots:
 
     /**
-     * @brief start the clock
-     */
-    int onStart(int state);
-
-    /**
      * @brief auto start
      */
     int setAutoStart(bool iValue);

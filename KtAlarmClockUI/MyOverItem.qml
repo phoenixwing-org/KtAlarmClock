@@ -83,7 +83,7 @@ Item {
             over0.showOver0()
 
             over0.myClock.timeMax = root.timeMax;
-            over0.myClock.onClockStart(KtAlarmClock.WorkBreak);
+            over0.myClock.actClockStart(KtAlarmClock.WorkBreak);
             return
         }
     }

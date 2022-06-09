@@ -45,7 +45,7 @@ Item{
         }
     }
 
-    function onClockStart(iState){
+    function actClockStart(iState){
         counter = timeMax;
         state = iState;
         if(iState === KtAlarmClock.None){
