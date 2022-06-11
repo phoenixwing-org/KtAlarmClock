@@ -11,7 +11,7 @@ Item{
     property int state: KtAlarmClock.None
     readonly property alias clockRunning: myTimer.running
 
-    signal sigClockOut(int state)
+    signal onClockOut(int state)
 
     Rectangle{
         id: rectangle
@@ -38,31 +38,31 @@ Item{
             running: false
             repeat: true
             onTriggered:{
-                if(counter <= 0) onClockOut();
+                if(counter <= 0) clockOut();
                 counter --
                 showTime();
             }
         }
     }
 
-    function actClockStart(iState){
+    function clockStart(iState){
         counter = timeMax;
         state = iState;
         if(iState === KtAlarmClock.None){
             myTimer.running = false;
-            sigClockOut(KtAlarmClock.None)
+            onClockOut(KtAlarmClock.None)
         }
 
         showTime();
         myTimer.running = true;
     }
 
-    function onClockOut(){
+    function clockOut(){
         myTimer.running = false;
-        sigClockOut(state)
+        onClockOut(state)
     }
 
-    function onClockPause(){
+    function clockPause(){
         myTimer.running = false;
     }
 

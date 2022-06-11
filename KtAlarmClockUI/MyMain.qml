@@ -11,13 +11,13 @@ import KtAlarmClock 1.0
 
 KtWindow{
     id: root
-    visible: true
+    visible: false
     width: 480
     height: 480
 
     title: qsTr("护眼闹钟")
 
-    left:ktLeft
+    left: ktLeft
     right: ktRight
 
     // Left
@@ -61,8 +61,8 @@ KtWindow{
     // connect signal onCompleted
     Component.onCompleted: {
         //console.log("MyMain.onCompleted()")
-        ktLeft.sigScrollPage.connect(ktRight.scrollPage)// pass index value
-        root.sigWindowSizeChanged.connect(root.autoDisplayLeftMenu)
+        ktLeft.onScrollPage.connect(ktRight.scrollPage)// pass index value
+        root.onWindowSizeChanged.connect(root.autoDisplayLeftMenu)
         //console.log("MyMain.onCompleted()-end")
     }
 

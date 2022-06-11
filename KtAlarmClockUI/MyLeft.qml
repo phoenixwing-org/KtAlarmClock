@@ -93,7 +93,7 @@ Item {
         text: "上课读书"
         shortcut: StandardKey.New
         onTriggered: {
-            sigScrollPage(0)
+            onScrollPage(0)
         }
     }
 
@@ -102,7 +102,7 @@ Item {
         text: "下课休息"
         shortcut: StandardKey.Open
         onTriggered: {
-            sigScrollPage(1)
+            onScrollPage(1)
         }
     }
     Action {
@@ -110,7 +110,7 @@ Item {
         text: "强制休息"
         shortcut: StandardKey.Save
         onTriggered: {
-                sigScrollPage(2)
+                onScrollPage(2)
             }
     }
 
@@ -119,7 +119,7 @@ Item {
         text: "默认设置"
         onTriggered: {
                 myAlarmClockParam.setDefault()
-                myAlarmClockParam.sigUpdateDialog()
+                myAlarmClockParam.onUpdateDialog()
             }
 
     }
@@ -128,7 +128,7 @@ Item {
         id: actionSave
         text: "保存设置"
         onTriggered: {
-                myAlarmClockParam.sigUpdateInfos()
+                myAlarmClockParam.onUpdateInfos()
                 myAlarmClockParam.registerWrite()
             }
     }
@@ -148,7 +148,7 @@ Item {
         text: "锟钛网站"
     }
 
-    signal sigScrollPage(int index)
+    signal onScrollPage(int index)
 
 
     onOnlyIconChanged: {

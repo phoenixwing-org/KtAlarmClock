@@ -8,7 +8,7 @@ SystemTrayIcon {
     visible: true
     icon.source: "qrc:/image/kt-blue.svg"
 
-    signal sigAction(int index)
+    signal onAction(int index)
 
     menu: Menu {
         MenuItem {
@@ -27,7 +27,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/coffee.svg"
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionBreak)
+                onAction(KtAlarmClock.ActionBreak)
             }
         }
         MenuItem {
@@ -35,7 +35,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/menus.svg"
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionMainDlg)
+                onAction(KtAlarmClock.ActionMainDlg)
             }
         }
 
@@ -62,7 +62,7 @@ SystemTrayIcon {
             iconSource: "qrc:/image/cancel.svg"
             onTriggered:{
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionClose)
+                onAction(KtAlarmClock.ActionClose)
             }
         }
     }

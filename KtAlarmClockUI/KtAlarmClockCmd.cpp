@@ -82,9 +82,9 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     m_pClockParam->registerRead(); // read param
 
     // all the signal is connect to the socket
-    m_pClockParam->sigUpdateDialog(); // update dialog
+    m_pClockParam->onUpdateDialog(); // update dialog
 
-    emit m_pClockParam->sigAction(KtAlarmClock::ActionPlayPause); // start to work
+    emit m_pClockParam->onAction(KtAlarmClock::ActionPlayPause); // start to work
 
     return KT_S_OK;
 }

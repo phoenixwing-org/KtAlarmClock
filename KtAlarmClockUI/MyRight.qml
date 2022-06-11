@@ -48,8 +48,8 @@ MyRightForm {
     // connect signal onCompleted
     Component.onCompleted: {
         //console.log("MyRight.onCompleted()")
-        myAlarmClockParam.sigUpdateInfos.connect(onUpdateInfos)
-        myAlarmClockParam.sigUpdateDialog.connect(onUpdateDialog)
+        myAlarmClockParam.onUpdateInfos.connect(onUpdateInfos)
+        myAlarmClockParam.onUpdateDialog.connect(onUpdateDialog)
 
         onUpdateDialog()
         //console.log("MyRight.onCompleted()-end")

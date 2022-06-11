@@ -25,8 +25,7 @@ Window {
 
     flags: Qt.FramelessWindowHint
 
-
-    signal sigWindowSizeChanged()
+    signal onWindowSizeChanged()
 
     /*
      * header
@@ -212,7 +211,7 @@ Window {
                 var xWidth = root.width+xOffset
                 if(xWidth+root.x<root.maximumWidth && xWidth>root.minimumWidth){
                     root.width = xWidth
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
             }
         }
@@ -237,7 +236,7 @@ Window {
                 if(root.y+yOffset>0 && root.height-yOffset>root.minimumHeight){
                     root.y = root.y+yOffset
                     root.height = root.height-yOffset
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
             }
         }
@@ -262,7 +261,7 @@ Window {
                 var yHeight = root.height+yOffset
                 if(yHeight+root.y<root.maximumHeight && yHeight>root.minimumHeight){
                     root.height = yHeight
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
             }
         }
@@ -288,7 +287,7 @@ Window {
                 if(root.x+xOffset>0 && root.width-xOffset>root.minimumWidth){
                     root.x = root.x+xOffset
                     root.width = root.width-xOffset
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
                 var yOffset = mouse.y-yPosition
                 if(root.y+yOffset>0 && root.height-yOffset>root.minimumHeight){
@@ -319,7 +318,7 @@ Window {
                 var xWidth = root.width+xOffset
                 if(xWidth+root.x<root.maximumWidth && xWidth>root.minimumWidth){
                     root.width = xWidth
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
                 var yOffset = mouse.y-yPosition
                 if(root.y+yOffset>0 && root.height-yOffset>root.minimumHeight){
@@ -349,7 +348,7 @@ Window {
                 if(root.x+xOffset>0 && root.width-xOffset>root.minimumWidth){
                     root.x = root.x+xOffset
                     root.width = root.width-xOffset
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
 
                 var yOffset = mouse.y-yPosition
@@ -381,7 +380,7 @@ Window {
                 var xWidth = root.width+xOffset
                 if(xWidth+root.x<root.maximumWidth && xWidth>root.minimumWidth){
                     root.width = xWidth
-                    sigWindowSizeChanged()
+                    onWindowSizeChanged()
                 }
                 var yOffset = mouse.y-yPosition
                 var yHeight = root.height+yOffset

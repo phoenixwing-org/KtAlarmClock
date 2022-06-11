@@ -27,5 +27,5 @@ QtObject {
     property bool clockForce: false
     property bool loop: false
 
-    signal sigAction(int index)
+    signal onAction(int index)
 }

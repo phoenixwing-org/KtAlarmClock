@@ -9,19 +9,19 @@ KtWindowOver {
     width:600
     height:400
     color: KtAlarmTheme.colorBackground
-    property alias myClock: myClock
-    readonly property alias clockRunning: myClock.clockRunning
 
-    property alias labelFormula: labelFormula
-    property alias labelMsg: labelMsg
-    property alias textEditResult: textEditResult
+    property int timeForce: 0
+    property int timeMax: 3600
     property int counterForce: 0
     property int formulaValue: 3300
     property bool canClose: false
     property bool showFormula: counterForce<=0
     
+    signal onClockOut(int state)
+
     //modality: Qt.WindowModal //Block other windows
     title: "First Over"
+    screenId: 0
 
     Label {
         id: labelMsg
@@ -153,7 +153,7 @@ KtWindowOver {
     }
 
     MyClock{
-        id: myClock
+        id: clock
         timeMax: 4
         visible: true
         x: root.width * 0.5
@@ -161,6 +161,12 @@ KtWindowOver {
         KtMouseAreaMove{}
     }
 
+    MyOver1 {
+        id: over1
+        canClose: root.canClose
+        title: qsTr("Over 1 window")
+        screenId: 1
+    }
 
 
     Component.onCompleted: {
@@ -191,7 +197,50 @@ KtWindowOver {
             }
         }
     }
+    /*
+     * Show Window
+     */
+    function customHide(){
+        root.visible = false
+        root.canClose = true;
 
+        if(clock.clockRunning){
+            root.stopPage0()
+        }
+
+        // for over1
+        root.hide()
+        over1.hide();
+    }
+
+
+    /*
+     * Show Window
+     */
+    function customShow(){
+        root.visible = true
+        visible = true
+        root.screenId = 0
+        over1.screenId = 1
+        root.checkoutScreen()
+        over1.checkoutScreen()
+        //console.log("over1.screenOK = ",over1.screenOK)
+        //console.log("root.screenOK = ",root.screenOK)
+
+        if(over1.screenOK){
+            over1.showOver();
+        }
+
+        if(root.screenOK){
+            root.canClose = false;// cannot close
+            root.counterForce = root.timeForce
+            root.showOver0()
+
+            root.clock.timeMax = root.timeMax;
+            root.clock.clockStart(KtAlarmClock.WorkBreak);
+            return
+        }
+    }
     function unlockPage(){
         // console.log("MyOver0.unlockPage()")
         if (root.counterForce > 0){
@@ -199,16 +248,24 @@ KtWindowOver {
             return
         }
 
-        // check answer
-        var value = parseInt(textEditResult.text)
-        root.canClose = (value == root.formulaValue)
-        // console.log("canClose = ",value, root.canClose)
+        // check whether can close
+        let can = false;
+        if(clock.running){
+            // if running, check answer
+            var value = parseInt(textEditResult.text)
+            can =  (value == root.formulaValue)
+        } else{
+            can = true
+        }
+        root.canClose = can
+
+        console.log("canClose = ",value, root.canClose)
 
         root.textEditResult.text = ""
         if(canClose){
             showMessage("")
-            myClock.onClockPause()
-            myAlarmClockParam.sigClockOut(KtAlarmClock.WorkBreak) // clock out from break
+            if (clock.running) clock.clockPause()
+            root.onClockOut(KtAlarmClock.WorkBreak) // clock out from break
         }
         else{
             showMessage("Result is wrong! Please try agin.")
@@ -228,7 +285,7 @@ KtWindowOver {
             flags= Qt.Window
         }
 
-        if(counterForce > 0 && counterForce < myClock.timeMax){
+        if(counterForce > 0 && counterForce < clock.timeMax){
             labelForce.visible = true
             timerForce.start();
         } else{
@@ -242,13 +299,10 @@ KtWindowOver {
         console.log("MyOver0.stopPage0()")
 
         root.canClose = true;
-        if(clockRunning){
-            myClock.onClockPause()
+        if(clock.clockRunning){
+            clock.clockPause()
         }
-        if(visible){
-            showMessage("")
-            this.hide()
-        }
+        showMessage("")
     }
 
     function initialFormula(){
@@ -261,4 +315,10 @@ KtWindowOver {
     function showMessage(msg){
         labelMsg.text = msg
     }
+    
+    onVisibleChanged: {
+        //if root hide, hide the second one
+        if(!visible) over1.hide();
+    }
+    
 }

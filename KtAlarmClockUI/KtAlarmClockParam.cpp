@@ -118,7 +118,7 @@ void KtAlarmClockParam::registerWrite() {
 void KtAlarmClockParam::setWorkTime(int iValue) {
     if (WorkTime != iValue) {
         WorkTime = iValue;
-        emit sigWorkTime(iValue);
+        emit onWorkTimeChanged(iValue);
     }
 }
 //--------------------------------------------------------------------
@@ -129,7 +129,7 @@ int KtAlarmClockParam::GetWorkBreak() const {
 void KtAlarmClockParam::setWorkBreak(int iValue) {
     if (WorkBreak != iValue) {
         WorkBreak = iValue;
-        emit sigWorkBreak(iValue);
+        emit onWorkBreakChanged(iValue);
     }
 }
 //--------------------------------------------------------------------
@@ -140,6 +140,6 @@ int KtAlarmClockParam::GetTimeForce() const {
 void KtAlarmClockParam::setTimeForce(int iValue) {
     if (TimeForce != iValue) {
         TimeForce = iValue;
-        emit sigTimeForce(iValue);
+        emit onTimeForceChanged(iValue);
     }
 }

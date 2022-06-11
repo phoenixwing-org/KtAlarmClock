@@ -12,8 +12,9 @@ Window {
     height: layout.height+5
     flags: Qt.Window | Qt.FramelessWindowHint
     color: "black"
+    visible: false
 
-    signal sigAction(int index)
+    signal onAction(int index)
 
     ColumnLayout {
         id: layout
@@ -30,7 +31,7 @@ Window {
             transformOrigin: Item.Left
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
-                sigAction(KtAlarmClock.ActionBreak)
+                onAction(KtAlarmClock.ActionBreak)
                 root.hide()
             }
         }
@@ -44,7 +45,7 @@ Window {
             icon.source: "qrc:/image/grid.svg"
             display: Qt.ToolButtonTextBesideIcon
             onClicked: {
-                sigAction(KtAlarmClock.ActionMainDlg)
+                onAction(KtAlarmClock.ActionMainDlg)
                 root.hide()
             }
         }

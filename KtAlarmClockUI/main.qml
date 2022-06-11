@@ -3,20 +3,23 @@ import QtQuick.Window 2.14
 import QtQuick.Controls 2.14
 import KtAlarmClock 1.0
 import Qt.labs.platform 1.1
-
+/**
+ * @brief root window
+ */
 Window {
     id: root
     x: mainDlg.x + mainDlg.width - clock.width - 5
     y: 2
+
     width: clock.width
     height: clock.height
     property bool canClose: false
 
     visible: true
     color: "transparent"
-    opacity: 1
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
+    // control move
     KtMouseAreaMove{
         targetFill: root.contentItem
         targetMove: root
@@ -25,55 +28,41 @@ Window {
         // 该属性设置为false的话，则鼠标的进入 离开 移动不能捕获到
         hoverEnabled: false
         onClicked: {
-            if(mouse.button===Qt.RightButton){
-                let x1 = root.x - menuTest.width + root.width
-                menuTest.x = x1
-                menuTest.y = root.y + root.height+5
-                menuTest.show()
-            }
+            if(mouse.button===Qt.RightButton) popMenu.show()
         }
     }
-
-    MyWindowMenu{
-        id:menuTest
-        visible: false
-        actAction:{
-            myAlarmClockParam.sigAction(index)
-        }
-    }
-
+    
+    // clock item
     MyClock{
         id: clock
-        x: 0
-        y: 0
         counter: -100
     }
 
-    MyOverItem{
-        id:overItem
-        visible: false
+    // over window
+    MyOver0{
+        id:over
     }
 
+    // main window
     MyMain{
         id:mainDlg
-        x:100
-        y:100
-        visible:false
-
-        //@disable-check M16
-        onClosing: function(closeEvent){
-            closeEvent.accepted = canClose
-            if(!canClose)hide()
-        }
     }
 
+    // main pop menu
+    MyWindowMenu{
+        id: popMenu
+        x: root.x - width + root.width
+        y: root.y + root.height
+    }
+
+    // tray icon
     MySystemTrayIcon {
         id:trayIcon
     }
 
     Connections {
         target: KtAlarmTheme
-        onWorkStepChanged: actWorkStepChanged
+        onWorkStepChanged: afterWorkStepChanged
     }
 
     //@disable-check M16
@@ -92,29 +81,31 @@ Window {
             myAlarmClockParam.WorkTime = 15
         }
 
-        root.show();
-        var x = Math.floor(Screen.width - mainDlg.width - 100)
+        //root.show();
+        let x = Math.floor(Screen.width - mainDlg.width - 100)
         mainDlg.x = x;
 
         // signal Show sub dialog
-        myAlarmClockParam.sigDialogShow.connect(actShowDialog)
-        myAlarmClockParam.sigClockStart.connect(actClockStart)
         
-        myAlarmClockParam.sigClockOut.connect(actClockTimeout);
-        myAlarmClockParam.sigAction.connect(actAction);
-        KtAlarmTheme.sigAction.connect(actAction);
+        // signal for clock
+        clock.onClockOut.connect(clockTimeout)
+        over.onClockOut.connect(clockTimeout)
 
-        clock.sigClockOut.connect(actClockTimeout)
-        trayIcon.sigAction.connect(actAction)
+        // for Action
+        trayIcon.onAction.connect(runCommand)
+        popMenu.onAction.connect(runCommand)
+        KtAlarmTheme.onAction.connect(runCommand);
+        myAlarmClockParam.onAction.connect(runCommand)
 
-        myAlarmClockCmd.setAutoStart(true);
+        // signal for param and cmd
+        myAlarmClockCmd.setAutoStart(true)
         
         //console.log("main.onCompleted()-end")
     }
 
-    function actWorkStepChanged(){
+    function afterWorkStepChanged(){
 
-        console.log("main:actWorkStepChanged(), workStep=",KtAlarmTheme.workStep)
+        console.log("main:afterWorkStepChanged(), workStep=",KtAlarmTheme.workStep)
         let showClock = false
         let showOver = false
 
@@ -129,11 +120,11 @@ Window {
             console.log("change clock.visible to ", showClock)
             clock.visible = showClock
         }
-        if(overItem.visible !== showOver) {
+        if(over.visible !== showOver) {
             console.log("change over.visible  to ", showOver)
-            overItem.visible = showOver
+            over.visible = showOver
             if(!showOver){
-                overItem.customHide();
+                over.customHide();
             }
         }
     }
@@ -144,95 +135,67 @@ Window {
 
         // can close
         root.canClose = true;
-        overItem.canClose = true;
+        over.canClose = true;
 
         //hide
         trayIcon.hide()
-        mainDlg.hide()
-        root.close()
-        
+        mainDlg.close()
+        root.close()        
     }
 
-    function actClockStart(state){
+    function clockStart(state){
         KtAlarmTheme.workStep = state
         //myAlarmClockParam.dump() // dump
 
         switch(state){
         case KtAlarmClock.WorkBreak:
-            clock.onClockPause()
-            overItem.timeMax= myAlarmClockParam.WorkBreak;
-            overItem.timeForce= myAlarmClockParam.TimeForce;
-            overItem.customShow();
+            clock.clockPause()
+            over.timeMax= myAlarmClockParam.WorkBreak;
+            over.timeForce= myAlarmClockParam.TimeForce;
+            over.customShow();
             return
         case KtAlarmClock.WorkTime:
             clock.timeMax = clock.counter;
-            clock.actClockStart(state);
+            clock.clockStart(state);
             break;
         default:
-            clock.onClockPause()
+            clock.clockPause()
         }
     }
 
-    // on state change
-    function actClockTimeout(state){
-        // console.log("actClockTimeout("+state+")")
+    // command after clock time out
+    function clockTimeout(state){
+        // on state change
+        // console.log("clockTimeout("+state+")")
         switch(state) {
         case KtAlarmClock.WorkTime:
-            myAlarmClockParam.sigUpdateInfos() // get infos
-            actClockStart(KtAlarmClock.WorkBreak) // break
+            myAlarmClockParam.onUpdateInfos() // get infos
+            clockStart(KtAlarmClock.WorkBreak) // break
             break;
         case KtAlarmClock.WorkBreak:
-            myAlarmClockParam.sigUpdateInfos() // get infos
+            myAlarmClockParam.onUpdateInfos() // get infos
 
             clock.counter = myAlarmClockParam.WorkTime; // reset
-            actClockStart(KtAlarmClock.WorkTime) // work time
+            clockStart(KtAlarmClock.WorkTime) // work time
             break;
         default:
-            actClockStart(KtAlarmClock.None) // None
+            clockStart(KtAlarmClock.None) // None
             break;
-        }
-    }
-
-    /**
-     * @brief Show sub dialog
-     */
-    function actShowDialog(index, value){
-        //console.log("actShowDialog(" + index + "," + value +")")
-        switch(index) {
-        case KtAlarmClock.DlgMain:
-            if(value){
-                mainDlg.show();
-            }
-            else{
-                actClockStart()
-                mainDlg.hide();
-            }
-            break;
-        case KtAlarmClock.DlgBreak:
-            if(value){
-                overItem.customShow();
-            }
-            else{
-                overItem.customHide();
-            }
-            break;
-        default:
-
         }
     }
 
     /**
      * @brief Action signal treatment
      */
-    function actAction(index){
-        console.log("main.actAction(" + index + ")")
+    function runCommand(index){
+        console.log("main.runCommand(" + index + ")")
         switch(index) {
         case KtAlarmClock.ActionPlayPause:
             if(clock.counter <= -100){
                 // first time to paly
                 KtAlarmTheme.loop = true
 
-                myAlarmClockParam.sigUpdateInfos() // get infos
+                myAlarmClockParam.onUpdateInfos() // get infos
                 clock.counter = myAlarmClockParam.WorkTime; // reset
             } else{
                 // change state
@@ -241,35 +204,35 @@ Window {
 
             console.log("To : loop = " + KtAlarmTheme.loop + ", counter = ", clock.counter)
             if(KtAlarmTheme.loop){
-                actClockStart(KtAlarmClock.WorkTime);
+                clockStart(KtAlarmClock.WorkTime);
             }
             else{
                 // change to pause
-                clock.onClockPause()
+                clock.clockPause()
             }
 
             break;
         case KtAlarmClock.ActionBreak:
-            myAlarmClockParam.sigUpdateInfos() // get infos
+            myAlarmClockParam.onUpdateInfos() // get infos
             KtAlarmTheme.loop = true
-            actClockStart(KtAlarmClock.WorkBreak)
+            clockStart(KtAlarmClock.WorkBreak)
             break;
         case KtAlarmClock.ActionNextLoop:
             KtAlarmTheme.loop = true
             
-            myAlarmClockParam.sigUpdateInfos() // get infos
+            myAlarmClockParam.onUpdateInfos() // get infos
             clock.counter = myAlarmClockParam.WorkTime; // reset
-            actClockStart(KtAlarmClock.WorkTime);
+            clockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionForward:
             KtAlarmTheme.loop = true
             clock.counter -= 60; // 60s
-            actClockStart(KtAlarmClock.WorkTime);
+            clockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionBackward:
             KtAlarmTheme.loop = true
             clock.counter += 60; // 60s
-            actClockStart(KtAlarmClock.WorkTime);
+            clockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionMainDlg:
             mainDlg.show()
