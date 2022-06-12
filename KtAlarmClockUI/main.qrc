@@ -56,5 +56,7 @@
         <file>KtAlarmTheme.qml</file>
         <file>qmldir</file>
         <file>KtSlider.qml</file>
+        <file>main.js</file>
+        <file>MyOver0.js</file>
     </qresource>
 </RCC>

@@ -9,8 +9,9 @@ KtWindowOver {
         x:parent.width*0.5
         y:parent.height*0.5
         color: KtAlarmTheme.colorText
-        text: "Have a rest! Except work, there are poetry and afar！"
         font.pointSize: KtAlarmTheme.fontPixelNormal
+
+        text: "Have a rest! Except work, there are poetry and afar！"
 
         KtMouseAreaMove{}
     }

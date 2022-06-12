@@ -100,4 +100,6 @@ DISTFILES += \
     MyRightForm.ui.qml \
     MySystemTrayIcon.qml \
     MyWindowMenu.qml \
+    main.js \
+    MyOver0.js \
     main.qml

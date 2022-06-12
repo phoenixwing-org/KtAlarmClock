@@ -12,8 +12,9 @@ SystemTrayIcon {
 
     menu: Menu {
         MenuItem {
-            text: qsTr("锟钛护眼闹钟")
             iconSource: "qrc:/image/kt.svg"
+            text: qsTr("锟钛护眼闹钟")
+
             onTriggered: {
                 if(checkForbiden()) return
                 trayIcon.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
@@ -23,16 +24,18 @@ SystemTrayIcon {
         
         MenuSeparator{}
         MenuItem {
-            text: qsTr("立刻休息")
             iconSource: "qrc:/image/coffee.svg"
+            text: qsTr("立刻休息")
+
             onTriggered: {
                 if(checkForbiden()) return
                 onAction(KtAlarmClock.ActionBreak)
             }
         }
         MenuItem {
-            text: qsTr("显示设置界面")
             iconSource: "qrc:/image/menus.svg"
+            text: qsTr("显示设置界面")
+
             onTriggered: {
                 if(checkForbiden()) return
                 onAction(KtAlarmClock.ActionMainDlg)
@@ -50,6 +53,7 @@ SystemTrayIcon {
 
         MenuItem {
             text: qsTr("访问锟钛网站")
+
             onTriggered: {
                 if(checkForbiden()) return
                 Qt.openUrlExternally("http://www.kuntaisoft.cn")
@@ -58,8 +62,9 @@ SystemTrayIcon {
 
         MenuSeparator{}
         MenuItem {
-            text: qsTr("退出")
             iconSource: "qrc:/image/cancel.svg"
+            text: qsTr("Exit")
+
             onTriggered:{
                 if(checkForbiden()) return
                 onAction(KtAlarmClock.ActionClose)

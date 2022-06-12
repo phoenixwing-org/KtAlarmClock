@@ -56,6 +56,7 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     else if (nullptr == engine) {
         return KT_E_INVALIDARG;
     }
+
     // m_pClockDlg
     m_pClockDlg = new KtAlarmClockDlg();
 
@@ -85,6 +86,9 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     m_pClockParam->onUpdateDialog(); // update dialog
 
     emit m_pClockParam->onAction(KtAlarmClock::ActionPlayPause); // start to work
+
+    // auto start
+    setAutoStart(true);
 
     return KT_S_OK;
 }
