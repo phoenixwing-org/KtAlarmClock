@@ -56,7 +56,7 @@ function afterIsForceChanged() {
  */
 function afterClockCounterChanged() {
     // if forced, change counterForce...
-    if (isForced) {
+    if (isForced && counterForce > 0) {
         counterForce--;
         if (counterForce < 1) isForced = false;
     }
@@ -185,6 +185,9 @@ function showOver0() {
 
     if (counterForce > 0) {
         isForced = true
+        if (counterForce >= counter) {
+            counterForce = 0; // do not counter the force
+        }
     } else isForced = false
 
     clock.clockStart(KtAlarmClock.WorkBreak);

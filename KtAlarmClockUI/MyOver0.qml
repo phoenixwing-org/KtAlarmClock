@@ -123,12 +123,12 @@ KtWindowOver {
 
     /**
      * @brief time counter label
-     * @note visible is only controlled by isForced
+     * @note visible is only controlled by counterForce > 0
      */
     Label {
         id: labelForce
         width: parent.width
-        visible: isForced
+        visible: counterForce>0
         color: KtAlarmTheme.colorText
         text: counterForce
         anchors.horizontalCenter: footer.horizontalCenter
