@@ -84,7 +84,7 @@ function clockStart(state) {
         case KtAlarmClock.WorkBreak:
             clock.clockPause()
             over.counter = myAlarmClockParam.WorkBreak;
-            over.timeForce = myAlarmClockParam.TimeForce;
+            over.counterForce = myAlarmClockParam.TimeForce;
             over.customShow();
             return
         case KtAlarmClock.WorkTime:

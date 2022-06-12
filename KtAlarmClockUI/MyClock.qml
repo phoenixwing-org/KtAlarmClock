@@ -38,7 +38,7 @@ Item{
             repeat: true
             onTriggered:{
                 if(counter <= 0) clockOut();
-                counter --
+                else counter --
                 showTime();
             }
         }

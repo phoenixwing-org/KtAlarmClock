@@ -11,7 +11,7 @@ KtWindowOver {
         color: KtAlarmTheme.colorText
         font.pointSize: KtAlarmTheme.fontPixelNormal
 
-        text: "Have a rest! Except work, there are poetry and afar！"
+        text: qsTr("Have a rest! Except work, there are poetry and afar!")
 
         KtMouseAreaMove{}
     }

@@ -12,12 +12,12 @@ KtWindowOver {
     height:400
     color: KtAlarmTheme.colorBackground
 
-    property int timeForce: 0
     property int counter: 3600
     property int counterForce: 0
     property int formulaValue: 3300
     property bool canClose: false
-    property bool showFormula: false
+    property bool isShowFormula: false
+    property bool isForced: false
     
     signal onClockOut(int state)
 
@@ -37,22 +37,22 @@ KtWindowOver {
 
     /**
      * @brief footer counter label
-     * @note visible is only controlled by force.running
+     * @note visible is only controlled by isForced
      */
     Rectangle {
         id: footer
         x: (over0.width - width) * 0.5
         y: over0.height - 100
-        width: showFormula? 500 : buttonUnlock.width
+        width: isShowFormula? 500 : buttonUnlock.width
         height: 80
         color: KtAlarmTheme.colorBackground
-        visible: !force.running
+        visible: !isForced
 
         KtMouseAreaMove{}
 
         Item {
             id: element
-            visible: showFormula
+            visible: isShowFormula
             width: labelFormula.width + rectangleResult.width + 20
             height: 50
             clip: false
@@ -123,12 +123,12 @@ KtWindowOver {
 
     /**
      * @brief time counter label
-     * @note visible is only controlled by force.running
+     * @note visible is only controlled by isForced
      */
     Label {
         id: labelForce
         width: parent.width
-        visible: force.running
+        visible: isForced
         color: KtAlarmTheme.colorText
         text: counterForce
         anchors.horizontalCenter: footer.horizontalCenter
@@ -172,7 +172,7 @@ KtWindowOver {
         KtMouseAreaMove{}
 
         onRunningChanged: Over0Js.afterClockRunningChanged()
-        onCounterChanged: Over0Js.changeFooterVisible()
+        onCounterChanged: Over0Js.afterClockCounterChanged()
     }
 
     MyOver1 {
@@ -182,14 +182,6 @@ KtWindowOver {
         screenId: 1
     }
 
-    Timer {
-        id: force
-        interval: 1000
-        running: false
-        repeat: true
-        onRunningChanged: Over0Js.afterClockRunningChanged()
-        onTriggered: Over0Js.afterForceTriggered()
-    }
 
     Component.onCompleted: {
         Over0Js.initialFormula()
@@ -204,6 +196,8 @@ KtWindowOver {
         //if over0 hide, hide the second one, duplicate command
         if(!visible) over1.hide();
     }
+
+    onIsForcedChanged: Over0Js.afterIsForceChanged()
     
     function customHide() {
         Over0Js.customHide()

@@ -12,7 +12,9 @@
  * @brief action after Clock Running Changed
  */
 function afterClockRunningChanged() {
-    console.log("afterClockRunningChanged()")
+    if (KtAlarmTheme.debug)
+        console.log("afterClockRunningChanged() :", clock.running)
+
     if (clock.running) {
         showMessage("");
         over0.canClose = false
@@ -23,8 +25,8 @@ function afterClockRunningChanged() {
         // do not close it now
 
         over0.canClose = true
-        counterForce = 0
-        timeForce.running = false
+        isForced = false
+        isShowFormula = false
 
         // do not set buttonUnlock.visible
     }
@@ -32,41 +34,45 @@ function afterClockRunningChanged() {
 /*
  * @brief action after Force timer Running Changed
  */
-function afterForceRunningChanged() {
-    console.log("afterForceRunningChanged()")
-    if (force.running) {
+function afterIsForceChanged() {
+    console.log("afterIsForceChanged() :", isForced)
+    if (isForced) {
         over0.canClose = false
+        isShowFormula = false
     } else {
         // make sure page can be closed
         // do not close it now
 
         over0.canClose = true
         counterForce = 0
-        timeForce.running = false
 
-        // do not set buttonUnlock.visible
+        // do not set :
+        // buttonUnlock.visible, isShowFormula
     }
 }
 
 /*
- * @brief action after Force timer Running Changed
+ * @brief action after clock counter Changed
  */
-function afterForceTriggered() {
-    console.log("afterForceRunningChanged()")
-    over0.counterForce--;
+function afterClockCounterChanged() {
+    // if forced, change counterForce...
+    if (isForced) {
+        counterForce--;
+        if (counterForce < 1) isForced = false;
+    }
 
-    // console.log("counterForce", over0.counterForce)
-    if (over0.counterForce <= 0) force.stop();
-}
+    // change isShowFormula
+    if (isForced) {
+        isShowFormula = false
+    } else if (clock.running) {
+        isShowFormula = true
+    } else isShowFormula = false
 
-function changeFooterVisible() {
-    if (clock.counter <= 0) {
-        showFormula = false
-    } else if (over0.counterForce <= 0) {
-        showFormula = clock.running
-    } else showFormula = false
+    // debug
     if (KtAlarmTheme.debug)
-        console.log("showFormula", showFormula, "clock.counter", clock.counter, "clock.running", clock.running, "over0.counterForce", over0.counterForce)
+        console.log("afterClockCounterChanged: ",
+            clock.running, isShowFormula,
+            clock.counter, counterForce)
 }
 
 /*
@@ -99,33 +105,35 @@ function customShow() {
     over0.checkoutScreen()
     over1.checkoutScreen()
 
-    //console.log("over1.screenOK = ",over1.screenOK)
-    //console.log("over0.screenOK = ",over0.screenOK)
 
     // if debug, not show all
     let fullScreen = (KtAlarmTheme.debug == 0)
     over0.fullScreen = fullScreen
     over1.fullScreen = fullScreen
 
-    if (over1.screenOK) over1.showOver()
-    else over1.hide()
-
     if (over0.screenOK) {
-        over0.canClose = false; // cannot close
-        over0.counterForce = over0.timeForce
+        //set parameter first 
+        clock.counter = over0.counter;
+
+        // then show Over page
         showOver0()
 
-        clock.counter = over0.counter;
-        clock.clockStart(KtAlarmClock.WorkBreak);
     } else over0.hide()
 
-    changeFooterVisible()
+    // debug
+    if (KtAlarmTheme.debug) {
+        console.log("over0.screenOK = ", over0.screenOK)
+        console.log("over1.screenOK = ", over1.screenOK)
+        console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
+    }
+
+    //afterClockCounterChanged()
 }
 
 function unlockPage() {
     if (KtAlarmTheme.debug)
         console.log("MyOver0.unlockPage()")
-    if (over0.counterForce > 0) {
+    if (isForced) {
         over0.canClose = false;
         return
     }
@@ -169,15 +177,19 @@ function showOver0() {
     over0.canClose = false
     showMessage("")
     initialFormula()
+
     if (KtAlarmTheme.debug) {
         flags = Qt.Window
+        console.log("showOver0", counterForce, counter, clock.counter)
     }
 
-    console.log(counterForce, counter, counterForce, clock.counter)
-    if (counterForce > 0 && counterForce < counter) {
-        force.start();
-    } else force.running = false
+    if (counterForce > 0) {
+        isForced = true
+    } else isForced = false
 
+    clock.clockStart(KtAlarmClock.WorkBreak);
+
+    if (over1.screenOK) over1.showOver()
     return showOver()
 }
 
