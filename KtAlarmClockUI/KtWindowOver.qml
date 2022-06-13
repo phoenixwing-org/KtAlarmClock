@@ -17,6 +17,7 @@ KtWindowBase {
      * Show Window
      */
     function hideOver(){
+        if (KtAlarmTheme.debugLocate) console.log(objectName, ".hideOver()")
         return KtWindowBase.hideBase();
     }
 
@@ -24,12 +25,12 @@ KtWindowBase {
      * Show Window
      */
     function showOver(){
-        // console.log("KtWindowOver.showOver()")
+        if (KtAlarmTheme.debugLocate) console.log(objectName, ".showOver()")
+
         let ok = checkoutScreen();
-        debugMsg("showOver")
 
         if(!ok) {
-            debugMsg("NG ShowOver")
+           console.log(objectName, ".checkoutScreen() = false")
             root.hide()
             return false;
         }
@@ -45,6 +46,7 @@ KtWindowBase {
             root.show()
         }
 
+        if (KtAlarmTheme.debug) debugMsg("showOver")
         return true
     }
     

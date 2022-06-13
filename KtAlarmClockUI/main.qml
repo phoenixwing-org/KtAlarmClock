@@ -72,6 +72,8 @@ Window {
     //@disable-check M16
     onClosing: function(closeEvent){
         closeEvent.accepted = root.canClose //accept the clos
+        console.log("main .onClosing(), canClose=",canClose)
+
     }
 
     // connect signal onCompleted

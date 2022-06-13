@@ -21,6 +21,7 @@ QtObject {
     property int fontPixelNormal: 12
     property int fontPixelLarge: 20
     property int debug: 0
+    property int debugLocate: 0
 
     // clock property
     property int workStep: KtAlarmClock.None

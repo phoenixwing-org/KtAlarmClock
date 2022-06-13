@@ -191,8 +191,11 @@ KtWindowOver {
     }
     //@disable-check M16
     onClosing: function(closeEvent){
-        //closeEvent.accepted = canClose
-
+        console.log("over0 .onClosing(), canClose=",canClose)
+        if(canClose){
+            onClockOut(KtAlarmClock.WorkBreak)
+            over1.hide()
+        }
     }
     
     // DON'T use onVisibleChanged to hide over1

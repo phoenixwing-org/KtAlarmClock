@@ -12,8 +12,7 @@
  * @brief action after Clock Running Changed
  */
 function afterClockRunningChanged() {
-    if (KtAlarmTheme.debug)
-        console.log("afterClockRunningChanged() :", clock.running)
+    if (KtAlarmTheme.debugLocate) console.log("over0 .afterClockRunningChanged() :", clock.running)
 
     if (clock.running) {
         showMessage("");
@@ -35,7 +34,7 @@ function afterClockRunningChanged() {
  * @brief action after Force timer Running Changed
  */
 function afterIsForceChanged() {
-    console.log("afterIsForceChanged() :", isForced)
+    if (KtAlarmTheme.debugLocate) console.log("over0 .afterIsForceChanged() :", isForced)
     if (isForced) {
         over0.canClose = false
         isShowFormula = false
@@ -55,7 +54,11 @@ function afterIsForceChanged() {
  * @brief action after clock counter Changed
  */
 function afterClockCounterChanged() {
-    if (!over0.visible) return;
+    if (!over0.visible) {
+        if (KtAlarmTheme.debugLocate) console.log("over0.visible = false, then exit afterClockCounterChanged()")
+        return;
+    }
+    if (KtAlarmTheme.debugLocate) console.log("over0 .afterClockCounterChanged()")
 
     // if forced, change counterForce...
     if (isForced && counterForce > 0) {
@@ -70,25 +73,32 @@ function afterClockCounterChanged() {
         isShowFormula = true
     } else isShowFormula = false
 
-    if (over0.visible) {
+    if (over1.screenOK) {
         if (!over1.visible) over1.showOver()
     }
+
     // debug
-    //if (KtAlarmTheme.debug)
-    //    console.log("afterClockCounterChanged: ",
-    //        clock.running, isShowFormula,
-    //        clock.counter, counterForce)
+    if (0 && KtAlarmTheme.debug) {
+        // console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
+
+        // debug
+        console.log("afterClockCounterChanged: ",
+            clock.running, isShowFormula,
+            clock.counter, counterForce)
+    }
+
 }
 
 /*
  * Show Window
  */
 function customHide() {
-    console.log("over0.customHide()")
+    if (KtAlarmTheme.debugLocate) console.log("over0 .customHide()")
 
     // Do not change over1.canClose
     over0.canClose = true;
-    clock.running = false
+
+    // clock.running
 
     // for over 0 and 1
     over0.hide();
@@ -100,8 +110,9 @@ function customHide() {
  * Show Window
  */
 function customShow() {
-    console.log("over0.customShow()")
-        // if debug, not show all
+    if (KtAlarmTheme.debugLocate) console.log("over0 .customShow()")
+
+    // if debug, not show all
     let fullScreen = (KtAlarmTheme.debug == 0)
     over0.fullScreen = fullScreen
 
@@ -122,20 +133,14 @@ function customShow() {
         over0.hide()
     }
 
-    if (showOver1) over1.showOver();
-    //else over1.hide();
+    if (KtAlarmTheme.debug) over1.screenId = 0 // only for debug
+    over1.checkoutScreen();
+    //if (showOver1) over1.showOver();
 
-    // debug
-    if (KtAlarmTheme.debug) {
-        console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
-    }
-
-    //afterClockCounterChanged()
 }
 
 function unlockPage() {
-    if (KtAlarmTheme.debug)
-        console.log("MyOver0.unlockPage()")
+    if (KtAlarmTheme.debugLocate) console.log("over0 .unlockPage()")
     if (isForced) {
         over0.canClose = false;
         return
@@ -143,8 +148,6 @@ function unlockPage() {
 
     // check whether can close
     let can = false;
-    if (KtAlarmTheme.debug)
-        console.log("clock.running = ", clock.running)
     if (clock.running) {
         // if running, check answer
         var value = parseInt(textEditResult.text)
@@ -158,16 +161,13 @@ function unlockPage() {
     }
     over0.canClose = can
 
-    if (KtAlarmTheme.debug)
-        console.log("canClose = ", can, over0.canClose)
-
     textEditResult.text = ""
     if (canClose) {
         showMessage("")
         over.customHide()
         over0.onClockOut(KtAlarmClock.WorkBreak) // clock out from break
     } else {
-        showMessage("Result is wrong! Please try agin.")
+        showMessage("Wrong answer!")
     }
 }
 
@@ -175,7 +175,7 @@ function unlockPage() {
  * Show Window 0
  */
 function showOver0() {
-    // console.log("MyOver0Js.showOver0()")
+    if (KtAlarmTheme.debugLocate) console.log("over0 .showOver0()")
 
     over0.canClose = false
     showMessage("")
@@ -198,6 +198,7 @@ function showOver0() {
 }
 
 function initialFormula() {
+    if (KtAlarmTheme.debugLocate) console.log("over0 .initialFormula()")
     let a = Math.floor(1000 * Math.random());
     let b = Math.floor(1000 * Math.random());
     formulaValue = a + b;

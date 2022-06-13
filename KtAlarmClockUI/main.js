@@ -10,7 +10,7 @@
  * @brief action after main Completed
  */
 function afterCompleted() {
-    //console.log("main.onCompleted()")
+    if (KtAlarmTheme.debugLocate) console.log("main .afterCompleted()")
     if (KtAlarmTheme.debug) {
         myAlarmClockParam.WorkBreak = 10
         myAlarmClockParam.TimeForce = 2
@@ -35,8 +35,8 @@ function afterCompleted() {
 
 function afterWorkStepChanged() {
 
-    if (KtAlarmTheme.debug)
-        console.log("main:afterWorkStepChanged(), workStep=", KtAlarmTheme.workStep)
+    if (KtAlarmTheme.debugLocate)
+        console.log("main .afterWorkStepChanged(), workStep=", KtAlarmTheme.workStep)
 
 
     // if (KtAlarmTheme.workStep != KtAlarmClock.WorkBreak) {
@@ -47,7 +47,7 @@ function afterWorkStepChanged() {
 }
 
 function closeAllWindows() {
-
+    if (KtAlarmTheme.debugLocate) console.log("main .closeAllWindows()")
     KtAlarmTheme.workStep = KtAlarmClock.None
 
     // can close
@@ -61,7 +61,7 @@ function closeAllWindows() {
 }
 
 function clockStart(state) {
-    console.log("clockStart(" + state + ")");
+    if (KtAlarmTheme.debugLocate) console.log("main .clockStart(" + state + ")");
     //myAlarmClockParam.dump() // dump
     KtAlarmTheme.workStep = state
 
@@ -84,8 +84,9 @@ function clockStart(state) {
 
 // command after clock time out
 function clockTimeout(state) {
+    if (KtAlarmTheme.debugLocate) console.log("main .clockTimeout(" + state + ")")
+
     // on state change
-    console.log("clockTimeout(" + state + ")")
     switch (state) {
         case KtAlarmClock.WorkTime:
             mainDlg.hide()
@@ -109,8 +110,8 @@ function clockTimeout(state) {
  * @brief Action signal treatment
  */
 function runCommand(index) {
-    if (KtAlarmTheme.debug)
-        console.log("MainJS.runCommand(" + index + ")")
+    if (KtAlarmTheme.debugLocate) console.log("main .runCommand(" + index + ")")
+
     switch (index) {
         case KtAlarmClock.ActionPlayPause:
             root.show()

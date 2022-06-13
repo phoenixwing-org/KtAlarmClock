@@ -49,6 +49,7 @@ Item{
         if(iState === KtAlarmClock.None){
             myTimer.running = false;
             onClockOut(KtAlarmClock.None)
+            return;
         }
 
         showTime();
