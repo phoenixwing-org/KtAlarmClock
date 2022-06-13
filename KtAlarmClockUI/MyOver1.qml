@@ -4,6 +4,7 @@ import QtQuick.Controls 2.14
 KtWindowOver {
     id: over1
     title: qsTr("Over 1")
+
     Label{
         id: labelMsg
         x:parent.width*0.5
@@ -15,4 +16,5 @@ KtWindowOver {
 
         KtMouseAreaMove{}
     }
+
 }

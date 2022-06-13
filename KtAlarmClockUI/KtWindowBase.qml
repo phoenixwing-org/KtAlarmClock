@@ -4,13 +4,19 @@ import QtQuick.Controls 2.14
 
 Window {
     id: root
-    property bool canClose: false
+    property bool canClose: true
     property bool fullScreen: false //true
     property int screenId: 0 //Screens id
     property bool screenOK: true
+    visible:false
+        
+    onVisibleChanged: {
+        debugMsg("onVisibleChanged ") 
+    }
 
     //@disable-check M16
     onClosing: function(closeEvent){
+        debugMsg("onClosing ")
         closeEvent.accepted = canClose
     }
 
@@ -47,6 +53,12 @@ Window {
             root.showFullScreen()
         else
             root.show();
+    }
+    
+    function debugMsg(iMsg = ""){
+        console.log(root.objectName, iMsg + "{ rect: (",x,",",y,",",width,",",height,")",
+            ",canClose:", canClose,"visible",
+            visible,"screenId:",screenId,"screenOK",screenOK,"}")
     }
 }
 

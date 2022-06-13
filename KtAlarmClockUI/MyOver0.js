@@ -55,6 +55,8 @@ function afterIsForceChanged() {
  * @brief action after clock counter Changed
  */
 function afterClockCounterChanged() {
+    if (!over0.visible) return;
+
     // if forced, change counterForce...
     if (isForced && counterForce > 0) {
         counterForce--;
@@ -68,28 +70,28 @@ function afterClockCounterChanged() {
         isShowFormula = true
     } else isShowFormula = false
 
+    if (over0.visible) {
+        if (!over1.visible) over1.showOver()
+    }
     // debug
-    if (KtAlarmTheme.debug)
-        console.log("afterClockCounterChanged: ",
-            clock.running, isShowFormula,
-            clock.counter, counterForce)
+    //if (KtAlarmTheme.debug)
+    //    console.log("afterClockCounterChanged: ",
+    //        clock.running, isShowFormula,
+    //        clock.counter, counterForce)
 }
 
 /*
  * Show Window
  */
 function customHide() {
-    over0.visible = false
-    over1.visible = false
+    console.log("over0.customHide()")
+
+    // Do not change over1.canClose
     over0.canClose = true;
-    over1.canClose = true;
+    clock.running = false
 
-    if (clock.running) {
-        over0.stopPage0()
-    }
-
-    // for over1
-    over0.hide()
+    // for over 0 and 1
+    over0.hide();
     over1.hide()
 }
 
@@ -98,32 +100,33 @@ function customHide() {
  * Show Window
  */
 function customShow() {
-    over0.visible = false
-    over1.visible = false
-    over0.screenId = 0
-    over1.screenId = 1
-    over0.checkoutScreen()
-    over1.checkoutScreen()
-
-
-    // if debug, not show all
+    console.log("over0.customShow()")
+        // if debug, not show all
     let fullScreen = (KtAlarmTheme.debug == 0)
     over0.fullScreen = fullScreen
-    over1.fullScreen = fullScreen
 
+    let showOver1 = false;
     if (over0.screenOK) {
+
         //set parameter first 
         clock.counter = over0.counter;
 
         // then show Over page
         showOver0()
 
-    } else over0.hide()
+        // SET FOR OVER 1
+        showOver1 = over1.screenOK
+
+
+    } else {
+        over0.hide()
+    }
+
+    if (showOver1) over1.showOver();
+    //else over1.hide();
 
     // debug
     if (KtAlarmTheme.debug) {
-        console.log("over0.screenOK = ", over0.screenOK)
-        console.log("over1.screenOK = ", over1.screenOK)
         console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
     }
 
@@ -180,7 +183,6 @@ function showOver0() {
 
     if (KtAlarmTheme.debug) {
         flags = Qt.Window
-        console.log("showOver0", counterForce, counter, clock.counter)
     }
 
     if (counterForce > 0) {
@@ -192,19 +194,7 @@ function showOver0() {
 
     clock.clockStart(KtAlarmClock.WorkBreak);
 
-    if (over1.screenOK) over1.showOver()
     return showOver()
-}
-
-function stopPage0() {
-    if (KtAlarmTheme.debug)
-        console.log("MyOver0.stopPage0()")
-
-    over0.canClose = true;
-    if (clock.running) {
-        clock.clockPause()
-    }
-    showMessage("")
 }
 
 function initialFormula() {

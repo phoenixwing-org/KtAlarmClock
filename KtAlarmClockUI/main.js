@@ -38,28 +38,12 @@ function afterWorkStepChanged() {
     if (KtAlarmTheme.debug)
         console.log("main:afterWorkStepChanged(), workStep=", KtAlarmTheme.workStep)
 
-    let showClock = false
-    let showOver = false
 
-    if (KtAlarmTheme.workStep == KtAlarmClock.WorkTime) {
-        showClock = true
-    } else if (KtAlarmTheme.workStep == KtAlarmClock.WorkBreak) {
-        showOver = true
-    }
-
-    if (clock.visible !== showClock) {
-        if (KtAlarmTheme.debug)
-            console.log("change clock.visible to ", showClock)
-        clock.visible = showClock
-    }
-    if (over.visible !== showOver) {
-        if (KtAlarmTheme.debug)
-            console.log("change over.visible  to ", showOver)
-        over.visible = showOver
-        if (!showOver) {
-            over.customHide();
-        }
-    }
+    // if (KtAlarmTheme.workStep != KtAlarmClock.WorkBreak) {
+    //     if (over.visible) {
+    //         over.customHide();
+    //     }
+    // }
 }
 
 function closeAllWindows() {
@@ -77,6 +61,7 @@ function closeAllWindows() {
 }
 
 function clockStart(state) {
+    console.log("clockStart(" + state + ")");
     //myAlarmClockParam.dump() // dump
     KtAlarmTheme.workStep = state
 

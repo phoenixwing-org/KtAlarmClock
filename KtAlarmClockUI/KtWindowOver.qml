@@ -26,14 +26,17 @@ KtWindowBase {
     function showOver(){
         // console.log("KtWindowOver.showOver()")
         let ok = checkoutScreen();
+        debugMsg("showOver")
+
         if(!ok) {
+            debugMsg("NG ShowOver")
             root.hide()
             return false;
         }
 
+        x = screen.virtualX
+        y = screen.virtualY
         if(fullScreen){
-            x = screen.virtualX
-            y = screen.virtualY
             width = screen.width
             height = screen.height
             root.showFullScreen();
@@ -44,5 +47,6 @@ KtWindowBase {
 
         return true
     }
+    
 }
 

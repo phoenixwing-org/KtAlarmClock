@@ -10,12 +10,12 @@ KtWindowOver {
     id: over0
     width:600
     height:400
+    visible:false
     color: KtAlarmTheme.colorBackground
 
     property int counter: 3600
     property int counterForce: 0
     property int formulaValue: 3300
-    property bool canClose: false
     property bool isShowFormula: false
     property bool isForced: false
     
@@ -23,6 +23,7 @@ KtWindowOver {
 
     //modality: Qt.WindowModal //Block other windows
     title: "Over Window"
+    objectName: "over0"
     screenId: 0
 
     Label {
@@ -177,25 +178,25 @@ KtWindowOver {
 
     MyOver1 {
         id: over1
+        screenId: 1   
+        visible: false 
         canClose: over0.canClose
+        fullScreen: over0.fullScreen
         title: qsTr("Over Window 1")
-        screenId: 1
+        objectName: "over1"
     }
-
 
     Component.onCompleted: {
         Over0Js.initialFormula()
     }
-
     //@disable-check M16
     onClosing: function(closeEvent){
-        closeEvent.accepted = canClose
+        //closeEvent.accepted = canClose
+
     }
     
-    onVisibleChanged: {
-        //if over0 hide, hide the second one, duplicate command
-        if(!visible) over1.hide();
-    }
+    // DON'T use onVisibleChanged to hide over1
+    //onVisibleChanged:
 
     onIsForcedChanged: Over0Js.afterIsForceChanged()
     
@@ -204,7 +205,8 @@ KtWindowOver {
     }   
 
     function customShow() {
+        console.log("over0.customShow()")
         Over0Js.customShow()
     }
-    
+
 }
