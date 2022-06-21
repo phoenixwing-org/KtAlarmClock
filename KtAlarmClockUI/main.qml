@@ -15,6 +15,8 @@ Window {
     width: clock.width
     height: clock.height
     property bool canClose: false
+    
+    property var over : null // over window
 
     visible: true
     color: "transparent"
@@ -38,11 +40,6 @@ Window {
         id: clock
         visible: !MyOver0.visible
         counter: -100
-    }
-
-    // over window
-    MyOver0{
-        id:over
     }
 
     // main window

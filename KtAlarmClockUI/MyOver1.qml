@@ -7,8 +7,8 @@ KtWindowOver {
 
     Label{
         id: labelMsg
-        x:parent.width*0.5
-        y:parent.height*0.5
+        x: 10
+        y: parent.height -50
         color: KtAlarmTheme.colorText
         font.pointSize: KtAlarmTheme.fontPixelNormal
 

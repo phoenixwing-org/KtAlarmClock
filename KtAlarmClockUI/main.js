@@ -22,7 +22,6 @@ function afterCompleted() {
 
     // signal for clock
     clock.onClockOut.connect(clockTimeout)
-    over.onClockOut.connect(clockTimeout)
 
     // for Action
     trayIcon.onAction.connect(MainJs.runCommand)
@@ -37,13 +36,6 @@ function afterWorkStepChanged() {
 
     if (KtAlarmTheme.debugLocate)
         console.log("main .afterWorkStepChanged(), workStep=", KtAlarmTheme.workStep)
-
-
-    // if (KtAlarmTheme.workStep != KtAlarmClock.WorkBreak) {
-    //     if (over.visible) {
-    //         over.customHide();
-    //     }
-    // }
 }
 
 function closeAllWindows() {
@@ -52,12 +44,36 @@ function closeAllWindows() {
 
     // can close
     root.canClose = true;
-    over.canClose = true;
+
+    overDestroy()
 
     //hide
     trayIcon.hide()
     mainDlg.close()
     root.close()
+}
+
+function overStart() {
+    console.log("overStart()");
+
+    if (null == over) {
+        console.log("createComponent(qrc:/MyOver0.qml)");
+        var component = Qt.createComponent("qrc:/MyOver0.qml")
+        over = component.createObject(root)
+
+    }
+    over.onClockOut.connect(clockTimeout)
+    over.counter = myAlarmClockParam.WorkBreak;
+    over.counterForce = myAlarmClockParam.TimeForce;
+    over.customShow();
+}
+
+function overDestroy() {
+    console.log("overDestroy()");
+    if (null == over) return
+    over.canClose = true
+    over.destroy() // duplicate hide
+    over = null
 }
 
 function clockStart(state) {
@@ -68,18 +84,17 @@ function clockStart(state) {
     switch (state) {
         case KtAlarmClock.WorkBreak:
             clock.clockPause()
-            over.counter = myAlarmClockParam.WorkBreak;
-            over.counterForce = myAlarmClockParam.TimeForce;
-            over.customShow();
+            overStart()
             return
         case KtAlarmClock.WorkTime:
-            over.customHide() // duplicate hide
+            overDestroy() // duplicate hide
             clock.clockStart(state);
             break;
         default:
+            overDestroy() // duplicate hide
             clock.clockPause()
-            over.customHide() // duplicate hide
     }
+
 }
 
 // command after clock time out
@@ -94,8 +109,6 @@ function clockTimeout(state) {
             clockStart(KtAlarmClock.WorkBreak) // break
             break;
         case KtAlarmClock.WorkBreak:
-            over.customHide() // duplicate run to make sure hide the dialog
-
             myAlarmClockParam.onUpdateInfos() // get infos
             clock.counter = myAlarmClockParam.WorkTime; // reset
             clockStart(KtAlarmClock.WorkTime) // work time
