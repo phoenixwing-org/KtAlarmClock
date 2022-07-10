@@ -60,6 +60,10 @@ function overStart() {
         over = component.createObject(root)
     }
 
+    // make sure hide in Mac system
+    mainDlg.hide()
+    root.hide()
+
     console.log("overStart()");
     over.onClockOut.connect(clockTimeout)
     over.counter = myAlarmClockParam.WorkBreak;
@@ -68,6 +72,7 @@ function overStart() {
 }
 
 function overDestroy() {
+    root.show() // show clock again
     if (null == over) return
 
     console.log("overDestroy()");

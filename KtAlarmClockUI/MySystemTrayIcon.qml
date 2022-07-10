@@ -4,7 +4,7 @@ import KtAlarmClock 1.0
 import Qt.labs.platform 1.1
 
 SystemTrayIcon {
-    id:trayIcon
+    id:control
     visible: true
     icon.source: "qrc:/image/kt-blue.svg"
 
@@ -17,7 +17,7 @@ SystemTrayIcon {
 
             onTriggered: {
                 if(checkForbiden()) return
-                trayIcon.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
+                control.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
                                      "http://www.kuntaisoft.cn")
             }
         }

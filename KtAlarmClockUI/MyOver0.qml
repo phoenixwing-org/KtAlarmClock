@@ -174,13 +174,17 @@ KtWindowOver {
         onCounterChanged: Over0Js.afterClockCounterChanged()
     }
 
-    MyOver1 {
-        id: over1
-        screenId: 1
-        canClose: over0.canClose
-        fullScreen: over0.fullScreen
-        title: qsTr("Over Window 1")
-        objectName: "over1"
+    Loader {
+        id: loadOver1
+    }
+
+    Component{
+        id: comOver1
+        MyOver1 {
+            screenId: 1
+            canClose: over0.canClose
+            fullScreen: over0.fullScreen
+        }
     }
 
     Component.onCompleted: {
@@ -191,12 +195,9 @@ KtWindowOver {
         console.log("over0 .onClosing(), canClose=",canClose)
         if(canClose){
             onClockOut(KtAlarmClock.WorkBreak)
-            over1.hide()
+            loadOver1.sourceComponent = null
         }
     }
-    
-    // DON'T use onVisibleChanged to hide over1
-    //onVisibleChanged:
 
     onIsForcedChanged: Over0Js.afterIsForceChanged()
     
@@ -205,7 +206,6 @@ KtWindowOver {
     }   
 
     function customShow() {
-        console.log("over0.customShow()")
         Over0Js.customShow()
     }
 

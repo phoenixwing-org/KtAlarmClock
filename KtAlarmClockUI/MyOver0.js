@@ -73,10 +73,6 @@ function afterClockCounterChanged() {
         isShowFormula = true
     } else isShowFormula = false
 
-    if (over1.screenOK) {
-        if (!over1.visible) over1.showOver()
-    }
-
     // debug
     if (0 && KtAlarmTheme.debug) {
         // console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
@@ -101,10 +97,9 @@ function customHide() {
     // clock.running
 
     // for over 0 and 1
-    over0.hide();
-    over1.hide()
+    over0.hide()
+    loadOver1.sourceComponent = null
 }
-
 
 /*
  * Show Window
@@ -116,32 +111,30 @@ function customShow() {
     let fullScreen = (KtAlarmTheme.debug == 0)
     over0.fullScreen = fullScreen
 
-    let showOver1 = false;
-    if (over0.screenOK) {
+    //set parameter first 
+    clock.counter = over0.counter;
 
-        //set parameter first 
-        clock.counter = over0.counter;
+    // then show Over page
+    showOver0()
 
-        // then show Over page
-        showOver0()
+    // show over1? debug or screens length more than one
+    if (KtAlarmTheme.debug || Qt.application.screens.length>1) {
+        loadOver1.sourceComponent = comOver1;
+        over1 = loadOver1.item
+        over1.screenId = KtAlarmTheme.debug? 0 : 1 
 
-        // SET FOR OVER 1
-        showOver1 = over1.screenOK
-
-
-    } else {
-        over0.hide()
+        if(null != over1){
+            loadOver1.item.checkoutScreen();
+            over1.showOver();
+        } else{
+            console.log("loader: over1 is null")
+        }
     }
-
-    if (KtAlarmTheme.debug) over1.screenId = 0 // only for debug
-    over1.checkoutScreen();
-    if (showOver1) over1.showOver();
-    else over1.hide();
-
+    
 }
 
 function unlockPage() {
-    if (KtAlarmTheme.debugLocate) console.log("over0 .unlockPage()")
+    if (KtAlarmTheme.debugLocate) console.log("over0.unlockPage()")
     if (isForced) {
         over0.canClose = false;
         return
@@ -165,7 +158,6 @@ function unlockPage() {
     textEditResult.text = ""
     if (canClose) {
         showMessage("")
-        over.customHide()
         over0.onClockOut(KtAlarmClock.WorkBreak) // clock out from break
     } else {
         showMessage("Wrong answer!")

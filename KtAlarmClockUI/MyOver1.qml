@@ -2,8 +2,7 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 
 KtWindowOver {
-    id: over1
-    title: qsTr("Over 1")
+    title: qsTr("Over Window 1")
     visible: true
 
     Label{
