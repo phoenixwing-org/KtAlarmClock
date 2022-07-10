@@ -57,9 +57,9 @@ Window {
     }
     
     function debugMsg(iMsg = ""){
-        console.log(objectName, iMsg + ",{ rect: (",x,",",y,",",width,",",height,")",
+        console.log(objectName, iMsg + ", {visible:", visible, ", rect: (",x,",",y,",",width,",",height,")",
             ", canClose:", canClose, ",screenOK:",screenOK,
-            ", screenId:",screenId, "visible:", visible,"}")
+            ", screenId:",screenId, "}")
     }
 }
 

@@ -135,7 +135,8 @@ function customShow() {
 
     if (KtAlarmTheme.debug) over1.screenId = 0 // only for debug
     over1.checkoutScreen();
-    //if (showOver1) over1.showOver();
+    if (showOver1) over1.showOver();
+    else over1.hide();
 
 }
 

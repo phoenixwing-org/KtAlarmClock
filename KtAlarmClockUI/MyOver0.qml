@@ -10,7 +10,7 @@ KtWindowOver {
     id: over0
     width:600
     height:400
-    visible:false
+    visible: true
     color: KtAlarmTheme.colorBackground
 
     property int counter: 3600
@@ -80,7 +80,6 @@ KtWindowOver {
                 color: "#112a3f"
                 border.color: KtAlarmTheme.colorBorder
                 border.width: 1
-                visible: true
 
                 anchors.verticalCenter: element.verticalCenter
                 TextEdit {
@@ -110,7 +109,6 @@ KtWindowOver {
             icon.source: "qrc:/image/unlock.svg"
             icon.height: 50
             icon.width: 50
-            visible: true
             text: qsTr("Unlock")
             flat: false
             font.pointSize: KtAlarmTheme.fontPixelLarge
@@ -178,8 +176,7 @@ KtWindowOver {
 
     MyOver1 {
         id: over1
-        screenId: 1   
-        visible: false 
+        screenId: 1
         canClose: over0.canClose
         fullScreen: over0.fullScreen
         title: qsTr("Over Window 1")

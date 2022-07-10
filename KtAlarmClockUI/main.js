@@ -54,14 +54,13 @@ function closeAllWindows() {
 }
 
 function overStart() {
-    console.log("overStart()");
-
     if (null == over) {
         console.log("createComponent(qrc:/MyOver0.qml)");
         var component = Qt.createComponent("qrc:/MyOver0.qml")
         over = component.createObject(root)
-
     }
+
+    console.log("overStart()");
     over.onClockOut.connect(clockTimeout)
     over.counter = myAlarmClockParam.WorkBreak;
     over.counterForce = myAlarmClockParam.TimeForce;
@@ -69,10 +68,11 @@ function overStart() {
 }
 
 function overDestroy() {
-    console.log("overDestroy()");
     if (null == over) return
+
+    console.log("overDestroy()");
     over.canClose = true
-    over.destroy() // duplicate hide
+    over.destroy() // destroy the dialog
     over = null
 }
 
