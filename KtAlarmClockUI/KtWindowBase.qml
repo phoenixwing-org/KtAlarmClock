@@ -9,10 +9,6 @@ Window {
     property int screenId: 0 //Screens id
     property bool screenOK: true
     visible:false
-        
-    onVisibleChanged: {
-        debugMsg("onVisibleChanged ") 
-    }
 
     //@disable-check M16
     onClosing: function(closeEvent){

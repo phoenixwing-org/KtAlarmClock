@@ -72,17 +72,6 @@ function afterClockCounterChanged() {
     } else if (clock.running) {
         isShowFormula = true
     } else isShowFormula = false
-
-    // debug
-    if (0 && KtAlarmTheme.debug) {
-        // console.log("afterClockCounterChanged: running, isShowFormula, counter, counterForce");
-
-        // debug
-        console.log("afterClockCounterChanged: ",
-            clock.running, isShowFormula,
-            clock.counter, counterForce)
-    }
-
 }
 
 /*
@@ -90,15 +79,11 @@ function afterClockCounterChanged() {
  */
 function customHide() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .customHide()")
+    over0.canClose = true; // Do not change over 1's canClose
+    over0.hide() //hide
+    //if(loadOver1.item)loadOver1.item.destroy()
+    loadOver1.sourceComponent = null // unload over 1
 
-    // Do not change over1.canClose
-    over0.canClose = true;
-
-    // clock.running
-
-    // for over 0 and 1
-    over0.hide()
-    loadOver1.sourceComponent = null
 }
 
 /*
@@ -108,26 +93,26 @@ function customShow() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .customShow()")
 
     // if debug, not show all
-    let fullScreen = (KtAlarmTheme.debug == 0)
-    over0.fullScreen = fullScreen
+    over0.fullScreen = (KtAlarmTheme.debug == 0) 
+    clock.counter = over0.counter;//set parameter first 
+    showOver0()// then show Over page
 
-    //set parameter first 
-    clock.counter = over0.counter;
-
-    // then show Over page
-    showOver0()
-
-    // show over1? debug or screens length more than one
+    // show over 1? debug or screens length more than one
     if (KtAlarmTheme.debug || Qt.application.screens.length>1) {
         loadOver1.sourceComponent = comOver1;
-        over1 = loadOver1.item
-        over1.screenId = KtAlarmTheme.debug? 0 : 1 
+        let comp = loadOver1.item
+        comp.screenId = KtAlarmTheme.debug? 0 : 1 
 
-        if(null != over1){
-            loadOver1.item.checkoutScreen();
-            over1.showOver();
-        } else{
-            console.log("loader: over1 is null")
+        if(null !== comp) {
+            comp.checkoutScreen();
+            comp.showOver();
+            // debug for position
+            if(KtAlarmTheme.debug !== 0) {
+                comp.x = over0.width
+                comp.color= "grey"
+            }
+        } else {
+            console.log("loader: over 1 is null")
         }
     }
     

@@ -15,8 +15,6 @@ Window {
     width: clock.width
     height: clock.height
     property bool canClose: false
-    
-    property var over : null // over window
 
     visible: true
     color: "transparent"
@@ -59,6 +57,11 @@ Window {
     // tray icon
     MySystemTrayIcon {
         id:trayIcon
+    }
+    
+    // loader for over0
+    Loader {
+        id: loadOver0
     }
 
     Connections {

@@ -45,7 +45,7 @@ function closeAllWindows() {
     // can close
     root.canClose = true;
 
-    overDestroy()
+    overUnload()
 
     //hide
     trayIcon.hide()
@@ -53,32 +53,21 @@ function closeAllWindows() {
     root.close()
 }
 
-function overStart() {
-    if (null == over) {
-        console.log("createComponent(qrc:/MyOver0.qml)");
-        var component = Qt.createComponent("qrc:/MyOver0.qml")
-        over = component.createObject(root)
-    }
-
-    // make sure hide in Mac system
-    mainDlg.hide()
-    root.hide()
-
-    console.log("overStart()");
+function overLoad() {
+    console.log("overLoad()");
+    loadOver0.source = "qrc:/MyOver0.qml"
+    let over = loadOver0.item
     over.onClockOut.connect(clockTimeout)
     over.counter = myAlarmClockParam.WorkBreak;
     over.counterForce = myAlarmClockParam.TimeForce;
     over.customShow();
 }
 
-function overDestroy() {
-    root.show() // show clock again
-    if (null == over) return
-
-    console.log("overDestroy()");
-    over.canClose = true
-    over.destroy() // destroy the dialog
-    over = null
+function overUnload() {
+    if (null == loadOver0.item) return
+    if (KtAlarmTheme.debugLocate) console.log("loadOver0 unload");
+    loadOver0.item.canClose = true
+    loadOver0.source = ""
 }
 
 function clockStart(state) {
@@ -89,14 +78,19 @@ function clockStart(state) {
     switch (state) {
         case KtAlarmClock.WorkBreak:
             clock.clockPause()
-            overStart()
+            // make sure hide in Mac system
+            mainDlg.hide()
+            root.hide()
+            overLoad()
             return
         case KtAlarmClock.WorkTime:
-            overDestroy() // duplicate hide
+            root.show()
+            overUnload() // duplicate hide
             clock.clockStart(state);
             break;
         default:
-            overDestroy() // duplicate hide
+            root.show()
+            overUnload() // duplicate hide
             clock.clockPause()
     }
 
