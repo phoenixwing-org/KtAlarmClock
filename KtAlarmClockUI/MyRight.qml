@@ -7,35 +7,40 @@ import QtQuick 2.14
 import KtAlarmClock 1.0
 
 MyRightForm {
+    property var myParam: null
 
     // test slot
-    function mySlot(index)
-    {
-        console.log("mySlot("+index+")")
+    function mySlot(index) {
+        if (KtAlarmTheme.debugLocate) console.log("mySlot("+index+")")
     }
     
     /**
      * update parameter to dialog
      */
-    function onUpdateDialog(){
-        ktTimeSlideMyWork.value = myAlarmClockParam.WorkTime
-        ktTimeSlideMyExercise.value = myAlarmClockParam.WorkBreak
-        ktTimeSlideMyForce.value = myAlarmClockParam.TimeForce
+    function onUpdateDialog() {
+        if(null == myParam) return
+        if (KtAlarmTheme.debugLocate) console.log("MyRight.onUpdateDialog()")
+        if (KtAlarmTheme.debugLocate) myParam.dump()
+        ktTimeSlideMyWork.value = myParam.WorkTime
+        ktTimeSlideMyExercise.value = myParam.WorkBreak
+        ktTimeSlideMyForce.value = myParam.TimeForce
     }
 
     /**
      * get parameter from dialog
      */
-    function onUpdateInfos()
-    {        
-        myAlarmClockParam.WorkTime = ktTimeSlideMyWork.value
-        myAlarmClockParam.WorkBreak = ktTimeSlideMyExercise.value
-        myAlarmClockParam.TimeForce = ktTimeSlideMyForce.value
+    function onUpdateInfos() {
+        if(null == myParam) return
+        if (KtAlarmTheme.debugLocate) console.log("MyRight.onUpdateInfos()")
+        myParam.WorkTime = ktTimeSlideMyWork.value
+        myParam.WorkBreak = ktTimeSlideMyExercise.value
+        myParam.TimeForce = ktTimeSlideMyForce.value
+        if (KtAlarmTheme.debugLocate)  myParam.dump()
     }
 
     // change Sub Item
     function scrollPage(index) {
-        //console.log("scrollPage("+index+")")
+        if (KtAlarmTheme.debugLocate) console.log("scrollPage("+index+")")
         if(0 === index){
             rect.y = - rect0.y
         } else if(1 === index){
@@ -44,21 +49,4 @@ MyRightForm {
             rect.y = - rect2.y
         }
     }
-    
-    // connect signal onCompleted
-    Component.onCompleted: {
-        //console.log("MyRight.onCompleted()")
-        myAlarmClockParam.onUpdateInfos.connect(onUpdateInfos)
-        myAlarmClockParam.onUpdateDialog.connect(onUpdateDialog)
-
-        onUpdateDialog()
-        //console.log("MyRight.onCompleted()-end")
-    }
-
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/

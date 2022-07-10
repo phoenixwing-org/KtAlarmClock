@@ -175,11 +175,11 @@ KtWindowOver {
     }
 
     Loader {
-        id: loadOver1
+        id: loaderOver1
     }
 
     Component{
-        id: comOver1
+        id: compOver1
         MyOver1 {
             screenId: 1
             canClose: over0.canClose
@@ -195,7 +195,7 @@ KtWindowOver {
         console.log("over0 .onClosing(), canClose=",canClose)
         if(canClose){
             onClockOut(KtAlarmClock.WorkBreak)
-            loadOver1.sourceComponent = null
+            loaderOver1.sourceComponent = null
         }
     }
 

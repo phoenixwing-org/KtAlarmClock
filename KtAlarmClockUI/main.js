@@ -25,8 +25,7 @@ function afterCompleted() {
 
     // for Action
     trayIcon.onAction.connect(MainJs.runCommand)
-    popMenu.onAction.connect(MainJs.runCommand)
-    KtAlarmTheme.onAction.connect(MainJs.runCommand);
+   KtAlarmTheme.onAction.connect(MainJs.runCommand);
     myAlarmClockParam.onAction.connect(MainJs.runCommand)
 
     //console.log("main.onCompleted()-end")
@@ -45,29 +44,84 @@ function closeAllWindows() {
     // can close
     root.canClose = true;
 
-    overUnload()
+    unloadOverDlg()
 
     //hide
     trayIcon.hide()
-    mainDlg.close()
+    unloadSettingDlg()
     root.close()
 }
 
-function overLoad() {
-    console.log("overLoad()");
-    loadOver0.source = "qrc:/MyOver0.qml"
-    let over = loadOver0.item
+
+function loadPopMenu() {
+    if(KtAlarmTheme.debugLocate) console.log("MainJs.loadPopMenu()");
+
+    var component = Qt.createComponent("qrc:/MyWindowMenu.qml")
+    let popDlg = component.createObject(root)
+    if(popDlg == null){
+        console.log("Error to load popDlg");
+        return
+    }
+    popDlg.x = root.x - width + root.width
+    popDlg.y = root.y + root.height
+
+    popDlg.show();
+    
+    // destroy when close
+    popDlg.onClosing.connect(function(){
+        if (KtAlarmTheme.debugLocate) console.log("popDlg.onClosing.connect(function())");
+        popDlg.destroy()
+    });
+    popDlg.onAction.connect(MainJs.runCommand)
+    
+
+}
+
+function loadSettingDlg() {
+    if(KtAlarmTheme.debugLocate) console.log("MainJs.loadSettingDlg()");
+    unloadSettingDlg()
+    
+    var component = Qt.createComponent("qrc:/MyMain.qml")
+    settingDlg = component.createObject(root)
+    if(settingDlg == null){
+        console.log("Error to load SettingDlg");
+        return
+    }
+    settingDlg.myParam = myAlarmClockParam
+    
+    // destroy when close
+    settingDlg.onClosing.connect(unloadSettingDlg);
+
+    settingDlg.x = root.x
+    settingDlg.y = root.y + root.height
+
+    if(settingDlg.y < 30) settingDlg.y =30
+    settingDlg.show();
+}
+
+function unloadSettingDlg(){
+    if(null !== settingDlg){
+        if(KtAlarmTheme.debugLocate) console.log("MainJs.unloadSettingDlg()");
+        settingDlg.destroy();
+        settingDlg = null;
+    }
+}
+
+function loadOverDlg() {
+    if(KtAlarmTheme.debugLocate) console.log("MainJs.loadOverDlg()");
+    loaderOver0.source = "qrc:/MyOver0.qml"
+    let over = loaderOver0.item
     over.onClockOut.connect(clockTimeout)
     over.counter = myAlarmClockParam.WorkBreak;
     over.counterForce = myAlarmClockParam.TimeForce;
     over.customShow();
 }
 
-function overUnload() {
-    if (null == loadOver0.item) return
-    if (KtAlarmTheme.debugLocate) console.log("loadOver0 unload");
-    loadOver0.item.canClose = true
-    loadOver0.source = ""
+function unloadOverDlg() {
+    if (null == loaderOver0.item) return
+    if (KtAlarmTheme.debugLocate) console.log("loaderOver0 unload");
+    loaderOver0.item.canClose = true
+    loaderOver0.source = ""
 }
 
 function clockStart(state) {
@@ -79,18 +133,18 @@ function clockStart(state) {
         case KtAlarmClock.WorkBreak:
             clock.clockPause()
             // make sure hide in Mac system
-            mainDlg.hide()
+            unloadSettingDlg()
             root.hide()
-            overLoad()
+            loadOverDlg()
             return
         case KtAlarmClock.WorkTime:
             root.show()
-            overUnload() // duplicate hide
+            unloadOverDlg() // duplicate hide
             clock.clockStart(state);
             break;
         default:
             root.show()
-            overUnload() // duplicate hide
+            unloadOverDlg() // duplicate hide
             clock.clockPause()
     }
 
@@ -103,7 +157,6 @@ function clockTimeout(state) {
     // on state change
     switch (state) {
         case KtAlarmClock.WorkTime:
-            mainDlg.hide()
             myAlarmClockParam.onUpdateInfos() // get infos
             clockStart(KtAlarmClock.WorkBreak) // break
             break;
@@ -171,7 +224,7 @@ function runCommand(index) {
             clockStart(KtAlarmClock.WorkTime);
             break;
         case KtAlarmClock.ActionMainDlg:
-            mainDlg.show()
+            loadSettingDlg()
             break;
         case KtAlarmClock.ActionClose:
             closeAllWindows()

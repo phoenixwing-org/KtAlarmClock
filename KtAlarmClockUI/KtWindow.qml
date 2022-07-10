@@ -94,6 +94,7 @@ Window {
 
                 KtToolButton {
                     id: buttonMin
+                    visible: false
                     Layout.preferredWidth: 55
                     icon.source: "image/win-min.svg"
                     onClicked: {

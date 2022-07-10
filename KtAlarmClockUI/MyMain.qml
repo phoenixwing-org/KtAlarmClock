@@ -11,7 +11,7 @@ import KtAlarmClock 1.0
 
 KtWindow{
     id: root
-    visible: false
+    visible: true
     width: 480
     height: 480
 
@@ -19,6 +19,7 @@ KtWindow{
 
     left: ktLeft
     right: ktRight
+    property var myParam: null
 
     // Left
     MyLeft{
@@ -34,6 +35,7 @@ KtWindow{
     MyRight{
         id: ktRight
         parent: center
+
         anchors.left: ktLeft.right
         anchors.leftMargin: 0
         anchors.right: parent.right
@@ -64,6 +66,19 @@ KtWindow{
         ktLeft.onScrollPage.connect(ktRight.scrollPage)// pass index value
         root.onWindowSizeChanged.connect(root.autoDisplayLeftMenu)
         //console.log("MyMain.onCompleted()-end")
+    }
+
+    // connect signal onMyParamChanged
+    onMyParamChanged: {
+        console.log("MyMain.onMyParamChanged():",myParam)
+        if(myParam == null) return;
+        // pass param directly
+        ktRight.myParam = root.myParam
+        ktLeft.myParam = root.myParam
+        myParam.onUpdateInfos.connect(ktRight.onUpdateInfos)
+        myParam.onUpdateDialog.connect(ktRight.onUpdateDialog)
+        ktRight.onUpdateDialog()
+
     }
 
     function autoDisplayLeftMenu()

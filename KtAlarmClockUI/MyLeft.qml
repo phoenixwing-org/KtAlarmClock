@@ -16,6 +16,7 @@ Item {
     property bool onlyIcon: false
     property int minimumWidth: 50
     property int defaultWidth: 200
+    property var myParam: null
 
 
     Rectangle {
@@ -110,17 +111,17 @@ Item {
         text: "强制休息"
         shortcut: StandardKey.Save
         onTriggered: {
-                onScrollPage(2)
-            }
+            onScrollPage(2)
+        }
     }
 
     Action {
         id: actionDefault
         text: "默认设置"
         onTriggered: {
-                myAlarmClockParam.setDefault()
-                myAlarmClockParam.onUpdateDialog()
-            }
+            myParam.setDefault()
+            myParam.onUpdateDialog()
+        }
 
     }
 
@@ -128,9 +129,9 @@ Item {
         id: actionSave
         text: "保存设置"
         onTriggered: {
-                myAlarmClockParam.onUpdateInfos()
-                myAlarmClockParam.registerWrite()
-            }
+            myParam.onUpdateInfos()
+            myParam.registerWrite()
+        }
     }
 
     Action {

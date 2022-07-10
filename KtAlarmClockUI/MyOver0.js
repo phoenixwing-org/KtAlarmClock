@@ -81,9 +81,7 @@ function customHide() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .customHide()")
     over0.canClose = true; // Do not change over 1's canClose
     over0.hide() //hide
-    //if(loadOver1.item)loadOver1.item.destroy()
-    loadOver1.sourceComponent = null // unload over 1
-
+    loaderOver1.sourceComponent = null // unload over 1
 }
 
 /*
@@ -99,8 +97,8 @@ function customShow() {
 
     // show over 1? debug or screens length more than one
     if (KtAlarmTheme.debug || Qt.application.screens.length>1) {
-        loadOver1.sourceComponent = comOver1;
-        let comp = loadOver1.item
+        loaderOver1.sourceComponent = compOver1;
+        let comp = loaderOver1.item
         comp.screenId = KtAlarmTheme.debug? 0 : 1 
 
         if(null !== comp) {

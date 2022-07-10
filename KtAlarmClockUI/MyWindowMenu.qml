@@ -76,7 +76,7 @@ Window {
     }
     onActiveFocusItemChanged: {
         if (!activeFocusItem) {
-            root.visible = false
+            root.close()
         }
     }
 

@@ -15,6 +15,7 @@ Window {
     width: clock.width
     height: clock.height
     property bool canClose: false
+    property var settingDlg: null
 
     visible: true
     color: "transparent"
@@ -29,7 +30,7 @@ Window {
         // 该属性设置为false的话，则鼠标的进入 离开 移动不能捕获到
         hoverEnabled: false
         onClicked: {
-            if(mouse.button===Qt.RightButton) popMenu.show()
+            if(mouse.button===Qt.RightButton) MainJs.loadPopMenu()
         }
     }
     
@@ -40,20 +41,6 @@ Window {
         counter: -100
     }
 
-    // main window
-    MyMain{
-        x: root.x
-        y: root.y + root.height
-        id:mainDlg
-    }
-
-    // main pop menu
-    MyWindowMenu{
-        id: popMenu
-        x: root.x - width + root.width
-        y: root.y + root.height
-    }
-
     // tray icon
     MySystemTrayIcon {
         id:trayIcon
@@ -61,7 +48,7 @@ Window {
     
     // loader for over0
     Loader {
-        id: loadOver0
+        id: loaderOver0
     }
 
     Connections {
