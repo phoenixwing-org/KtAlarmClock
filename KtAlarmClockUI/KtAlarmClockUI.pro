@@ -78,7 +78,7 @@ HEADERS += \
 #}
 
 RESOURCES += \
-    main.qrc
+    KtAlarmClock.qrc
 
 DISTFILES += \
     KtAlarmTheme.qml \
@@ -100,6 +100,6 @@ DISTFILES += \
     MyRightForm.ui.qml \
     MySystemTrayIcon.qml \
     MyWindowMenu.qml \
-    main.js \
+    KtAlarmClock.js \
     MyOver0.js \
-    main.qml
+    KtAlarmClockDlg.qml

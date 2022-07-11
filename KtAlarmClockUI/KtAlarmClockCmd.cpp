@@ -66,7 +66,7 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
 
     // qDebug() << "KtAlarmClockCmd load(url)";
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/KtAlarmClockDlg.qml"));
     /*
      * What's the meaning?
     QObject::connect(

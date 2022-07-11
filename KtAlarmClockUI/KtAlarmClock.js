@@ -2,7 +2,7 @@
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
  * @license     LGPL 3.0
  * @author      Kuntai
- * @file        main.js
+ * @file        KtAlarmClock.js
  * @brief       js functions for main window
  */
 

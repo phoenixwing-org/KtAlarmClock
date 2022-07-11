@@ -35,7 +35,7 @@
         <file alias="kt-forward.svg">../image/kt-forward.svg</file>
     </qresource>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>KtAlarmClockDlg.qml</file>
         <file>MyFooter.qml</file>
         <file>MyLeft.qml</file>
         <file>MyMain.qml</file>
@@ -56,7 +56,7 @@
         <file>KtAlarmTheme.qml</file>
         <file>qmldir</file>
         <file>KtSlider.qml</file>
-        <file>main.js</file>
+        <file>KtAlarmClock.js</file>
         <file>MyOver0.js</file>
     </qresource>
 </RCC>

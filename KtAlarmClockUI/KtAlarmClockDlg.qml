@@ -3,7 +3,7 @@ import QtQuick.Window 2.14
 import QtQuick.Controls 2.14
 import KtAlarmClock 1.0
 import Qt.labs.platform 1.1
-import "main.js" as MainJs
+import "KtAlarmClock.js" as MainJs
 
 /**
  * @brief root window
