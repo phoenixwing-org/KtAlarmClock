@@ -42,7 +42,7 @@ Window {
     }
 
     // tray icon
-    MySystemTrayIcon {
+    KtAlarmClockSystemTrayIcon {
         id:trayIcon
     }
     

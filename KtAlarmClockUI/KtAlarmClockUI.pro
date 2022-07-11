@@ -91,14 +91,13 @@ DISTFILES += \
     KtWindowBase.qml \
     KtWindowOver.qml \
     MyClock.qml \
-    MyFooter.qml \
-    MyLeft.qml \
-    MyMain.qml \
+    KtAlarmClockSettingFooter.qml \
+    KtAlarmClockSettingLeft.qml \
+    KtAlarmClockSettingDlg.qml \
     MyOver0.qml \
     MyOver1.qml \
-    MyRight.qml \
-    MyRightForm.ui.qml \
-    MySystemTrayIcon.qml \
+    KtAlarmClockSettingRight.qml \
+    KtAlarmClockSystemTrayIcon.qml \
     MyWindowMenu.qml \
     KtAlarmClock.js \
     MyOver0.js \

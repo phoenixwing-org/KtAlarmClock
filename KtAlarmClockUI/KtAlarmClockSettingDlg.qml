@@ -22,7 +22,7 @@ KtWindow{
     property var myParam: null
 
     // Left
-    MyLeft{
+    KtAlarmClockSettingLeft{
         id: ktLeft
         y: ktRight.y
 
@@ -32,7 +32,7 @@ KtWindow{
         anchors.leftMargin: 0
     }
 
-    MyRight{
+    KtAlarmClockSettingRight{
         id: ktRight
         parent: center
 
@@ -46,7 +46,7 @@ KtWindow{
         anchors.bottomMargin: 0
     }
 
-    MyFooter{
+    KtAlarmClockSettingFooter{
         id:ktfooter
         parent: footer
 
@@ -62,15 +62,15 @@ KtWindow{
 
     // connect signal onCompleted
     Component.onCompleted: {
-        //console.log("MyMain.onCompleted()")
+        //console.log("KtAlarmClockSettingDlg.onCompleted()")
         ktLeft.onScrollPage.connect(ktRight.scrollPage)// pass index value
         root.onWindowSizeChanged.connect(root.autoDisplayLeftMenu)
-        //console.log("MyMain.onCompleted()-end")
+        //console.log("KtAlarmClockSettingDlg.onCompleted()-end")
     }
 
     // connect signal onMyParamChanged
     onMyParamChanged: {
-        console.log("MyMain.onMyParamChanged():",myParam)
+        console.log("KtAlarmClockSettingDlg.onMyParamChanged():",myParam)
         // pass param directly
         ktRight.myParam = myParam
         ktLeft.myParam = myParam

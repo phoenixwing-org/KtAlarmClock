@@ -1,4 +1,3 @@
-
 /**
 * @copyright Shanghai Kuntai Software Technology Co., Ltd. 2022
 * @license LGPL 3.0
@@ -7,19 +6,14 @@
 import QtQuick 2.14
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.14
+import KtAlarmClock 1.0
 
 Item {
     id: root
     width: 600
     height: 400
     clip: true
-    property alias rect: rect
-    property alias rect0: rect0
-    property alias rect1: rect1
-    property alias rect2: rect2
-    property alias ktTimeSlideMyWork: ktTimeSlideMyWork
-    property alias ktTimeSlideMyExercise: ktTimeSlideMyExercise
-    property alias ktTimeSlideMyForce: ktTimeSlideMyForce
+    property var myParam: null
 
     Rectangle {
         color: "#000000"
@@ -103,11 +97,45 @@ Item {
             }
         }
     }
-}
 
-/*##^##
-Designer {
-    D{i:1;invisible:true}
-}
-##^##*/
+    // test slot
+    function mySlot(index) {
+        if (KtAlarmTheme.debugLocate) console.log("mySlot("+index+")")
+    }
+    
+    /**
+     * update parameter to dialog
+     */
+    function onUpdateDialog() {
+        if(null == myParam) return
+        if (KtAlarmTheme.debugLocate) console.log("KtAlarmClockSettingRight.onUpdateDialog()")
+        if (KtAlarmTheme.debugLocate) myParam.dump()
+        ktTimeSlideMyWork.value = myParam.WorkTime
+        ktTimeSlideMyExercise.value = myParam.WorkBreak
+        ktTimeSlideMyForce.value = myParam.TimeForce
+    }
 
+    /**
+     * get parameter from dialog
+     */
+    function onUpdateInfos() {
+        if(null == myParam) return
+        if (KtAlarmTheme.debugLocate) console.log("KtAlarmClockSettingRight.onUpdateInfos()")
+        myParam.WorkTime = ktTimeSlideMyWork.value
+        myParam.WorkBreak = ktTimeSlideMyExercise.value
+        myParam.TimeForce = ktTimeSlideMyForce.value
+        if (KtAlarmTheme.debugLocate)  myParam.dump()
+    }
+
+    // change Sub Item
+    function scrollPage(index) {
+        if (KtAlarmTheme.debugLocate) console.log("scrollPage("+index+")")
+        if(0 === index){
+            rect.y = - rect0.y
+        } else if(1 === index){
+            rect.y = - rect1.y
+        } else{
+            rect.y = - rect2.y
+        }
+    }
+}

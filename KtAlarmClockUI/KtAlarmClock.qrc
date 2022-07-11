@@ -36,12 +36,11 @@
     </qresource>
     <qresource prefix="/">
         <file>KtAlarmClockDlg.qml</file>
-        <file>MyFooter.qml</file>
-        <file>MyLeft.qml</file>
-        <file>MyMain.qml</file>
-        <file>MyRight.qml</file>
-        <file>MyRightForm.ui.qml</file>
-        <file>MyClock.qml</file>
+        <file>KtAlarmClockSettingFooter.qml</file>
+        <file>KtAlarmClockSettingLeft.qml</file>
+        <file>KtAlarmClockSettingDlg.qml</file>
+        <file>KtAlarmClockSettingRight.qml</file>
+       <file>MyClock.qml</file>
         <file>KtToolButton.qml</file>
         <file>KtWindow.qml</file>
         <file>KtSpinBox.qml</file>
@@ -52,7 +51,7 @@
         <file>MyOver0.qml</file>
         <file>MyOver1.qml</file>
         <file>MyWindowMenu.qml</file>
-        <file>MySystemTrayIcon.qml</file>
+        <file>KtAlarmClockSystemTrayIcon.qml</file>
         <file>KtAlarmTheme.qml</file>
         <file>qmldir</file>
         <file>KtSlider.qml</file>

@@ -81,7 +81,7 @@ function loadSettingDlg() {
     if(KtAlarmTheme.debugLocate) console.log("MainJs.loadSettingDlg()");
     unloadSettingDlg()
     
-    var component = Qt.createComponent("qrc:/MyMain.qml")
+    var component = Qt.createComponent("qrc:/KtAlarmClockSettingDlg.qml")
     let dlg = component.createObject(root)
     if(dlg == null){
         console.log("Error to load SettingDlg");
