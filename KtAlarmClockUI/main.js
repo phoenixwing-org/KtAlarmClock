@@ -82,25 +82,27 @@ function loadSettingDlg() {
     unloadSettingDlg()
     
     var component = Qt.createComponent("qrc:/MyMain.qml")
-    settingDlg = component.createObject(root)
-    if(settingDlg == null){
+    let dlg = component.createObject(root)
+    if(dlg == null){
         console.log("Error to load SettingDlg");
         return
     }
-    settingDlg.myParam = myAlarmClockParam
+    dlg.myParam = myAlarmClockParam
     
     // destroy when close
-    settingDlg.onClosing.connect(unloadSettingDlg);
+    dlg.onClosing.connect(unloadSettingDlg);
 
-    settingDlg.x = root.x
-    settingDlg.y = root.y + root.height
+    dlg.x = root.x
+    dlg.y = root.y + root.height
 
-    if(settingDlg.y < 30) settingDlg.y =30
-    settingDlg.show();
+    if(dlg.y < 30) dlg.y =30
+    dlg.show();
+    settingDlg = dlg
 }
 
 function unloadSettingDlg(){
     if(null !== settingDlg){
+        settingDlg.myParam = null
         if(KtAlarmTheme.debugLocate) console.log("MainJs.unloadSettingDlg()");
         settingDlg.destroy();
         settingDlg = null;

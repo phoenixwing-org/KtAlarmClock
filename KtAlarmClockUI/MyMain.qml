@@ -71,14 +71,15 @@ KtWindow{
     // connect signal onMyParamChanged
     onMyParamChanged: {
         console.log("MyMain.onMyParamChanged():",myParam)
-        if(myParam == null) return;
         // pass param directly
-        ktRight.myParam = root.myParam
-        ktLeft.myParam = root.myParam
-        myParam.onUpdateInfos.connect(ktRight.onUpdateInfos)
-        myParam.onUpdateDialog.connect(ktRight.onUpdateDialog)
-        ktRight.onUpdateDialog()
+        ktRight.myParam = myParam
+        ktLeft.myParam = myParam
 
+        if(myParam != null) {
+            myParam.onUpdateInfos.connect(ktRight.onUpdateInfos)
+            myParam.onUpdateDialog.connect(ktRight.onUpdateDialog)
+            ktRight.onUpdateDialog()
+        }
     }
 
     function autoDisplayLeftMenu()

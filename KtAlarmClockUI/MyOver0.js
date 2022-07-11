@@ -14,12 +14,10 @@
 function afterClockRunningChanged() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .afterClockRunningChanged() :", clock.running)
 
+    showMessage("");
     if (clock.running) {
-        showMessage("");
         over0.canClose = false
     } else {
-
-        showMessage("Close:");
         // make sure page can be closed
         // do not close it now
 
@@ -30,6 +28,7 @@ function afterClockRunningChanged() {
         // do not set buttonUnlock.visible
     }
 }
+
 /*
  * @brief action after Force timer Running Changed
  */
@@ -99,10 +98,15 @@ function customShow() {
     if (KtAlarmTheme.debug || Qt.application.screens.length>1) {
         loaderOver1.sourceComponent = compOver1;
         let comp = loaderOver1.item
-        comp.screenId = KtAlarmTheme.debug? 0 : 1 
 
         if(null !== comp) {
-            comp.checkoutScreen();
+            comp.screenId = KtAlarmTheme.debug? 0 : 1 
+            let ok = comp.checkoutScreen();
+            if (!ok){
+                console.log("loader: over1 .checkoutScreen()")
+                return
+            }
+            if (KtAlarmTheme.debugLocate) console.log("over1 .screenId ", comp.screenId)
             comp.showOver();
             // debug for position
             if(KtAlarmTheme.debug !== 0) {
