@@ -4,6 +4,7 @@ bin-release/
 bin/
 out/
 build-*
+build
 x64
 Debug
 Release

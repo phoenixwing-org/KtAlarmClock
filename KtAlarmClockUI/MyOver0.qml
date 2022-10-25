@@ -42,8 +42,8 @@ KtWindowOver {
      */
     Rectangle {
         id: footer
-        x: (over0.width - width) * 0.5
-        y: over0.height - 100
+        x: 5
+        y: 5
         width: isShowFormula? 500 : buttonUnlock.width
         height: 80
         color: KtAlarmTheme.colorBackground
@@ -184,6 +184,7 @@ KtWindowOver {
             screenId: 1
             canClose: over0.canClose
             fullScreen: over0.fullScreen
+            onSendClose: Over0Js.unlockPage();
         }
     }
 

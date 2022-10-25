@@ -24,13 +24,13 @@ CONFIG(release, debug|release){
 
 # KT_BASE_INCLUDE for deferent system
 unix {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/include
 }
 macx {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/include
 }
 win32 {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\include
 }
 
 # message(KT_INCLUDES=$$(KT_INCLUDES))
