@@ -4,38 +4,41 @@ import KtAlarmClock 1.0
 import Qt.labs.platform 1.1
 
 SystemTrayIcon {
-    id:trayIcon
+    id:control
     visible: true
     icon.source: "qrc:/image/kt-blue.svg"
 
-    signal sigAction(int index)
+    signal onAction(int index)
 
     menu: Menu {
         MenuItem {
-            text: qsTr("锟钛护眼闹钟")
             iconSource: "qrc:/image/kt.svg"
+            text: qsTr("锟钛护眼闹钟")
+
             onTriggered: {
                 if(checkForbiden()) return
-                trayIcon.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
+                control.showMessage("锟钛闹钟", "可以定时休息、工作\n"+
                                      "http://www.kuntaisoft.cn")
             }
         }
         
         MenuSeparator{}
         MenuItem {
-            text: qsTr("立刻休息")
             iconSource: "qrc:/image/coffee.svg"
+            text: qsTr("立刻休息")
+
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionBreak)
+                onAction(KtAlarmClock.ActionBreak)
             }
         }
         MenuItem {
-            text: qsTr("显示设置界面")
             iconSource: "qrc:/image/menus.svg"
+            text: qsTr("显示设置界面")
+
             onTriggered: {
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionMainDlg)
+                onAction(KtAlarmClock.ActionMainDlg)
             }
         }
 
@@ -50,6 +53,7 @@ SystemTrayIcon {
 
         MenuItem {
             text: qsTr("访问锟钛网站")
+
             onTriggered: {
                 if(checkForbiden()) return
                 Qt.openUrlExternally("http://www.kuntaisoft.cn")
@@ -58,11 +62,12 @@ SystemTrayIcon {
 
         MenuSeparator{}
         MenuItem {
-            text: qsTr("退出")
             iconSource: "qrc:/image/cancel.svg"
+            text: qsTr("Exit")
+
             onTriggered:{
                 if(checkForbiden()) return
-                sigAction(KtAlarmClock.ActionClose)
+                onAction(KtAlarmClock.ActionClose)
             }
         }
     }
@@ -74,6 +79,6 @@ SystemTrayIcon {
 
     function checkForbiden(){
         if(KtAlarmTheme.debug ===1) return false
-        return (KtAlarmTheme.clockStep == KtAlarmClock.WorkBreak)
+        return (KtAlarmTheme.workStep == KtAlarmClock.WorkBreak)
     }
 }

@@ -56,6 +56,7 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     else if (nullptr == engine) {
         return KT_E_INVALIDARG;
     }
+
     // m_pClockDlg
     m_pClockDlg = new KtAlarmClockDlg();
 
@@ -65,7 +66,7 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
 
     // qDebug() << "KtAlarmClockCmd load(url)";
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/KtAlarmClockDlg.qml"));
     /*
      * What's the meaning?
     QObject::connect(
@@ -82,9 +83,12 @@ ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     m_pClockParam->registerRead(); // read param
 
     // all the signal is connect to the socket
-    m_pClockParam->sigUpdateDialog(); // update dialog
+    m_pClockParam->onUpdateDialog(); // update dialog
 
-    emit m_pClockParam->sigAction(KtAlarmClock::ActionPlayPause); // start to work
+    emit m_pClockParam->onAction(KtAlarmClock::ActionPlayPause); // start to work
+
+    // auto start
+    setAutoStart(true);
 
     return KT_S_OK;
 }
@@ -105,11 +109,4 @@ int KtAlarmClockCmd::setAutoStart(bool iValue) {
 
     reg.setValue("KtAlarmClock", m_ExePath);
     return 0; // ok
-}
-//------------------------------------------------
-int KtAlarmClockCmd::onStart(int state) {
-    // qDebug() << "KtAlarmClockCmd::onStart(" << state << ")";
-    m_pClockParam->sigUpdateInfos(); // get infos from dialog
-    emit m_pClockParam->sigClockStart(state);
-    return KT_S_OK;
 }

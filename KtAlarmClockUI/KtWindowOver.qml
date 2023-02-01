@@ -17,6 +17,7 @@ KtWindowBase {
      * Show Window
      */
     function hideOver(){
+        if (KtAlarmTheme.debugLocate) console.log(objectName, ".hideOver()")
         return KtWindowBase.hideBase();
     }
 
@@ -24,16 +25,19 @@ KtWindowBase {
      * Show Window
      */
     function showOver(){
-        // console.log("KtWindowOver.showOver()")
+        if (KtAlarmTheme.debugLocate) console.log(objectName, ".showOver()")
+
         let ok = checkoutScreen();
+
         if(!ok) {
+           console.log(objectName, ".checkoutScreen() = false")
             root.hide()
             return false;
         }
 
+        x = screen.virtualX
+        y = screen.virtualY
         if(fullScreen){
-            x = screen.virtualX
-            y = screen.virtualY
             width = screen.width
             height = screen.height
             root.showFullScreen();
@@ -42,7 +46,9 @@ KtWindowBase {
             root.show()
         }
 
+        if (KtAlarmTheme.debug) debugMsg("showOver")
         return true
     }
+    
 }
 

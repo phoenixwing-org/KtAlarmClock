@@ -16,6 +16,7 @@ Item {
     property bool onlyIcon: false
     property int minimumWidth: 50
     property int defaultWidth: 200
+    property var myParam: null
 
 
     Rectangle {
@@ -93,7 +94,7 @@ Item {
         text: "上课读书"
         shortcut: StandardKey.New
         onTriggered: {
-            sigScrollPage(0)
+            onScrollPage(0)
         }
     }
 
@@ -102,7 +103,7 @@ Item {
         text: "下课休息"
         shortcut: StandardKey.Open
         onTriggered: {
-            sigScrollPage(1)
+            onScrollPage(1)
         }
     }
     Action {
@@ -110,17 +111,17 @@ Item {
         text: "强制休息"
         shortcut: StandardKey.Save
         onTriggered: {
-                sigScrollPage(2)
-            }
+            onScrollPage(2)
+        }
     }
 
     Action {
         id: actionDefault
         text: "默认设置"
         onTriggered: {
-                myAlarmClockParam.setDefault()
-                myAlarmClockParam.sigUpdateDialog()
-            }
+            myParam.setDefault()
+            myParam.onUpdateDialog()
+        }
 
     }
 
@@ -128,9 +129,9 @@ Item {
         id: actionSave
         text: "保存设置"
         onTriggered: {
-                myAlarmClockParam.sigUpdateInfos()
-                myAlarmClockParam.registerWrite()
-            }
+            myParam.onUpdateInfos()
+            myParam.registerWrite()
+        }
     }
 
     Action {
@@ -148,7 +149,7 @@ Item {
         text: "锟钛网站"
     }
 
-    signal sigScrollPage(int index)
+    signal onScrollPage(int index)
 
 
     onOnlyIconChanged: {

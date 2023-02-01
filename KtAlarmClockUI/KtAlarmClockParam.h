@@ -28,17 +28,17 @@ class ExportedByKtAlarmClockUI KtAlarmClockParam : public QObject {
     /**
      * @brief Work Time Property
      */
-    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE SetWorkTime NOTIFY sigWorkTime);
+    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE setWorkTime NOTIFY onWorkTimeChanged);
 
     /**
      * @brief Work Break Property
      */
-    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE SetWorkBreak NOTIFY sigWorkBreak);
+    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE setWorkBreak NOTIFY onWorkBreakChanged);
 
     /**
      * @brief Time Force Property
      */
-    Q_PROPERTY(int TimeForce READ GetTimeForce WRITE SetTimeForce NOTIFY sigTimeForce);
+    Q_PROPERTY(int TimeForce READ GetTimeForce WRITE setTimeForce NOTIFY onTimeForceChanged);
 
 public:
     /** @brief Standard constructors and destructors */
@@ -49,7 +49,13 @@ public:
     KtAlarmClockParam(const KtAlarmClockParam&);
     KtAlarmClockParam& operator=(const KtAlarmClockParam&);
 
-public:
+public: // functions
+    /**
+     * @brief set class members to default value
+     * @return void
+     */
+    void clear();
+
     /**
      * @brief Get Work Time
      */
@@ -69,47 +75,32 @@ signals:
     /**
      * @brief Work Time Signal
      */
-    bool sigWorkTime(int iValue);
+    bool onWorkTimeChanged(int iValue);
 
     /**
      * @brief Work Break Signal
      */
-    bool sigWorkBreak(int iValue);
+    bool onWorkBreakChanged(int iValue);
 
     /**
      * @brief Time Counter Signal
      */
-    bool sigTimeForce(int iValue);
+    bool onTimeForceChanged(int iValue);
 
     /**
-     * @brief Show sub dialog
+     * @brief Action state Signal
      */
-    bool sigDialogShow(int index, bool value);
+    bool onAction(int state);
 
     /**
-     * @brief clock timeout
+     * @brief Update Infos Signal
      */
-    bool sigClockOut(int state);
-
-    /**
-     * @brief clock state
-     */
-    bool sigClockStart(int state);
-
-    /**
-     * @brief Action state
-     */
-    bool sigAction(int state);
-
-    /**
-     * @brief Update Infos
-     */
-    bool sigUpdateInfos();
+    bool onUpdateInfos();
 
     /**
      * @brief Update dialog
      */
-    bool sigUpdateDialog();
+    bool onUpdateDialog();
 
 public slots:
 
@@ -132,17 +123,17 @@ public slots:
     /**
      * @brief Set Work Time
      */
-    void SetWorkTime(int iValue);
+    void setWorkTime(int iValue);
 
     /**
      * @brief Set Work Break
      */
-    void SetWorkBreak(int iValue);
+    void setWorkBreak(int iValue);
 
     /**
      * @brief Set Time Counter
      */
-    void SetTimeForce(int iValue);
+    void setTimeForce(int iValue);
 
 public:
     // clang-format off
@@ -196,12 +187,5 @@ public:
     //END KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM DECLARATION
 
     // clang-format on
-
-public: // functions
-    /**
-     * @brief set class members to default value
-     * @return void
-     */
-    void clear();
 };
 #endif

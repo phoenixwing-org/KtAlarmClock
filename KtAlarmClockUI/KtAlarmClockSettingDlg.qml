@@ -17,11 +17,12 @@ KtWindow{
 
     title: qsTr("护眼闹钟")
 
-    left:ktLeft
+    left: ktLeft
     right: ktRight
+    property var myParam: null
 
     // Left
-    MyLeft{
+    KtAlarmClockSettingLeft{
         id: ktLeft
         y: ktRight.y
 
@@ -31,9 +32,10 @@ KtWindow{
         anchors.leftMargin: 0
     }
 
-    MyRight{
+    KtAlarmClockSettingRight{
         id: ktRight
         parent: center
+
         anchors.left: ktLeft.right
         anchors.leftMargin: 0
         anchors.right: parent.right
@@ -44,7 +46,7 @@ KtWindow{
         anchors.bottomMargin: 0
     }
 
-    MyFooter{
+    KtAlarmClockSettingFooter{
         id:ktfooter
         parent: footer
 
@@ -60,10 +62,24 @@ KtWindow{
 
     // connect signal onCompleted
     Component.onCompleted: {
-        //console.log("MyMain.onCompleted()")
-        ktLeft.sigScrollPage.connect(ktRight.scrollPage)// pass index value
-        root.sigWindowSizeChanged.connect(root.autoDisplayLeftMenu)
-        //console.log("MyMain.onCompleted()-end")
+        //console.log("KtAlarmClockSettingDlg.onCompleted()")
+        ktLeft.onScrollPage.connect(ktRight.scrollPage)// pass index value
+        root.onWindowSizeChanged.connect(root.autoDisplayLeftMenu)
+        //console.log("KtAlarmClockSettingDlg.onCompleted()-end")
+    }
+
+    // connect signal onMyParamChanged
+    onMyParamChanged: {
+        console.log("KtAlarmClockSettingDlg.onMyParamChanged():",myParam)
+        // pass param directly
+        ktRight.myParam = myParam
+        ktLeft.myParam = myParam
+
+        if(myParam != null) {
+            myParam.onUpdateInfos.connect(ktRight.onUpdateInfos)
+            myParam.onUpdateDialog.connect(ktRight.onUpdateDialog)
+            ktRight.onUpdateDialog()
+        }
     }
 
     function autoDisplayLeftMenu()

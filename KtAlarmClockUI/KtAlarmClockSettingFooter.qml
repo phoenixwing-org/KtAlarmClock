@@ -45,7 +45,7 @@ Item {
                 icon.width: iconSize
                 icon.height: iconSize
                 action: ActionBackward
-                onClicked: KtAlarmTheme.sigAction(KtAlarmClock.ActionBackward)
+                onClicked: KtAlarmTheme.onAction(KtAlarmClock.ActionBackward)
             }
 
             KtToolButton {
@@ -64,7 +64,7 @@ Item {
                 icon.source: "qrc:/image/kt-forward.svg"
                 icon.width: iconSize
                 icon.height: iconSize
-                onClicked: KtAlarmTheme.sigAction(KtAlarmClock.ActionForward)
+                onClicked: KtAlarmTheme.onAction(KtAlarmClock.ActionForward)
             }
 
             KtToolButton {
@@ -82,20 +82,20 @@ Item {
     Action {
         id: actionPlayPause
         text: "Pay / Pause"
-        onTriggered:  KtAlarmTheme.sigAction(KtAlarmClock.ActionPlayPause)
+        onTriggered:  KtAlarmTheme.onAction(KtAlarmClock.ActionPlayPause)
     }
 
     Action {
         id: actionBreak
         text: "Break"
-        onTriggered:  KtAlarmTheme.sigAction(KtAlarmClock.ActionBreak)
+        onTriggered:  KtAlarmTheme.onAction(KtAlarmClock.ActionBreak)
     }
 
 
     Action {
         id: actionNextLoop
         text: "Next Loop"
-        onTriggered:  KtAlarmTheme.sigAction(KtAlarmClock.ActionNextLoop)
+        onTriggered:  KtAlarmTheme.onAction(KtAlarmClock.ActionNextLoop)
     }
 
 }

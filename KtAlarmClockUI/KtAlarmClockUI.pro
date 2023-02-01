@@ -24,13 +24,13 @@ CONFIG(release, debug|release){
 
 # KT_BASE_INCLUDE for deferent system
 unix {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Linux/include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/include
 }
 macx {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)/Mac/include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)/include
 }
 win32 {
-    KT_BASE_INCLUDE = $$(KT_INCLUDES)\Windows\include
+    KT_BASE_INCLUDE = $$(KT_INCLUDES)\include
 }
 
 # message(KT_INCLUDES=$$(KT_INCLUDES))
@@ -78,7 +78,7 @@ HEADERS += \
 #}
 
 RESOURCES += \
-    main.qrc
+    KtAlarmClock.qrc
 
 DISTFILES += \
     KtAlarmTheme.qml \
@@ -91,14 +91,14 @@ DISTFILES += \
     KtWindowBase.qml \
     KtWindowOver.qml \
     MyClock.qml \
-    MyFooter.qml \
-    MyLeft.qml \
-    MyMain.qml \
+    KtAlarmClockSettingFooter.qml \
+    KtAlarmClockSettingLeft.qml \
+    KtAlarmClockSettingDlg.qml \
     MyOver0.qml \
     MyOver1.qml \
-    MyOverItem.qml \
-    MyRight.qml \
-    MyRightForm.ui.qml \
-    MySystemTrayIcon.qml \
+    KtAlarmClockSettingRight.qml \
+    KtAlarmClockSystemTrayIcon.qml \
     MyWindowMenu.qml \
-    main.qml
+    KtAlarmClock.js \
+    MyOver0.js \
+    KtAlarmClockDlg.qml

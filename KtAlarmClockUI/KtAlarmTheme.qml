@@ -21,12 +21,12 @@ QtObject {
     property int fontPixelNormal: 12
     property int fontPixelLarge: 20
     property int debug: 0
+    property int debugLocate: 0
 
     // clock property
-    property int clockStep: KtAlarmClock.None
+    property int workStep: KtAlarmClock.None
     property bool clockForce: false
     property bool loop: false
 
-    signal sigAction(int index)
-
+    signal onAction(int index)
 }
