@@ -2,7 +2,6 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.12
 import KtAlarmClock 1.0
-import QtGraphicalEffects 1.14
 import "MyOver0.js" as Over0Js
 
 
@@ -19,173 +18,143 @@ KtWindowOver {
     property int formulaValue: 3300
     property bool isShowFormula: false
     property bool isForced: false
-    
+
     signal onClockOut(int state)
 
-    //modality: Qt.WindowModal //Block other windows
     title: "Over Window"
     objectName: "over0"
     screenId: 0
 
     Label {
-        id: labelMsg
-        color: KtAlarmTheme.colorText
-        text: qsTr("")
-        anchors.horizontalCenter: footer.horizontalCenter
-        anchors.bottom: footer.top
-        anchors.bottomMargin: 5
-        font.pointSize: KtAlarmTheme.fontPixelLarge
-    }
-
-    /**
-     * @brief footer counter label
-     * @note visible is only controlled by isForced
-     */
-    Rectangle {
-        id: footer
-        x: 5
-        y: 5
-        width: isShowFormula? 500 : buttonUnlock.width
-        height: 80
-        color: KtAlarmTheme.colorBackground
-        visible: !isForced
-
-        KtMouseAreaMove{}
-
-        Item {
-            id: element
-            visible: isShowFormula
-            width: labelFormula.width + rectangleResult.width + 20
-            height: 50
-            clip: false
-            anchors.horizontalCenter: footer.horizontalCenter
-            anchors.verticalCenter: footer.verticalCenter
-
-            Label {
-                id: labelFormula
-                color: KtAlarmTheme.colorText
-                text: qsTr("2200 + 1100 =")
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-                font.pointSize: KtAlarmTheme.fontPixelLarge
-
-                anchors.verticalCenter: element.verticalCenter
-            }
-
-            Rectangle {
-                id: rectangleResult
-                width: 80
-                height: 40
-                anchors.left: labelFormula.right
-                anchors.leftMargin: 10
-                color: "#112a3f"
-                border.color: KtAlarmTheme.colorBorder
-                border.width: 1
-
-                anchors.verticalCenter: element.verticalCenter
-                TextEdit {
-                    id: textEditResult
-                    x: 159
-                    y: 15
-                    height: 40
-                    color: KtAlarmTheme.colorText
-                    text: ""
-                    anchors.rightMargin: 5
-                    anchors.leftMargin: 0
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.top: parent.top
-                    anchors.right: parent.right
-                    anchors.left: parent.left
-                    font.family: "Arial"
-                    font.pixelSize: 30
-                    wrapMode: Text.NoWrap
-                    horizontalAlignment: Text.AlignRight
-                    verticalAlignment: Text.AlignVCenter
-                }
-            }
-        }
-
-        KtToolButton {
-            id: buttonUnlock
-            icon.source: "qrc:/image/unlock.svg"
-            icon.height: 50
-            icon.width: 50
-            text: qsTr("Unlock")
-            flat: false
-            font.pointSize: KtAlarmTheme.fontPixelLarge
-            
-            anchors.verticalCenter: footer.verticalCenter
-            anchors.right: footer.right
-            anchors.rightMargin: 5
-            onClicked: Over0Js.unlockPage()
-        }
-    }
-
-    /**
-     * @brief time counter label
-     * @note visible is only controlled by counterForce > 0
-     */
-    Label {
         id: labelForce
+        z: 50
+        anchors.centerIn: parent
         width: parent.width
         visible: isForced && counterForce > 0
         color: KtAlarmTheme.colorText
         text: counterForce
-        anchors.horizontalCenter: footer.horizontalCenter
-        anchors.verticalCenter: footer.verticalCenter
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
-        font.pointSize: KtAlarmTheme.fontPixelNormal
+        font.pointSize: KtAlarmTheme.fontPixelLarge
     }
 
-    Image {
-        id: imgCoffee
-        x: (over0.width -width ) * 0.5
-        y: (over0.height - height) * 0.5
-        width: 100
-        height: 100
-        sourceSize.height: 100
-        sourceSize.width: 100
-        source: "qrc:/image/coffee.svg"
-        KtMouseAreaMove{}
+    Item {
+        id: centerContent
+        anchors.centerIn: parent
+        width: imgCoffee.width
+        height: imgCoffee.height + clock.height + 10
+        visible: !isForced
 
         Image {
-            id: imgClock
-            x: 35
-            y: 56
-            width: 24
-            height: 24
-            source: "qrc:/image/alarm-clock.svg"
-            KtMouseAreaMove{}
+            id: imgCoffee
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 100
+            height: 100
+            sourceSize.height: 100
+            sourceSize.width: 100
+            source: "qrc:/image/coffee.svg"
+
+            Image {
+                id: imgClockIcon
+                x: 35
+                y: 56
+                width: 24
+                height: 24
+                source: "qrc:/image/alarm-clock.svg"
+            }
+        }
+
+        MyClock {
+            id: clock
+            visible: running
+            anchors.top: imgCoffee.bottom
+            anchors.topMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            onRunningChanged: Over0Js.afterClockRunningChanged()
+            onCounterChanged: Over0Js.afterClockCounterChanged()
         }
     }
 
-    /**
-     * @brief clock item
-     * @note visible is only controlled by running
-     */
-    MyClock{
-        id: clock
-        visible: running
-        x: imgCoffee.x + 5
-        y: imgCoffee.y + imgCoffee.height + 10
-        KtMouseAreaMove{}
+    Item {
+        id: unlockPanel
+        z: 100
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 20
+        visible: !isForced
+        width: isShowFormula ? 500 : buttonUnlock.width
+        height: unlockColumn.implicitHeight
 
-        onRunningChanged: Over0Js.afterClockRunningChanged()
-        onCounterChanged: Over0Js.afterClockCounterChanged()
-    }
+        Column {
+            id: unlockColumn
+            spacing: 8
+            anchors.right: parent.right
 
-    Loader {
-        id: loaderOver1
-    }
+            Label {
+                id: labelMsg
+                width: unlockPanel.width
+                horizontalAlignment: Text.AlignRight
+                color: KtAlarmTheme.colorText
+                text: qsTr("")
+                font.pointSize: KtAlarmTheme.fontPixelLarge
+            }
 
-    Component{
-        id: compOver1
-        MyOver1 {
-            screenId: 1
-            canClose: over0.canClose
-            fullScreen: over0.fullScreen
-            onSendClose: Over0Js.unlockPage();
+            Item {
+                id: element
+                visible: isShowFormula
+                width: labelFormula.width + rectangleResult.width + 20
+                height: 50
+                anchors.right: parent.right
+
+                Label {
+                    id: labelFormula
+                    color: KtAlarmTheme.colorText
+                    text: qsTr("2200 + 1100 =")
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: KtAlarmTheme.fontPixelLarge
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Rectangle {
+                    id: rectangleResult
+                    width: 80
+                    height: 40
+                    anchors.left: labelFormula.right
+                    anchors.leftMargin: 10
+                    color: "#112a3f"
+                    border.color: KtAlarmTheme.colorBorder
+                    border.width: 1
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    TextEdit {
+                        id: textEditResult
+                        height: 40
+                        color: KtAlarmTheme.colorText
+                        text: ""
+                        anchors.fill: parent
+                        anchors.margins: 4
+                        font.family: "Arial"
+                        font.pixelSize: 30
+                        wrapMode: Text.NoWrap
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+
+            KtToolButton {
+                id: buttonUnlock
+                anchors.right: parent.right
+                icon.source: "qrc:/image/unlock.svg"
+                icon.height: 50
+                icon.width: 50
+                text: qsTr("Unlock")
+                flat: false
+                font.pointSize: KtAlarmTheme.fontPixelLarge
+                onClicked: Over0Js.unlockPage()
+            }
         }
     }
 
@@ -198,39 +167,65 @@ KtWindowOver {
         onRunningChanged: if (running) Over0Js.syncWallClocks()
     }
 
+    Timer {
+        id: raiseTimer
+        interval: 5000
+        running: visible
+        repeat: true
+        onTriggered: Over0Js.raiseLockScreens()
+        onRunningChanged: if (running) Over0Js.raiseLockScreens()
+    }
+
+    Timer {
+        id: screenWatchdogTimer
+        interval: 10000
+        running: visible
+        repeat: true
+        onTriggered: Over0Js.reconcileLockScreens()
+        onRunningChanged: if (running) Over0Js.reconcileLockScreens()
+    }
+
     Connections {
         target: Qt.application
         function onStateChanged(state) {
-            if (state === Qt.ApplicationActive)
+            if (state === Qt.ApplicationActive) {
                 Over0Js.syncWallClocks()
+                Over0Js.reconcileLockScreens()
+                Over0Js.raiseLockScreens()
+            }
         }
     }
 
     onVisibleChanged: {
-        if (visible)
+        if (visible) {
             Over0Js.syncWallClocks()
+            Over0Js.reconcileLockScreens()
+            Over0Js.raiseLockScreens()
+        } else {
+            Over0Js.hideSecondaryScreens()
+        }
     }
 
     Component.onCompleted: {
         Over0Js.initialFormula()
     }
+
     //@disable-check M16
     onClosing: function(closeEvent){
         console.log("over0 .onClosing(), canClose=",canClose)
         if(canClose){
             onClockOut(KtAlarmClock.WorkBreak)
-            loaderOver1.sourceComponent = null
+            Over0Js.hideSecondaryScreens()
         }
     }
 
     onIsForcedChanged: Over0Js.afterIsForceChanged()
-    
+
     function customHide() {
         Over0Js.customHide()
-    }   
+    }
 
     function customShow() {
         Over0Js.customShow()
     }
-
 }

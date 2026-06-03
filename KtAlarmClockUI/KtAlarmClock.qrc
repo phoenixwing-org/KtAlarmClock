@@ -57,5 +57,6 @@
         <file>KtSlider.qml</file>
         <file>KtAlarmClock.js</file>
         <file>MyOver0.js</file>
+        <file>LockScreenManager.js</file>
     </qresource>
 </RCC>

@@ -5,10 +5,10 @@ import QtQuick.Controls 2.14
 Window {
     id: root
     property bool canClose: true
-    property bool fullScreen: false //true
-    property int screenId: 0 //Screens id
+    property bool fullScreen: false
+    property int screenId: 0
     property bool screenOK: true
-    visible:false
+    visible: false
 
     //@disable-check M16
     onClosing: function(closeEvent){
@@ -25,9 +25,6 @@ Window {
         return true;
     }
 
-    /*
-     * Show Window
-     */
     function hideBase(){
         console.log(objectName,".hideBase()")
         canClose = true
@@ -35,9 +32,6 @@ Window {
         return true;
     }
 
-    /*
-     * Show Window
-     */
     function showBase(){
         console.log(objectName,".showBase()")
         let ok = checkoutScreen();
@@ -51,11 +45,28 @@ Window {
         else
             root.show();
     }
-    
+
+    function applyScreenGeometry() {
+        if (!checkoutScreen())
+            return false
+
+        x = screen.virtualX
+        y = screen.virtualY
+        if (fullScreen) {
+            width = screen.width
+            height = screen.height
+        }
+        return true
+    }
+
+    function raiseToFront() {
+        raise()
+        requestActivate()
+    }
+
     function debugMsg(iMsg = ""){
         console.log(objectName, iMsg + ", {visible:", visible, ", rect: (",x,",",y,",",width,",",height,")",
             ", canClose:", canClose, ",screenOK:",screenOK,
             ", screenId:",screenId, "}")
     }
 }
-

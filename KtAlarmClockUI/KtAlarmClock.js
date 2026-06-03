@@ -123,6 +123,7 @@ function unloadOverDlg() {
     if (null == loaderOver0.item) return
     if (KtAlarmTheme.debugLocate) console.log("loaderOver0 unload");
     loaderOver0.item.canClose = true
+    loaderOver0.item.customHide()
     loaderOver0.source = ""
 }
 

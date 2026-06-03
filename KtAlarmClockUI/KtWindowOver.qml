@@ -13,42 +13,28 @@ KtWindowBase {
 
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
 
-    /*
-     * Show Window
-     */
     function hideOver(){
         if (KtAlarmTheme.debugLocate) console.log(objectName, ".hideOver()")
-        return KtWindowBase.hideBase();
+        return hideBase();
     }
 
-    /*
-     * Show Window
-     */
     function showOver(){
         if (KtAlarmTheme.debugLocate) console.log(objectName, ".showOver()")
 
-        let ok = checkoutScreen();
-
-        if(!ok) {
-           console.log(objectName, ".checkoutScreen() = false")
-            root.hide()
-            return false;
+        if (!applyScreenGeometry()) {
+            console.log(objectName, ".applyScreenGeometry() = false")
+            hide()
+            return false
         }
 
-        x = screen.virtualX
-        y = screen.virtualY
-        if(fullScreen){
-            width = screen.width
-            height = screen.height
-            root.showFullScreen();
-        }
-        else{
-            root.show()
-        }
+        if (fullScreen)
+            showFullScreen()
+        else
+            show()
+
+        raiseToFront()
 
         if (KtAlarmTheme.debug) debugMsg("showOver")
         return true
     }
-    
 }
-

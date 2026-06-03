@@ -4,9 +4,9 @@
  * @author      Kuntai
  * @file        MyOver0.js
  * @brief       js functions for MyOver0
- * @note        this can hide these functions as private
  */
 
+.import "LockScreenManager.js" as LockScreen
 
 /*
  * @brief action after Clock Running Changed
@@ -105,15 +105,29 @@ function syncWallClocks() {
     syncForceFromWallClock()
 }
 
-/*
- * Show Window
- */
+function hideSecondaryScreens() {
+    LockScreen.hideAll()
+}
+
+function reconcileLockScreens() {
+    if (!over0.visible)
+        return
+    LockScreen.reconcileScreens(over0, unlockPage)
+}
+
+function raiseLockScreens() {
+    if (!over0.visible)
+        return
+    LockScreen.raiseAll(over0)
+}
+
 function customHide() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .customHide()")
-    over0.canClose = true; // Do not change over 1's canClose
-    over0.hide() //hide
-    loaderOver1.sourceComponent = null // unload over 1
+    over0.canClose = true
+    hideSecondaryScreens()
+    over0.hide()
 }
+
 
 /*
  * Show Window
@@ -121,35 +135,11 @@ function customHide() {
 function customShow() {
     if (KtAlarmTheme.debugLocate) console.log("over0 .customShow()")
 
-    // if debug, not show all
-    over0.fullScreen = (KtAlarmTheme.debug == 0) 
-    clock.counter = over0.counter;//set parameter first 
-    showOver0()// then show Over page
-
-    // show over 1? debug or screens length more than one
-    if (KtAlarmTheme.debug || Qt.application.screens.length>1) {
-        loaderOver1.sourceComponent = compOver1;
-        let comp = loaderOver1.item
-
-        if(null !== comp) {
-            comp.screenId = KtAlarmTheme.debug? 0 : 1 
-            let ok = comp.checkoutScreen();
-            if (!ok){
-                console.log("loader: over1 .checkoutScreen()")
-                return
-            }
-            if (KtAlarmTheme.debugLocate) console.log("over1 .screenId ", comp.screenId)
-            comp.showOver();
-            // debug for position
-            if(KtAlarmTheme.debug !== 0) {
-                comp.x = over0.width
-                comp.color= "grey"
-            }
-        } else {
-            console.log("loader: over 1 is null")
-        }
-    }
-    
+    over0.fullScreen = (KtAlarmTheme.debug == 0)
+    clock.counter = over0.counter
+    showOver0()
+    reconcileLockScreens()
+    raiseLockScreens()
 }
 
 function unlockPage() {
@@ -160,11 +150,9 @@ function unlockPage() {
     }
 
     // check whether can close
-    let can = false;
+    var can = false;
     if (clock.running) {
-        // if running, check answer
         var value = parseInt(textEditResult.text)
-
         can = (value == formulaValue)
 
         if (KtAlarmTheme.debug)
@@ -177,7 +165,7 @@ function unlockPage() {
     textEditResult.text = ""
     if (canClose) {
         showMessage("")
-        over0.onClockOut(KtAlarmClock.WorkBreak) // clock out from break
+        over0.onClockOut(KtAlarmClock.WorkBreak)
     } else {
         showMessage("Wrong answer!")
     }
@@ -214,7 +202,10 @@ function showOver0() {
     clock.clockStart(KtAlarmClock.WorkBreak);
     syncWallClocks()
 
-    return showOver()
+    var ok = showOver()
+    if (ok)
+        raiseLockScreens()
+    return ok
 }
 
 function initialFormula() {
