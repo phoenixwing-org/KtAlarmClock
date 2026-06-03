@@ -56,6 +56,14 @@ Window {
         onWorkStepChanged: MainJs.afterWorkStepChanged
     }
 
+    Connections {
+        target: Qt.application
+        function onStateChanged(state) {
+            if (state === Qt.ApplicationActive && clock.running)
+                clock.syncFromWallClock()
+        }
+    }
+
     //@disable-check M16
     onClosing: function(closeEvent){
         closeEvent.accepted = root.canClose //accept the clos

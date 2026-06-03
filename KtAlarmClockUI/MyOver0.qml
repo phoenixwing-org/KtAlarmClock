@@ -15,6 +15,7 @@ KtWindowOver {
 
     property int counter: 3600
     property int counterForce: 0
+    property double forceEndMs: 0
     property int formulaValue: 3300
     property bool isShowFormula: false
     property bool isForced: false
@@ -127,7 +128,7 @@ KtWindowOver {
     Label {
         id: labelForce
         width: parent.width
-        visible: counterForce>0
+        visible: isForced && counterForce > 0
         color: KtAlarmTheme.colorText
         text: counterForce
         anchors.horizontalCenter: footer.horizontalCenter
@@ -186,6 +187,28 @@ KtWindowOver {
             fullScreen: over0.fullScreen
             onSendClose: Over0Js.unlockPage();
         }
+    }
+
+    Timer {
+        id: wallClockTimer
+        interval: 1000
+        running: visible
+        repeat: true
+        onTriggered: Over0Js.syncWallClocks()
+        onRunningChanged: if (running) Over0Js.syncWallClocks()
+    }
+
+    Connections {
+        target: Qt.application
+        function onStateChanged(state) {
+            if (state === Qt.ApplicationActive)
+                Over0Js.syncWallClocks()
+        }
+    }
+
+    onVisibleChanged: {
+        if (visible)
+            Over0Js.syncWallClocks()
     }
 
     Component.onCompleted: {

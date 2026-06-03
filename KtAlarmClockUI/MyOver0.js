@@ -43,6 +43,7 @@ function afterIsForceChanged() {
 
         over0.canClose = true
         counterForce = 0
+        forceEndMs = 0
 
         // do not set :
         // buttonUnlock.visible, isShowFormula
@@ -58,19 +59,50 @@ function afterClockCounterChanged() {
         return;
     }
     if (KtAlarmTheme.debugLocate) console.log("over0 .afterClockCounterChanged()")
+    updateFormulaVisibility()
+}
 
-    // if forced, change counterForce...
-    if (isForced && counterForce > 0) {
-        counterForce--;
-        if (counterForce < 1) isForced = false;
+/*
+ * @brief sync TimeForce countdown from wall clock
+ */
+function syncForceFromWallClock() {
+    if (!over0.visible)
+        return
+
+    if (forceEndMs <= 0) {
+        updateFormulaVisibility()
+        return
     }
 
-    // change isShowFormula
+    var remaining = Math.ceil((forceEndMs - Date.now()) / 1000)
+    if (remaining <= 0) {
+        isForced = false
+        counterForce = 0
+        forceEndMs = 0
+    } else {
+        isForced = true
+        counterForce = remaining
+    }
+    updateFormulaVisibility()
+}
+
+function updateFormulaVisibility() {
     if (isForced) {
         isShowFormula = false
     } else if (clock.running) {
         isShowFormula = true
-    } else isShowFormula = false
+    } else {
+        isShowFormula = false
+    }
+}
+
+/*
+ * @brief calibrate break clock and force timer (e.g. after resume from sleep)
+ */
+function syncWallClocks() {
+    if (clock.running)
+        clock.syncFromWallClock()
+    syncForceFromWallClock()
 }
 
 /*
@@ -165,14 +197,22 @@ function showOver0() {
         flags = Qt.Window
     }
 
-    if (counterForce > 0) {
-        isForced = true
-        if (counterForce >= counter) {
-            counterForce = 0; // do not counter the force
+    if (over0.counterForce > 0) {
+        if (over0.counterForce >= over0.counter) {
+            over0.counterForce = 0
+            isForced = false
+            forceEndMs = 0
+        } else {
+            forceEndMs = Date.now() + over0.counterForce * 1000
+            isForced = true
         }
-    } else isForced = false
+    } else {
+        isForced = false
+        forceEndMs = 0
+    }
 
     clock.clockStart(KtAlarmClock.WorkBreak);
+    syncWallClocks()
 
     return showOver()
 }

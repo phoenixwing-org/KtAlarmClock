@@ -8,8 +8,6 @@ find_package(Qt5 REQUIRED COMPONENTS
     Quick
 )
 
-file(TO_CMAKE_PATH "$ENV{KT_INCLUDES}/include" KT_BASE_INCLUDE)
-
 add_executable(${PROJECT_NAME} main.cpp)
 
 if(WIN32)
@@ -20,7 +18,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE QT_DEPRECATED_WARNINGS)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/../KtAlarmClockUI
-    ${KT_BASE_INCLUDE}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

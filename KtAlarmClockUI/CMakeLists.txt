@@ -13,8 +13,6 @@ find_package(Qt5 REQUIRED COMPONENTS
     Multimedia
 )
 
-file(TO_CMAKE_PATH "$ENV{KT_INCLUDES}/include" KT_BASE_INCLUDE)
-
 set(SOURCES
     KtAlarmClockCore.cpp
     KtAlarmClockDlg.cpp
