@@ -32,19 +32,19 @@ public:
      * @brief pretreat
      * @return int, 0: succeed, plus: failed
      */
-    ktErrorCode pretreat();
+    int pretreat();
 
     /**
      * @brief calculate
      * @return int, 0: succeed, plus: failed
      */
-    ktErrorCode calculate();
+    int calculate();
 
 public:
     KtAlarmClockParam* k_pClockParam;
 
 private:
-    ktErrorCode m_Pretreat;
+    int m_Pretreat;
 };
 
 #endif // KtAlarmClockCore_H

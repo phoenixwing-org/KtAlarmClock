@@ -10,8 +10,7 @@
 #include <QDebug>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-// kt
-#include "ktErrorCode.h"
+
 // Kt
 #include "KtAlarmClockCmd.h"
 
@@ -29,8 +28,8 @@ int main(int argc, char* argv[]) {
     cmd.setExePath(argv[ 0 ]); // set path
 
     // cmd.debug(" Clock");      // debug
-    ktErrorCode ec = cmd.buildDialog(&engine); // build diglog
-    if (KT_FAILED(ec)) {
+    int code = cmd.buildDialog(&engine); // build dialog
+    if (code) {
         QCoreApplication::exit(-1);
     }
 

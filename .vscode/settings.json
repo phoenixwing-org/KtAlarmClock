@@ -1,5 +1,9 @@
 {
     "files.associations": {
+        "*.ts": "typescript",
+        "*.cls": "vb",
+        "*.frm": "vb",
+        "*.json": "json",
         "*.qml": "qml",
         "*.qrc": "xml",
         "xutility": "cpp",
@@ -39,13 +43,12 @@
         "xmemory0": "cpp",
         "xstddef": "cpp",
         "xstring": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "charconv": "cpp"
     },
     "editor.formatOnSave": true,
     "cSpell.words": [
-        "flickable",
-        "Frameless",
-        "Kuntai"
+        "flickable", "Frameless", "Kuntai"
     ],
     "svg.preview.background": "editor"
 }

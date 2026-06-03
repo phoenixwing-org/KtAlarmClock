@@ -21,7 +21,7 @@ KtAlarmClockCore::~KtAlarmClockCore() {
     KTSetNULL(k_pClockParam); // outside
 }
 //------------------------------------------------
-ktErrorCode KtAlarmClockCore::pretreat() {
+int KtAlarmClockCore::pretreat() {
     qDebug() << "KtAlarmClockCore::pretreat()";
     m_Pretreat = KT_E_FAIL;
     if (NULL == k_pClockParam) {
@@ -31,7 +31,7 @@ ktErrorCode KtAlarmClockCore::pretreat() {
     return m_Pretreat;
 }
 //------------------------------------------------
-ktErrorCode KtAlarmClockCore::calculate() {
+int KtAlarmClockCore::calculate() {
     qDebug() << "KtAlarmClockCore::calculate()";
     if (m_Pretreat > KT_S_OK) {
         return m_Pretreat;

@@ -14,8 +14,7 @@
 #include <QObject>
 #include <QQuickItem>
 // kt
-#include "ktCoreDefine.h"
-#include "ktErrorCode.h"
+// #include "ktCoreDefine.h"
 
 // Kt
 #include "KtAlarmClockUI.h"
@@ -41,14 +40,14 @@ public:
 public:
     /**
      * @brief Print Message
-     * @param[in] iMsg messge
+     * @param[in] iMsg message
      */
     void debug(const QString& iMsg);
 
     /**
      * @brief Build Dialog
      */
-    ktErrorCode buildDialog(QQmlApplicationEngine* engine);
+    int buildDialog(QQmlApplicationEngine* engine);
 
     /**
      * @brief Give My Panel

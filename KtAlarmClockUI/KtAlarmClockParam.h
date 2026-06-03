@@ -12,8 +12,7 @@
 
 #include <QObject>
 // kt
-#include "ktCoreDefine.h"
-#include "ktErrorCode.h"
+// #include "ktCoreDefine.h"
 
 // Kt
 #include "KtAlarmClock.h"

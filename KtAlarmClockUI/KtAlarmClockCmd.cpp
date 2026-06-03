@@ -44,7 +44,7 @@ KtAlarmClockCmd::~KtAlarmClockCmd() {
     KTSetNULL(m_pClockDlg);
 }
 //------------------------------------------------
-ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
+int KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
     // qDebug() << "KtAlarmClockCmd::buildDialog()";
     if (NULL != m_pClockDlg) {
         return KT_S_OK;
