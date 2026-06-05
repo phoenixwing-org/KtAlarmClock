@@ -4,8 +4,7 @@ project(KtAlarmClock LANGUAGES CXX)
 
 find_package(Qt5 REQUIRED COMPONENTS
     Core
-    Qml
-    Quick
+    Widgets
 )
 
 add_executable(${PROJECT_NAME} main.cpp)
@@ -23,6 +22,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     KtAlarmClockUI
     Qt5::Core
-    Qt5::Qml
-    Qt5::Quick
+    Qt5::Widgets
 )

@@ -12,19 +12,19 @@
 
 //------------------------------------------------
 KtAlarmClockCore::KtAlarmClockCore()
-    : k_pClockParam(NULL)
+    : parameter(nullptr)
     , m_Pretreat(KT_E_FAIL) {
     // qDebug() << "KtAlarmClockCore::KtAlarmClockCore()";
 }
 //------------------------------------------------
 KtAlarmClockCore::~KtAlarmClockCore() {
-    KTSetNULL(k_pClockParam); // outside
+    parameter = nullptr; // outside
 }
 //------------------------------------------------
 int KtAlarmClockCore::pretreat() {
     qDebug() << "KtAlarmClockCore::pretreat()";
     m_Pretreat = KT_E_FAIL;
-    if (NULL == k_pClockParam) {
+    if (nullptr == parameter) {
         return m_Pretreat;
     }
     m_Pretreat = KT_E_UNEXPECTED; // unfinish

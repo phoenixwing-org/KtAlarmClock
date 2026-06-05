@@ -5,7 +5,7 @@
         "*.frm": "vb",
         "*.json": "json",
         "*.qml": "qml",
-        "*.qrc": "xml",
+        "*.qrc": "tex",
         "xutility": "cpp",
         "algorithm": "cpp",
         "iostream": "cpp",
@@ -44,11 +44,52 @@
         "xstddef": "cpp",
         "xstring": "cpp",
         "xtr1common": "cpp",
-        "charconv": "cpp"
+        "charconv": "cpp",
+        "qvboxlayout": "cpp",
+        "qobject": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp",
+        "optional": "cpp",
+        "xlocmon": "cpp",
+        "qquickitem": "cpp",
+        "qwidget": "cpp"
     },
     "editor.formatOnSave": true,
     "cSpell.words": [
-        "flickable", "Frameless", "Kuntai"
+        "flickable",
+        "Frameless",
+        "Kuntai",
+        "Pixmaps",
+        "Segoe"
     ],
-    "svg.preview.background": "editor"
+    "svg.preview.background": "editor",
+
+    // --- CMake Tools (MSVC) ---
+    // 若输出目录不对，请改 ROOT_DIR（须与 common.cmake 中 ${ROOT_DIR}/kt/viewer 一致）
+    "cmake.configureEnvironment": {
+        "ROOT_DIR": "E:/phoenix",
+        "ROOT_DIR_3rdParty": "E:/phoenix"
+    },
+    "cmake.configureSettings": {
+        "CMAKE_PREFIX_PATH": "C:/Qt/5.14.2/msvc2017_64"
+    },
+    "cmake.generator": "Visual Studio 17 2022",
+    "cmake.preferredGenerators": [
+        "Visual Studio 17 2022", "Visual Studio 16 2019"
+    ],
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.buildTarget": "KtAlarmClock",
+    "cmake.configureOnOpen": true,
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.debugConfig": {
+        "name": "Debug KtAlarmClock",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/../kt/viewer/debug/KtAlarmClock.exe",
+        "cwd": "${workspaceFolder}/../kt/viewer/debug",
+        "stopAtEntry": false
+    },
+
+    // --- C/C++ IntelliSense ---
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

@@ -1,83 +1,107 @@
 # KtAlarmClock
 
-## 介绍
+Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘常驻。支持墙钟计时（休眠/合盖后仍准确）。
 
-KT 闹钟程序。
+开源主页：[https://gitee.com/PhoenixWing321/KtAlarmClock](https://gitee.com/PhoenixWing321/KtAlarmClock)
+
+---
+
+## 快速开始
+
+1. 配置环境变量 `ROOT_DIR`（输出根路径，如 `E:/XyRoot`）。
+2. 编译 `KtAlarmClockUI` → `KtAlarmClock`（见下方构建说明）。
+3. 运行 `KtAlarmClock.exe`，与 `KtAlarmClockUI.dll` 同目录。
+4. 托盘或设置页调整 **工作 / 休息 / 强制锁定** 时长，点击播放开始。
+
+---
 
 ## 软件架构
 
-- Qt 5，基于 Qt Quick / QML 界面
-- 工程分为两个目标：
-  - `KtAlarmClockUI`：QML 插件动态库，包含界面与业务逻辑
-  - `KtAlarmClock`：可执行程序入口
-- 构建系统：CMake 3.25+
+| 模块 | 路径 | 说明 |
+| --- | --- | --- |
+| 可执行入口 | `KtAlarmClock/` | `main.cpp`，加载 UI 插件 |
+| UI 插件 | `KtAlarmClockUI/` | QWidget 界面、计时与锁屏逻辑（打进 dll） |
+| 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+，输出到 `${ROOT_DIR}/kt/viewer` |
+
+技术栈：Qt 5 Widgets，C++20。主流程已从 QML/JS 迁移为 C++（见 [doc/TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md)）。
+
+---
 
 ## 构建
 
 ### 环境要求
 
-- CMake 3.25 及以上
-- Qt 5（Core、Qml、Quick、Multimedia）
-- C++20 编译器（MSVC / GCC / Clang）
+- CMake 3.25+
+- Qt 5（Core、Gui、Widgets 等）
+- MSVC / GCC / Clang（C++20）
 
 ### 环境变量
 
-构建前需设置以下环境变量：
-
 | 变量 | 说明 |
 | --- | --- |
-| `ROOT_DIR` | 工程根路径，例如 `E:/XyRoot` |
+| `ROOT_DIR` | 工程输出根路径，例如 `E:/XyRoot` |
 | `ROOT_DIR_3rdParty` | 第三方库根路径（`common.cmake` 预留） |
 
-### 编译步骤
-
-子目录顺序即为依赖顺序：先编译 `KtAlarmClockUI`，再编译 `KtAlarmClock`。
+### 编译
 
 ```bash
-mkdir build
-cd build
+mkdir build && cd build
 cmake ..
 cmake --build . --config Debug
 cmake --build . --config Release
 ```
 
-### 输出目录
+**注意**：图标与 `lock-screen.qss` 在 `KtAlarmClock.qrc` 中，改资源后须重新编译 `KtAlarmClockUI.dll`。
 
-输出路径由 `common.cmake` 统一管理，默认基于 `${ROOT_DIR}/kt/viewer`：
+### 输出目录
 
 | 类型 | Debug | Release |
 | --- | --- | --- |
-| 可执行文件 | `debug/KtAlarmClock.exe` | `bin/KtAlarmClock.exe` |
-| 动态库 | `debug/KtAlarmClockUI.dll` | `bin/KtAlarmClockUI.dll` |
-| 静态库 | `lib/` | `lib/` |
+| 可执行文件 | `${ROOT_DIR}/kt/viewer/debug/KtAlarmClock.exe` | `.../bin/KtAlarmClock.exe` |
+| 动态库 | `.../debug/KtAlarmClockUI.dll` | `.../bin/KtAlarmClockUI.dll` |
 
-## 安装教程
-
-1. 绿色软件，直接运行，需要 Qt 5 相关 DLL 支持。
-2. 将 `KtAlarmClock.exe` 与 `KtAlarmClockUI.dll` 放在同一目录下。
+---
 
 ## 使用说明
 
-1. 设定总时间、休息时间、工作时间。
-2. 到时机后会锁定屏幕几分钟，无法解锁。
-3. 解锁结束后，可以继续操作电脑。
-4. 可以用于 PPT 演讲的计时。
+1. **工作计时**：主浮窗显示倒计时；可拖动（左键），右键打开菜单。
+2. **休息 / 锁屏**：到点或点「立刻休息」进入全屏；强制期内不可解锁。
+3. **暂停**：仅工作计时可暂停；锁屏无暂停，始终按墙钟走。
+4. **设置**：托盘 → 显示设置界面；底部可播放/暂停、快进/后退 60 秒、Next。
 
-详细请查看 wiki 使用说明。
+更详细的计时与休眠行为见 **[doc/ 文档目录](doc/README.md)**。
 
-## 待完成工作
+---
 
-1. 换肤功能
-2. UI 美化
+## 文档
 
-## 开发说明
+| 文档 | 说明 |
+| --- | --- |
+| **[doc/README.md](doc/README.md)** | 文档总索引 |
+| [doc/计时系统说明.md](doc/计时系统说明.md) | 墙钟模型、工作/休息/暂停 |
+| [doc/计时与休眠.md](doc/计时与休眠.md) | 合盖/休眠场景与**手动测试步骤** |
+| [doc/计时相关文件索引.md](doc/计时相关文件索引.md) | C++ 源码与函数对照 |
+| [doc/多屏锁屏遮罩.md](doc/多屏锁屏遮罩.md) | 多显示器遮罩与热插拔 reconcile |
+| [doc/TODO.md](doc/TODO.md) | 阶段任务与验收清单 |
+| [doc/TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md) | QWidget 迁移记录 |
 
-### QML 约定
+---
 
-- QML 对象的构造顺序：id → 属性声明 → 信号声明 → JavaScript 函数 → 对象属性 → 子对象 → 状态 → 状态切换
-- 私有属性使用两个下划线开头：`__`
+## 开发约定
+
+- 新建 C++ 遵循 `.cursor/skills/cxx-code-style`（`class_prefix: Kt`）
+- 动作统一经 `KtAlarmClockController::run_command(int actionId)`
+- 调试日志：开启 `set_debug_locate(true)`，前缀见 [TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md)
+
+---
+
+## 待办（概要）
+
+- 阶段 1–3 代码已完成，**手动验收**见 [doc/TODO.md](doc/TODO.md)
+- 产品向：换肤、UI 美化
+
+---
 
 ## 参与贡献
 
-1. kevin
-2. Jane
+kevin、Jane

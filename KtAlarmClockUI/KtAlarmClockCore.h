@@ -41,10 +41,11 @@ public:
     int calculate();
 
 public:
-    KtAlarmClockParam* k_pClockParam;
+    KtAlarmClockParamShared parameter;
 
 private:
     int m_Pretreat;
 };
 
+using KtAlarmClockCoreShared = std::shared_ptr<KtAlarmClockCore>;
 #endif // KtAlarmClockCore_H

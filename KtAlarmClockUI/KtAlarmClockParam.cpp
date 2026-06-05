@@ -16,12 +16,11 @@
 #include "KtAlarmClockParam.h"
 
 //--------------------------------------------------------------------
-KtAlarmClockParam::KtAlarmClockParam(QObject* parent)
-    : QObject(parent)
-    ,
+KtAlarmClockParam::KtAlarmClockParam()
+
     // clang-format off
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM CONSTRUCTOR
-      WorkTime(2700),
+      : WorkTime(2700),
       WorkBreak(600),
       TimeForce(600),
       TimeTotal(5100),
@@ -48,8 +47,7 @@ KtAlarmClockParam::~KtAlarmClockParam() {
     // clang-format on
 }
 //--------------------------------------------------------------------
-KtAlarmClockParam::KtAlarmClockParam(const KtAlarmClockParam& iOriginal)
-    : QObject(iOriginal.parent()) {
+KtAlarmClockParam::KtAlarmClockParam(const KtAlarmClockParam& iOriginal) {
     *this = iOriginal;
 }
 //--------------------------------------------------------------------
@@ -116,10 +114,7 @@ void KtAlarmClockParam::registerWrite() {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::setWorkTime(int iValue) {
-    if (WorkTime != iValue) {
-        WorkTime = iValue;
-        emit onWorkTimeChanged(iValue);
-    }
+    WorkTime = iValue;
 }
 //--------------------------------------------------------------------
 int KtAlarmClockParam::GetWorkBreak() const {
@@ -127,10 +122,7 @@ int KtAlarmClockParam::GetWorkBreak() const {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::setWorkBreak(int iValue) {
-    if (WorkBreak != iValue) {
-        WorkBreak = iValue;
-        emit onWorkBreakChanged(iValue);
-    }
+    WorkBreak = iValue;
 }
 //--------------------------------------------------------------------
 int KtAlarmClockParam::GetTimeForce() const {
@@ -138,8 +130,5 @@ int KtAlarmClockParam::GetTimeForce() const {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::setTimeForce(int iValue) {
-    if (TimeForce != iValue) {
-        TimeForce = iValue;
-        emit onTimeForceChanged(iValue);
-    }
+    TimeForce = iValue;
 }

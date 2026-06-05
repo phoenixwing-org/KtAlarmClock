@@ -10,9 +10,7 @@
 #ifndef KtAlarmClockParam_H
 #define KtAlarmClockParam_H
 
-#include <QObject>
-// kt
-// #include "ktCoreDefine.h"
+#include <memory>
 
 // Kt
 #include "KtAlarmClock.h"
@@ -21,27 +19,11 @@
 /**
  * @brief Class KtAlarmClockParam
  */
-class ExportedByKtAlarmClockUI KtAlarmClockParam : public QObject {
-    Q_OBJECT;
-
-    /**
-     * @brief Work Time Property
-     */
-    Q_PROPERTY(int WorkTime READ GetWorkTime WRITE setWorkTime NOTIFY onWorkTimeChanged);
-
-    /**
-     * @brief Work Break Property
-     */
-    Q_PROPERTY(int WorkBreak READ GetWorkBreak WRITE setWorkBreak NOTIFY onWorkBreakChanged);
-
-    /**
-     * @brief Time Force Property
-     */
-    Q_PROPERTY(int TimeForce READ GetTimeForce WRITE setTimeForce NOTIFY onTimeForceChanged);
+class ExportedByKtAlarmClockUI KtAlarmClockParam {
 
 public:
     /** @brief Standard constructors and destructors */
-    KtAlarmClockParam(QObject* parent = nullptr);
+    KtAlarmClockParam();
     virtual ~KtAlarmClockParam();
 
     /** @brief Copy constructor and equal operator */
@@ -69,39 +51,6 @@ public: // functions
      * @brief Get Time Counter
      */
     int GetTimeForce() const;
-
-signals:
-    /**
-     * @brief Work Time Signal
-     */
-    bool onWorkTimeChanged(int iValue);
-
-    /**
-     * @brief Work Break Signal
-     */
-    bool onWorkBreakChanged(int iValue);
-
-    /**
-     * @brief Time Counter Signal
-     */
-    bool onTimeForceChanged(int iValue);
-
-    /**
-     * @brief Action state Signal
-     */
-    bool onAction(int state);
-
-    /**
-     * @brief Update Infos Signal
-     */
-    bool onUpdateInfos();
-
-    /**
-     * @brief Update dialog
-     */
-    bool onUpdateDialog();
-
-public slots:
 
     /**
      * @brief set default value for debug
@@ -187,4 +136,6 @@ public:
 
     // clang-format on
 };
+
+using KtAlarmClockParamShared = std::shared_ptr<KtAlarmClockParam>;
 #endif

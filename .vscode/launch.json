@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug KtAlarmClock",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../kt/viewer/debug/KtAlarmClock.exe",
+            "cwd": "${workspaceFolder}/../kt/viewer/debug",
+            "args": [],
+            "stopAtEntry": false,
+            "preLaunchTask": "CMake: build"
+        },
+        {
+            "name": "Release KtAlarmClock",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../kt/viewer/bin/KtAlarmClock.exe",
+            "cwd": "${workspaceFolder}/../kt/viewer/bin",
+            "args": [],
+            "stopAtEntry": false,
+            "preLaunchTask": "CMake: build"
+        }
+    ]
+}
