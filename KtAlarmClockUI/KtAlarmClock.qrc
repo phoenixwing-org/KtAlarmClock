@@ -35,27 +35,6 @@
         <file alias="kt-forward.svg">../image/kt-forward.svg</file>
     </qresource>
     <qresource prefix="/">
-        <file>KtAlarmClockDlg.qml</file>
-        <file>KtAlarmClockSettingFooter.qml</file>
-        <file>KtAlarmClockSettingLeft.qml</file>
-        <file>KtAlarmClockSettingDlg.qml</file>
-        <file>KtAlarmClockSettingRight.qml</file>
-       <file>MyClock.qml</file>
-        <file>KtToolButton.qml</file>
-        <file>KtWindow.qml</file>
-        <file>KtSpinBox.qml</file>
-        <file>KtMouseAreaMove.qml</file>
-        <file>KtTimeSlide.qml</file>
-        <file>KtWindowBase.qml</file>
-        <file>KtWindowOver.qml</file>
-        <file>MyOver0.qml</file>
-        <file>MyOver1.qml</file>
-        <file>MyWindowMenu.qml</file>
-        <file>KtAlarmClockSystemTrayIcon.qml</file>
-        <file>KtAlarmTheme.qml</file>
-        <file>qmldir</file>
-        <file>KtSlider.qml</file>
-        <file>KtAlarmClock.js</file>
-        <file>MyOver0.js</file>
+        <file>lock-screen.qss</file>
     </qresource>
 </RCC>

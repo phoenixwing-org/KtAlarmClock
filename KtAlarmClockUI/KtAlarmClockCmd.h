@@ -12,20 +12,16 @@
 
 // Qt
 #include <QObject>
-#include <QQuickItem>
-// kt
-#include "ktCoreDefine.h"
-#include "ktErrorCode.h"
 
 // Kt
+#include "KtAlarmClockCore.h"
 #include "KtAlarmClockUI.h"
 
 // class pre-declare
-class KtAlarmClockCore;
+class KtAlarmClockController;
 class KtAlarmClockDlg;
-class KtAlarmClockParam;
+class KtLockScreenManager;
 class QGuiApplication;
-class QQmlApplicationEngine;
 
 /**
  * @brief Class KtAlarmClockCmd
@@ -41,19 +37,19 @@ public:
 public:
     /**
      * @brief Print Message
-     * @param[in] iMsg messge
+     * @param[in] iMsg message
      */
     void debug(const QString& iMsg);
 
     /**
      * @brief Build Dialog
      */
-    ktErrorCode buildDialog(QQmlApplicationEngine* engine);
+    int build();
 
     /**
      * @brief Give My Panel
      */
-    QQuickItem* giveMyPanel() const;
+    KtAlarmClockDlg* giveMyPanel() const;
 
     void setExePath(const QString& iPath) {
         m_ExePath = iPath;
@@ -66,11 +62,17 @@ public slots:
      */
     int setAutoStart(bool iValue);
 
+    /**
+     * @brief Force terminate process (bypass QML event loop cleanup)
+     */
+    void forceQuit();
+
 private:
-    KtAlarmClockCore*  m_pClockCore;
-    KtAlarmClockParam* m_pClockParam;
-    KtAlarmClockDlg*   m_pClockDlg;
-    QString            m_ExePath;
+    KtAlarmClockCoreShared  core;
+    KtAlarmClockParamShared parameter;
+    KtAlarmClockDlg*        dialog;
+    KtAlarmClockController* m_pController;
+    QString                 m_ExePath;
 };
 
 #endif // KtAlarmClockCmd_H

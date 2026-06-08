@@ -7,11 +7,13 @@
  */
 
 // Qt
+#include <QApplication>
 #include <QDebug>
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-// kt
-#include "ktErrorCode.h"
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#include <QCoreApplication>
+#endif
+
 // Kt
 #include "KtAlarmClockCmd.h"
 
@@ -19,18 +21,24 @@
 #include <iostream>
 
 int main(int argc, char* argv[]) {
-    // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+    QGuiApplication::setHighDpiScaleFactorRoundingPolicy(
+        Qt::HighDpiScaleFactorRoundingPolicy::PassThrough); // 150%/175% 等小数缩放更平滑
+#endif
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
 
-    QGuiApplication       app(argc, argv);
-    QQmlApplicationEngine engine;
-    KtAlarmClockCmd       cmd;
+    QApplication    app(argc, argv);
+    KtAlarmClockCmd cmd;
 
     // qDebug() << argv[ 0 ];
     cmd.setExePath(argv[ 0 ]); // set path
 
     // cmd.debug(" Clock");      // debug
-    ktErrorCode ec = cmd.buildDialog(&engine); // build diglog
-    if (KT_FAILED(ec)) {
+    int code = cmd.build(); // build dialog
+    if (code) {
         QCoreApplication::exit(-1);
     }
 

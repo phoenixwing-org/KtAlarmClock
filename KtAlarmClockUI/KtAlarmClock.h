@@ -47,6 +47,7 @@ public:
         ActionPlayPause = 6,
         ActionForward   = 7,
         ActionBackward  = 8,
+        ActionKtWeb     = 9,
     };
 signals:
 };

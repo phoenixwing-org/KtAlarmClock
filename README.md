@@ -1,44 +1,108 @@
 # KtAlarmClock
 
-#### 介绍
-KT闹钟程序
+Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘常驻。支持墙钟计时（休眠/合盖后仍准确）。
 
-#### 软件架构
-纯QT程序，QT5，QT Widget， 信号槽等
+开源主页：[https://gitee.com/PhoenixWing321/KtAlarmClock](https://gitee.com/PhoenixWing321/KtAlarmClock)
 
+---
 
-#### 安装教程
+## 快速开始
 
-1.  绿色软件，直接运行，需要Qt5的相关dll支持。
+1. 配置环境变量 `ROOT_DIR`（输出根路径，如 `E:/XyRoot`）。
+2. 编译 `KtAlarmClockUI` → `KtAlarmClock`（见下方构建说明）。
+3. 运行 `KtAlarmClock.exe`，与 `KtAlarmClockUI.dll` 同目录。
+4. 托盘或设置页调整 **工作 / 休息 / 强制锁定** 时长，点击播放开始。
 
-#### 使用说明
+---
 
-1. 设定总时间、休息时间，工作时间，
-1. 到时机后会锁定屏幕几分钟，无法解锁，
-1. 解锁结束后，可以继续操作电脑
-1. 可以用于PPT演讲的计时。
-详细请查看wiki使用说明
+## 软件架构
 
-### 待完成工作
-1.换肤功能
-2.UI美化
+| 模块 | 路径 | 说明 |
+| --- | --- | --- |
+| 可执行入口 | `KtAlarmClock/` | `main.cpp`，加载 UI 插件 |
+| UI 插件 | `KtAlarmClockUI/` | QWidget 界面、计时与锁屏逻辑（打进 dll） |
+| 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+，输出到 `${ROOT_DIR}/kt/viewer` |
 
-### pro配置
-#### SUBDIRS
-- 主目录的pro，配置为 subdirs
-- 子目录的顺序就是编译的顺序。要把底层动态库放到前面。
+技术栈：Qt 5 Widgets，C++20。QML/JS 主流程已迁移完成，现为纯 QWidget 实现（见 [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)）。
+
+---
+
+## 构建
+
+### 环境要求
+
+- CMake 3.25+
+- Qt 5（Core、Gui、Widgets 等）
+- MSVC / GCC / Clang（C++20）
+
+### 环境变量
+
+| 变量 | 说明 |
+| --- | --- |
+| `ROOT_DIR` | 工程输出根路径，例如 `E:/XyRoot` |
+| `ROOT_DIR_3rdParty` | 第三方库根路径（`common.cmake` 预留） |
+
+### 编译
+
+```bash
+mkdir build && cd build
+cmake ..
+cmake --build . --config Debug
+cmake --build . --config Release
 ```
-SUBDIRS += \
-    KtAlarmClockUI \
-    KtAlarmClock
-```
-#### include path
 
-区分系统见KT_BASE_INCLUDE的配置。
-#### property
-- QML对象的构造顺序：id->属性声明->信号声明->JavaScript函数->对象属性->子对象->状态->状态切换
-- 私有属性使用两个下划线开头: __
-#### 参与贡献
+**注意**：图标与 `lock-screen.qss` 在 `KtAlarmClock.qrc` 中，改资源后须重新编译 `KtAlarmClockUI.dll`。
 
-1.  kevin
-2.  Jane
+### 输出目录
+
+| 类型 | Debug | Release |
+| --- | --- | --- |
+| 可执行文件 | `${ROOT_DIR}/kt/viewer/debug/KtAlarmClock.exe` | `.../bin/KtAlarmClock.exe` |
+| 动态库 | `.../debug/KtAlarmClockUI.dll` | `.../bin/KtAlarmClockUI.dll` |
+
+---
+
+## 使用说明
+
+1. **工作计时**：主浮窗显示倒计时；可拖动（左键），右键打开菜单。
+2. **休息 / 锁屏**：到点或点「立刻休息」进入全屏；强制期内不可解锁。
+3. **暂停**：仅工作计时可暂停；锁屏无暂停，始终按墙钟走。
+4. **设置**：托盘 → 显示设置界面；底部可播放/暂停、快进/后退 60 秒、Next。
+
+更详细的计时与休眠行为见 **[doc/ 文档目录](doc/README.md)**。
+
+---
+
+## 文档
+
+| 文档 | 说明 |
+| --- | --- |
+| **[doc/README.md](doc/README.md)** | 文档总索引 |
+| [doc/计时系统说明.md](doc/计时系统说明.md) | 墙钟模型、工作/休息/暂停 |
+| [doc/计时与休眠.md](doc/计时与休眠.md) | 合盖/休眠场景与**手动测试步骤** |
+| [doc/计时相关文件索引.md](doc/计时相关文件索引.md) | C++ 源码与函数对照 |
+| [doc/多屏锁屏遮罩.md](doc/多屏锁屏遮罩.md) | 多显示器遮罩与热插拔 reconcile |
+| [doc/高分辨率适配.md](doc/高分辨率适配.md) | 高 DPI 适配：manifest、.ui 与 C++ |
+| [doc/TODO.md](doc/TODO.md) | 产品待办（换肤、UI 美化） |
+| [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md) | QML→Widget 迁移备忘 |
+
+---
+
+## 开发约定
+
+- 新建 C++ 遵循 `.cursor/skills/cxx-code-style`（`class_prefix: Kt`）
+- 动作统一经 `KtAlarmClockController::run_command(int actionId)`
+- 调试日志：开启 `set_debug_locate(true)`，前缀见 [QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)
+
+---
+
+## 待办（概要）
+
+- 产品向：见 [doc/TODO.md](doc/TODO.md)
+- 计时 / 休眠验收：见 [doc/计时与休眠.md](doc/计时与休眠.md#验收状态)（步骤 2「工作中+休眠」需求待确认）
+
+---
+
+## 参与贡献
+
+kevin、Jane

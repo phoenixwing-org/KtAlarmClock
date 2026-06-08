@@ -7,13 +7,20 @@
 // Qt
 #include <QDebug>
 #include <QGuiApplication>
-#include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QSettings>
+
+// std
+#include <cstdlib>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 // Kt
 #include "KtAlarmClock.h"
 #include "KtAlarmClockCmd.h"
+#include "KtAlarmClockController.h"
 #include "KtAlarmClockCore.h"
 #include "KtAlarmClockDlg.h"
 #include "KtAlarmClockParam.h"
@@ -21,71 +28,50 @@
 //------------------------------------------------
 KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     : QObject(parent)
-    , m_pClockCore(NULL)
-    , m_pClockParam(NULL)
-    , m_pClockDlg(NULL)
+    , core(nullptr)
+    , parameter(nullptr)
+    , dialog(nullptr)
+    , m_pController(nullptr)
     , m_ExePath() {
     // qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
     //  new
-    m_pClockParam = new KtAlarmClockParam();
-    m_pClockCore  = new KtAlarmClockCore();
+    parameter = std::make_shared<KtAlarmClockParam>();
+    core      = std::make_shared<KtAlarmClockCore>();
     // set value
-    m_pClockCore->k_pClockParam = m_pClockParam;
-    qmlRegisterType<KtAlarmClock>("KtAlarmClock", 1, 0, "KtAlarmClock");
+    core->parameter = parameter;
 }
 //------------------------------------------------
 KtAlarmClockCmd::~KtAlarmClockCmd() {
     // qDebug() << "KtAlarmClockCmd::~KtAlarmClockCmd()";
     //  delete
-    KTDelete(m_pClockParam);
-    KTDelete(m_pClockCore);
+    parameter = nullptr;
+    core      = nullptr;
+    KTDelete(m_pController);
 
     // only set NULL
-    KTSetNULL(m_pClockDlg);
+    KTSetNULL(dialog);
 }
 //------------------------------------------------
-ktErrorCode KtAlarmClockCmd::buildDialog(QQmlApplicationEngine* engine) {
-    // qDebug() << "KtAlarmClockCmd::buildDialog()";
-    if (NULL != m_pClockDlg) {
+int KtAlarmClockCmd::build() {
+    // qDebug() << "KtAlarmClockCmd::build()";
+    if (NULL != m_pController) {
         return KT_S_OK;
     }
 
     if (nullptr == qGuiApp) {
         return KT_E_INVALIDARG;
     }
-    else if (nullptr == engine) {
-        return KT_E_INVALIDARG;
-    }
 
-    // m_pClockDlg
-    m_pClockDlg = new KtAlarmClockDlg();
+    // dialog
+    dialog = new KtAlarmClockDlg();
 
-    // register m_pClockParam to qml
-    engine->rootContext()->setContextProperty("myAlarmClockParam", m_pClockParam);
-    // register command to qml
-    engine->rootContext()->setContextProperty("myAlarmClockCmd", this);
+    parameter->registerRead();
 
-    // qDebug() << "KtAlarmClockCmd load(url)";
-    const QUrl url(QStringLiteral("qrc:/KtAlarmClockDlg.qml"));
-    /*
-     * What's the meaning?
-    QObject::connect(
-        engine, &QQmlApplicationEngine::objectCreated, qGuiApp,
-        [ url ](QObject* obj, const QUrl& objUrl) {
-            if (!obj && url == objUrl) QCoreApplication::exit(-1);
-        },
-        Qt::QueuedConnection);
-    */
-    engine->load(url);
-    // qDebug() << "KtAlarmClockCmd load(url)-end";
+    m_pController = new KtAlarmClockController(parameter, this);
+    m_pController->set_debug_locate(true);
+    m_pController->start();
 
-    // after load, all the qml is complete load,
-    m_pClockParam->registerRead(); // read param
-
-    // all the signal is connect to the socket
-    m_pClockParam->onUpdateDialog(); // update dialog
-
-    emit m_pClockParam->onAction(KtAlarmClock::ActionPlayPause); // start to work
+    m_pController->dispatch_user_action(KtAlarmClock::ActionPlayPause);
 
     // auto start
     setAutoStart(true);
@@ -97,8 +83,8 @@ void KtAlarmClockCmd::debug(const QString& iMsg) {
     qDebug() << "Hello to KtAlarmClockCmd. msg = " << iMsg;
 }
 //------------------------------------------------
-QQuickItem* KtAlarmClockCmd::giveMyPanel() const {
-    return m_pClockDlg;
+KtAlarmClockDlg* KtAlarmClockCmd::giveMyPanel() const {
+    return dialog;
 }
 //------------------------------------------------
 int KtAlarmClockCmd::setAutoStart(bool iValue) {
@@ -109,4 +95,14 @@ int KtAlarmClockCmd::setAutoStart(bool iValue) {
 
     reg.setValue("KtAlarmClock", m_ExePath);
     return 0; // ok
+}
+//------------------------------------------------
+void KtAlarmClockCmd::forceQuit() {
+    if (qGuiApp) qGuiApp->quit();
+
+#ifdef _WIN32
+    ::TerminateProcess(::GetCurrentProcess(), 0);
+#else
+    std::_Exit(0);
+#endif
 }

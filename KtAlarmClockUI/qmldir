@@ -1,4 +1,0 @@
-# https://blog.csdn.net/qq_38880380/article/details/103808865
-# add amldir to qrc file
-# use KtAlarmTheme directly
-singleton KtAlarmTheme 1.0 KtAlarmTheme.qml

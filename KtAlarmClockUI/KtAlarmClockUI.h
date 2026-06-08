@@ -22,4 +22,18 @@
 #error "Unknown compiler"
 #endif
 
+#define KT_S_OK 0
+#define KT_E_FAIL 100001
+#define KT_E_INVALIDARG 100002
+#define KT_E_UNEXPECTED 100003
+
+#define KTDelete(ptr)  \
+    if (ptr) {         \
+        delete ptr;    \
+        ptr = nullptr; \
+    }
+#define KTSetNULL(ptr) \
+    { ptr = nullptr; }
+
+#
 #endif // _KtAlarmClockUI_EXPORT_H_

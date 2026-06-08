@@ -32,19 +32,20 @@ public:
      * @brief pretreat
      * @return int, 0: succeed, plus: failed
      */
-    ktErrorCode pretreat();
+    int pretreat();
 
     /**
      * @brief calculate
      * @return int, 0: succeed, plus: failed
      */
-    ktErrorCode calculate();
+    int calculate();
 
 public:
-    KtAlarmClockParam* k_pClockParam;
+    KtAlarmClockParamShared parameter;
 
 private:
-    ktErrorCode m_Pretreat;
+    int m_Pretreat;
 };
 
+using KtAlarmClockCoreShared = std::shared_ptr<KtAlarmClockCore>;
 #endif // KtAlarmClockCore_H

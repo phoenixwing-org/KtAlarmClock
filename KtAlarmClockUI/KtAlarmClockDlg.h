@@ -9,8 +9,8 @@
 #ifndef KtAlarmClockDlg_H
 #define KtAlarmClockDlg_H
 
-#include <QQuickItem>
 #include <QString>
+#include <QWidget>
 
 // Kt
 #include "KtAlarmClockParam.h"
@@ -18,12 +18,12 @@
 /**
  * @brief Class KtAlarmClockDlg
  */
-class KtAlarmClockDlg : public QQuickItem {
+class KtAlarmClockDlg : public QWidget {
     Q_OBJECT;
     Q_DISABLE_COPY(KtAlarmClockDlg);
 
 public:
-    explicit KtAlarmClockDlg(QQuickItem* parent = nullptr);
+    explicit KtAlarmClockDlg(QWidget* parent = nullptr);
     ~KtAlarmClockDlg() override;
 
     // property
