@@ -52,7 +52,10 @@
         "optional": "cpp",
         "xlocmon": "cpp",
         "qquickitem": "cpp",
-        "qwidget": "cpp"
+        "qwidget": "cpp",
+        "qfontmetrics": "cpp",
+        "qstyle": "cpp",
+        "qwindow": "cpp"
     },
     "editor.formatOnSave": true,
     "cSpell.words": [

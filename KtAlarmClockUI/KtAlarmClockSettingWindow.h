@@ -12,11 +12,10 @@
 
 #include "KtAlarmClockParam.h"
 
+class KtDurationEdit;
 class QCloseEvent;
-class QLabel;
+class QPoint;
 class QSlider;
-class QSpinBox;
-class QWidget;
 
 namespace Ui {
 class KtAlarmClockSettingWindow;
@@ -41,15 +40,18 @@ public:
     /** @brief 绑定共享参数对象 */
     void set_param(KtAlarmClockParamShared param);
 
-    /** @brief 在锚点窗口附近显示 */
-    void show_near(const QWidget* anchor);
+    /** @brief 在全局参考点（通常为鼠标）附近显示，并限制在当前屏幕内 */
+    void show_near(const QPoint& globalRef);
 
 public slots:
     /** @brief 从参数刷新 UI */
     void update_dialog();
 
-    /** @brief 从 UI 写回参数（以 spinBox 秒数为准） */
+    /** @brief 从 UI 写回参数（以 m:ss 输入框秒数为准） */
     void update_infos();
+
+    /** @brief 按计时状态切换播放/暂停图标与 tooltip */
+    void update_play_pause_button(bool running);
 
 signals:
     /** @brief 底部控制按钮动作（KtAlarmClock::ActionID） */
@@ -59,22 +61,21 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
-    /** @brief 同步滑条、输入框与时间标签，不触发互相连锁信号 */
-    void apply_seconds_value(QSlider* slider, QSpinBox* spinBox, QLabel* timeLabel, int seconds);
+    /** @brief 高 DPI 下按字体度量列宽与行高，避免标签叠字、按钮撑爆 */
+    void apply_layout_metrics();
+
+    /** @brief 同步滑条与 m:ss 输入框，不触发互相连锁信号 */
+    void apply_seconds_value(QSlider* slider, KtDurationEdit* durationEdit, int seconds);
 
     /**
-     * @brief 绑定滑条与输入框双向同步（秒）
+     * @brief 绑定滑条与 m:ss 输入框双向同步（秒）
      * @param slider 滑条
-     * @param spinBox 秒数输入框（对外数据源）
-     * @param timeLabel 输入框右侧 m:ss 标签；可为 nullptr
+     * @param durationEdit 时长输入框（对外数据源）
      */
-    void bind_spin_slider(QSlider* slider, QSpinBox* spinBox, QLabel* timeLabel);
+    void bind_duration_slider(QSlider* slider, KtDurationEdit* durationEdit);
 
     /** @brief 连接 .ui 控件信号 */
     void connect_ui_signals();
-
-    /** @brief 格式化秒数为 m:ss */
-    static QString format_slider_value(int seconds);
 
     /** @brief 恢复工作/休息/强制时长为默认值并写回 parameter */
     void restore_defaults();
@@ -83,7 +84,7 @@ private:
     Ui::KtAlarmClockSettingWindow* ui;           ///< 1. Designer 生成的界面
     KtAlarmClockParamShared        parameter_;   ///< 2. 共享参数
     bool                           debugLocate_; ///< 3. 调试日志
-    bool                           syncingUi_;   ///< 4. 防止 spin/slider 互相同步时递归
+    bool                           syncingUi_;   ///< 4. 防止控件互相同步时递归
 };
 
 #endif // KtAlarmClockSettingWindow_H

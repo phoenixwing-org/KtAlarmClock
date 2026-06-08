@@ -30,6 +30,8 @@ set(SOURCES
     KtAlarmClockTray.cpp
     KtAlarmClockController.cpp
     KtAlarmClockSettingWindow.cpp
+    KtDurationEdit.cpp
+    KtScreenUtil.cpp
 )
 
 set(HEADERS
@@ -46,6 +48,8 @@ set(HEADERS
     KtAlarmClockTray.h
     KtAlarmClockController.h
     KtAlarmClockSettingWindow.h
+    KtDurationEdit.h
+    KtScreenUtil.h
 )
 
 set(UI_FILES

@@ -9,6 +9,7 @@
 #define KtAlarmClockController_H
 
 #include <QObject>
+#include <QPointer>
 #include <QPoint>
 
 #include "KtAlarmClockParam.h"
@@ -44,12 +45,15 @@ public:
     void start();
 
 public slots:
-    /** @brief 执行托盘/设置/菜单动作（原 onAction 信号） */
-    void run_command(int actionId);
+    /** @brief 用户操作统一入口（托盘/右键/设置底部按钮） */
+    void dispatch_user_action(int actionId);
 
 private slots:
     void on_clock_timeout(int state);
     void on_context_menu_requested(const QPoint& globalPos);
+
+    /** @brief 设置窗底部按钮：先写回参数再分发动作 */
+    void on_setting_action(int actionId);
 
 private:
     void apply_debug_defaults();
@@ -62,12 +66,23 @@ private:
     void close_all_windows();
     void force_unload_over_dlg();
     void load_over_dlg();
-    void load_setting_dlg();
     void show_pop_menu(const QPoint& globalPos);
-    void sync_param_from_setting();
-    void unload_setting_dlg();
 
-    /** @brief 休息中是否禁止托盘/菜单操作 */
+    /** @brief 显示或复用唯一设置窗（跟随 globalPos 所在屏幕） */
+    void show_setting_dlg(const QPoint& globalPos);
+
+    /** @brief 关闭并销毁设置窗 */
+    void close_setting_dlg();
+
+    void sync_param_from_setting();
+
+    /** @brief 设置窗打开时，从 parameter 刷新界面与播放按钮 */
+    void refresh_setting_ui();
+
+    /** @brief 执行动作（内部状态机，不经 forbidden 校验） */
+    void run_command(int actionId);
+
+    /** @brief 休息中是否禁止用户操作 */
     bool is_forbidden() const;
 
 private:
@@ -76,7 +91,7 @@ private:
     KtMainClockWidget*         mainClock_;   ///< 3. 主浮窗
     KtAlarmClockTray*          tray_;        ///< 4. 托盘
     KtLockScreenManager*       lockScreen_;  ///< 5. 锁屏
-    KtAlarmClockSettingWindow* settingDlg_;  ///< 6. 设置窗
+    QPointer<KtAlarmClockSettingWindow> settingDlg_; ///< 6. 唯一设置窗（QPointer 自动跟踪销毁）
     QMenu*                     popMenu_;     ///< 7. 右键菜单
     bool                       loop_;        ///< 8. 是否循环工作/休息
     int                        workStep_;    ///< 9. 当前阶段

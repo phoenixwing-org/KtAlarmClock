@@ -20,9 +20,10 @@
 #include <QWindow>
 
 namespace {
-constexpr int kMinWidth  = 72;
-constexpr int kMinHeight = 28;
-constexpr int kHPad      = 14;
+constexpr int kMinWidth   = 80;
+constexpr int kMinHeight  = 34;
+constexpr int kHPad       = 20;
+constexpr int kTimePointSize = 12; // 点字号随 DPI 缩放，比固定 pixel 更清晰
 } // namespace
 
 //------------------------------------------------------
@@ -40,11 +41,11 @@ KtMainClockWidget::KtMainClockWidget(QWidget* parent)
     setMinimumSize(kMinWidth, kMinHeight);
 
     auto* layout = new QHBoxLayout(this);
-    layout->setContentsMargins(kHPad / 2, 2, kHPad / 2, 2);
+    layout->setContentsMargins(kHPad / 2, 4, kHPad / 2, 4);
 
     TimeLabel = new QLabel(QStringLiteral("0:00"), this);
     QFont font(QStringLiteral("Segoe UI"));
-    font.setPixelSize(12);
+    font.setPointSize(kTimePointSize);
     TimeLabel->setFont(font);
     TimeLabel->setStyleSheet(QStringLiteral("color: #46aef6; background: transparent;"));
     layout->addWidget(TimeLabel, 0, Qt::AlignCenter);
@@ -225,7 +226,7 @@ void KtMainClockWidget::refresh_display() {
     const int textW = TimeLabel->fontMetrics().width(TimeLabel->text());
 #endif
     const int w = qMax(kMinWidth, textW + kHPad);
-    const int h = kMinHeight;
+    const int h = qMax(kMinHeight, TimeLabel->fontMetrics().height() + 10);
     if (width() != w || height() != h)
         resize(w, h); // 随文本宽度伸缩
     ensure_within_screen(); // resize 后防止右侧/下侧越界

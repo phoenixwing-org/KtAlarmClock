@@ -71,7 +71,7 @@ int KtAlarmClockCmd::build() {
     m_pController->set_debug_locate(true);
     m_pController->start();
 
-    m_pController->run_command(KtAlarmClock::ActionPlayPause);
+    m_pController->dispatch_user_action(KtAlarmClock::ActionPlayPause);
 
     // auto start
     setAutoStart(true);

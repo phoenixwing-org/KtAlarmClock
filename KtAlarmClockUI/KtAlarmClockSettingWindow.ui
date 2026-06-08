@@ -1,405 +1,357 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-    <class>KtAlarmClockSettingWindow</class>
-    <widget class="QDialog" name="KtAlarmClockSettingWindow">
-        <property name="geometry">
-            <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>560</width>
-                <height>235</height>
-            </rect>
-        </property>
-        <property name="minimumSize">
-            <size>
-                <width>280</width>
-                <height>150</height>
-            </size>
-        </property>
-        <property name="windowTitle">
-            <string>护眼闹钟 - 设置</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout">
-            <property name="leftMargin">
-                <number>12</number>
-            </property>
-            <property name="topMargin">
-                <number>12</number>
-            </property>
-            <property name="rightMargin">
-                <number>12</number>
-            </property>
-            <property name="bottomMargin">
-                <number>12</number>
-            </property>
-            <item>
-                <layout class="QGridLayout" name="gridLayout">
-                    <property name="horizontalSpacing">
-                        <number>8</number>
-                    </property>
-                    <property name="verticalSpacing">
-                        <number>12</number>
-                    </property>
-                    <item row="0" column="0">
-                        <widget class="QLabel" name="LabelWork">
-                            <property name="text">
-                                <string>工作 Work:</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="0" column="1">
-                        <widget class="QSpinBox" name="spinBoxWorkTime">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>64</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="maximum">
-                                <number>7200</number>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="0" column="2">
-                        <widget class="QLabel" name="LabelWorkTime">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>48</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string>0:00</string>
-                            </property>
-                            <property name="alignment">
-                                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="0" column="3">
-                        <widget class="QSlider" name="sliderWorkTime">
-                            <property name="minimum">
-                                <number>60</number>
-                            </property>
-                            <property name="maximum">
-                                <number>5400</number>
-                            </property>
-                            <property name="singleStep">
-                                <number>300</number>
-                            </property>
-                            <property name="pageStep">
-                                <number>300</number>
-                            </property>
-                            <property name="value">
-                                <number>2400</number>
-                            </property>
-                            <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="1" column="0">
-                        <widget class="QLabel" name="LabelBreak">
-                            <property name="text">
-                                <string>休息 Sports:</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="1" column="1">
-                        <widget class="QSpinBox" name="spinBoxWorkBreak">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>64</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="maximum">
-                                <number>7200</number>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="1" column="2">
-                        <widget class="QLabel" name="LabelBreakTime">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>48</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string>0:00</string>
-                            </property>
-                            <property name="alignment">
-                                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="1" column="3">
-                        <widget class="QSlider" name="sliderWorkBreak">
-                            <property name="minimum">
-                                <number>10</number>
-                            </property>
-                            <property name="maximum">
-                                <number>3600</number>
-                            </property>
-                            <property name="singleStep">
-                                <number>60</number>
-                            </property>
-                            <property name="pageStep">
-                                <number>60</number>
-                            </property>
-                            <property name="value">
-                                <number>600</number>
-                            </property>
-                            <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="2" column="0">
-                        <widget class="QLabel" name="LabelForce">
-                            <property name="text">
-                                <string>强制 Force:</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="2" column="1">
-                        <widget class="QSpinBox" name="spinBoxTimeForce">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>64</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="maximum">
-                                <number>7200</number>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="2" column="2">
-                        <widget class="QLabel" name="LabelForceTime">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>48</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string>0:00</string>
-                            </property>
-                            <property name="alignment">
-                                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-                            </property>
-                        </widget>
-                    </item>
-                    <item row="2" column="3">
-                        <widget class="QSlider" name="sliderTimeForce">
-                            <property name="minimum">
-                                <number>0</number>
-                            </property>
-                            <property name="maximum">
-                                <number>3600</number>
-                            </property>
-                            <property name="singleStep">
-                                <number>10</number>
-                            </property>
-                            <property name="pageStep">
-                                <number>10</number>
-                            </property>
-                            <property name="value">
-                                <number>300</number>
-                            </property>
-                            <property name="orientation">
-                                <enum>Qt::Horizontal</enum>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </item>
-            <item>
-                <layout class="QHBoxLayout" name="footerLayout">
-                    <property name="spacing">
-                        <number>8</number>
-                    </property>
-                    <item>
-                        <widget class="QPushButton" name="BtnRest">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>32</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string/>
-                            </property>
-                            <property name="icon">
-                                <iconset resource="KtAlarmClock.qrc">
-                                    <normaloff>:/image/coffee.svg</normaloff>:/image/coffee.svg</iconset>
-                            </property>
-                            <property name="iconSize">
-                                <size>
-                                    <width>24</width>
-                                    <height>24</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="BtnBackward">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>32</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="toolTip">
-                                <string>- 60s</string>
-                            </property>
-                            <property name="text">
-                                <string/>
-                            </property>
-                            <property name="icon">
-                                <iconset resource="KtAlarmClock.qrc">
-                                    <normaloff>:/image/kt-backward.svg</normaloff>:/image/kt-backward.svg</iconset>
-                            </property>
-                            <property name="iconSize">
-                                <size>
-                                    <width>24</width>
-                                    <height>24</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="BtnPlayPause">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>32</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="toolTip">
-                                <string>Pause</string>
-                            </property>
-                            <property name="text">
-                                <string/>
-                            </property>
-                            <property name="icon">
-                                <iconset resource="KtAlarmClock.qrc">
-                                    <normaloff>:/image/ic_pause.svg</normaloff>:/image/ic_pause.svg</iconset>
-                            </property>
-                            <property name="iconSize">
-                                <size>
-                                    <width>24</width>
-                                    <height>24</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="BtnForward">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>32</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="toolTip">
-                                <string>+ 60s</string>
-                            </property>
-                            <property name="text">
-                                <string/>
-                            </property>
-                            <property name="icon">
-                                <iconset resource="KtAlarmClock.qrc">
-                                    <normaloff>:/image/kt-forward.svg</normaloff>:/image/kt-forward.svg</iconset>
-                            </property>
-                            <property name="iconSize">
-                                <size>
-                                    <width>24</width>
-                                    <height>24</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="BtnNext">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>32</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="toolTip">
-                                <string>Next</string>
-                            </property>
-                            <property name="text">
-                                <string/>
-                            </property>
-                            <property name="icon">
-                                <iconset resource="KtAlarmClock.qrc">
-                                    <normaloff>:/image/next.svg</normaloff>:/image/next.svg</iconset>
-                            </property>
-                            <property name="iconSize">
-                                <size>
-                                    <width>24</width>
-                                    <height>24</height>
-                                </size>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </item>
-            <item>
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                    <property name="topMargin">
-                        <number>0</number>
-                    </property>
-                    <item>
-                        <widget class="QPushButton" name="pushButtonDefault">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>60</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string>默认</string>
-                            </property>
-                        </widget>
-                    </item>
-                    <item>
-                        <widget class="QPushButton" name="pushButtonSave">
-                            <property name="minimumSize">
-                                <size>
-                                    <width>60</width>
-                                    <height>0</height>
-                                </size>
-                            </property>
-                            <property name="text">
-                                <string>保存配置</string>
-                            </property>
-                        </widget>
-                    </item>
-                </layout>
-            </item>
-            <item>
-                <spacer name="verticalSpacer">
-                    <property name="orientation">
-                        <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                        <size>
-                            <width>20</width>
-                            <height>40</height>
-                        </size>
-                    </property>
-                </spacer>
-            </item>
-        </layout>
-    </widget>
-    <resources>
-        <include location="KtAlarmClock.qrc"/>
-    </resources>
-    <connections/>
+ <class>KtAlarmClockSettingWindow</class>
+ <widget class="QDialog" name="KtAlarmClockSettingWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>386</width>
+    <height>194</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>280</width>
+    <height>150</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>护眼闹钟 - 设置</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>12</number>
+   </property>
+   <property name="topMargin">
+    <number>12</number>
+   </property>
+   <property name="rightMargin">
+    <number>12</number>
+   </property>
+   <property name="bottomMargin">
+    <number>12</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,1">
+     <property name="horizontalSpacing">
+      <number>8</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>12</number>
+     </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="LabelWork">
+       <property name="text">
+        <string>工作 Work:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="KtDurationEdit" name="durationWorkTime">
+       <property name="minimumSize">
+        <size>
+         <width>64</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QSlider" name="sliderWorkTime">
+       <property name="minimum">
+        <number>60</number>
+       </property>
+       <property name="maximum">
+        <number>5400</number>
+       </property>
+       <property name="singleStep">
+        <number>300</number>
+       </property>
+       <property name="pageStep">
+        <number>300</number>
+       </property>
+       <property name="value">
+        <number>2400</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="LabelBreak">
+       <property name="text">
+        <string>休息 Sports:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="KtDurationEdit" name="durationWorkBreak">
+       <property name="minimumSize">
+        <size>
+         <width>64</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSlider" name="sliderWorkBreak">
+       <property name="minimum">
+        <number>10</number>
+       </property>
+       <property name="maximum">
+        <number>3600</number>
+       </property>
+       <property name="singleStep">
+        <number>60</number>
+       </property>
+       <property name="pageStep">
+        <number>60</number>
+       </property>
+       <property name="value">
+        <number>600</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="LabelForce">
+       <property name="text">
+        <string>强制 Force:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="KtDurationEdit" name="durationTimeForce">
+       <property name="minimumSize">
+        <size>
+         <width>64</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QSlider" name="sliderTimeForce">
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>3600</number>
+       </property>
+       <property name="singleStep">
+        <number>10</number>
+       </property>
+       <property name="pageStep">
+        <number>10</number>
+       </property>
+       <property name="value">
+        <number>300</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="footerLayout">
+     <property name="spacing">
+      <number>8</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="pushButtonRest">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="KtAlarmClock.qrc">
+         <normaloff>:/image/coffee.svg</normaloff>:/image/coffee.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonBackward">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>- 60s</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="KtAlarmClock.qrc">
+         <normaloff>:/image/kt-backward.svg</normaloff>:/image/kt-backward.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonPlayPause">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="KtAlarmClock.qrc">
+         <normaloff>:/image/play.svg</normaloff>:/image/play.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonForward">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>+ 60s</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="KtAlarmClock.qrc">
+         <normaloff>:/image/kt-forward.svg</normaloff>:/image/kt-forward.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonNext">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Next</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="KtAlarmClock.qrc">
+         <normaloff>:/image/next.svg</normaloff>:/image/next.svg</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="pushButtonDefault">
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>默认</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonSave">
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>保存配置</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KtDurationEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">KtDurationEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="KtAlarmClock.qrc"/>
+ </resources>
+ <connections/>
 </ui>

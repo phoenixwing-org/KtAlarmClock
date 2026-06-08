@@ -23,7 +23,7 @@ Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘
 | UI 插件 | `KtAlarmClockUI/` | QWidget 界面、计时与锁屏逻辑（打进 dll） |
 | 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+，输出到 `${ROOT_DIR}/kt/viewer` |
 
-技术栈：Qt 5 Widgets，C++20。主流程已从 QML/JS 迁移为 C++（见 [doc/TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md)）。
+技术栈：Qt 5 Widgets，C++20。QML/JS 主流程已迁移完成，现为纯 QWidget 实现（见 [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)）。
 
 ---
 
@@ -82,8 +82,9 @@ cmake --build . --config Release
 | [doc/计时与休眠.md](doc/计时与休眠.md) | 合盖/休眠场景与**手动测试步骤** |
 | [doc/计时相关文件索引.md](doc/计时相关文件索引.md) | C++ 源码与函数对照 |
 | [doc/多屏锁屏遮罩.md](doc/多屏锁屏遮罩.md) | 多显示器遮罩与热插拔 reconcile |
-| [doc/TODO.md](doc/TODO.md) | 阶段任务与验收清单 |
-| [doc/TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md) | QWidget 迁移记录 |
+| [doc/高分辨率适配.md](doc/高分辨率适配.md) | 高 DPI 适配：manifest、.ui 与 C++ |
+| [doc/TODO.md](doc/TODO.md) | 产品待办（换肤、UI 美化） |
+| [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md) | QML→Widget 迁移备忘 |
 
 ---
 
@@ -91,14 +92,14 @@ cmake --build . --config Release
 
 - 新建 C++ 遵循 `.cursor/skills/cxx-code-style`（`class_prefix: Kt`）
 - 动作统一经 `KtAlarmClockController::run_command(int actionId)`
-- 调试日志：开启 `set_debug_locate(true)`，前缀见 [TODO-QWidget迁移.md](doc/TODO-QWidget迁移.md)
+- 调试日志：开启 `set_debug_locate(true)`，前缀见 [QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)
 
 ---
 
 ## 待办（概要）
 
-- 阶段 1–3 代码已完成，**手动验收**见 [doc/TODO.md](doc/TODO.md)
-- 产品向：换肤、UI 美化
+- 产品向：见 [doc/TODO.md](doc/TODO.md)
+- 计时 / 休眠验收：见 [doc/计时与休眠.md](doc/计时与休眠.md#验收状态)（步骤 2「工作中+休眠」需求待确认）
 
 ---
 

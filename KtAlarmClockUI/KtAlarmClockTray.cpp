@@ -5,6 +5,7 @@
  * @file        KtAlarmClockTray.cpp
  */
 #include "KtAlarmClockTray.h"
+#include "KtScreenUtil.h"
 
 #include "KtAlarmClock.h"
 
@@ -54,8 +55,6 @@ void KtAlarmClockTray::build_menu() {
     auto addAction = [this](const QString& text, int actionId) {
         QAction* action = Menu->addAction(text);
         connect(action, &QAction::triggered, this, [this, actionId]() {
-            if (check_forbidden())
-                return;
             if (debugLocate_)
                 qDebug() << "[Tray] action" << actionId;
             emit action_triggered(actionId);
@@ -94,8 +93,11 @@ void KtAlarmClockTray::on_tray_activated(QSystemTrayIcon::ActivationReason reaso
         qDebug() << "[Tray] activated reason=" << reason << "cursor=" << cursorPos;
 
     if (reason == QSystemTrayIcon::Context && Menu) {
-        Menu->popup(cursorPos); // 跟随光标，替代 QML menu.open()
+        Menu->ensurePolished();
+        const QPoint menuPos =
+            KtScreenUtil::place_popup(cursorPos, Menu->sizeHint(), true);
+        Menu->popup(menuPos);
         if (debugLocate_)
-            qDebug() << "[Tray] menu.popup at" << cursorPos;
+            qDebug() << "[Tray] menu.popup at" << menuPos << "cursor=" << cursorPos;
     }
 }
