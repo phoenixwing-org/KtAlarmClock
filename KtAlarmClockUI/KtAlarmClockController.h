@@ -48,6 +48,9 @@ public slots:
     /** @brief 用户操作统一入口（托盘/右键/设置底部按钮） */
     void dispatch_user_action(int actionId);
 
+    /** @brief 二次启动时由单实例守卫触发：显示主浮窗或托盘提示 */
+    void on_second_instance_activate();
+
 private slots:
     void on_clock_timeout(int state);
     void on_context_menu_requested(const QPoint& globalPos);

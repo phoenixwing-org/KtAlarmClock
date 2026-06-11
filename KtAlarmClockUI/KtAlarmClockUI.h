@@ -22,7 +22,8 @@
 #error "Unknown compiler"
 #endif
 
-#define KT_S_OK 0
+#define KT_S_OK              0
+#define KT_S_ALREADY_RUNNING 1
 #define KT_E_FAIL 100001
 #define KT_E_INVALIDARG 100002
 #define KT_E_UNEXPECTED 100003

@@ -22,7 +22,7 @@ KtAlarmClockParam::KtAlarmClockParam()
     //START KEVIN CAA WIZARD SECTION KtAlarmClockParam PARAM CONSTRUCTOR
       : WorkTime(2700),
       WorkBreak(600),
-      TimeForce(600),
+      TimeForce(300),
       TimeTotal(5100),
       WorkStep(1),
       TimeCounter(0)
@@ -77,11 +77,7 @@ void KtAlarmClockParam::dump() {
 }
 //--------------------------------------------------------------------
 void KtAlarmClockParam::setDefault() {
-    WorkTime  = 2700; // 1
-    WorkBreak = 600;  // 2
-    TimeForce = 600;  // 3
-    WorkStep  = 0;    // 6
-    TimeTotal = 3300; // 100
+    *this = KtAlarmClockParam();
 }
 //--------------------------------------------------------------------
 int KtAlarmClockParam::GetWorkTime() const {

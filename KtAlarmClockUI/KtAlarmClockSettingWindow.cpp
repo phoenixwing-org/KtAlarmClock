@@ -32,9 +32,10 @@ KtAlarmClockSettingWindow::KtAlarmClockSettingWindow(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::KtAlarmClockSettingWindow) // 1
     , parameter_(nullptr)                   // 2
-    , debugLocate_(true)                    // 3
+    , debugLocate_(false)                   // 3
     , syncingUi_(false) {                   // 4
     ui->setupUi(this);
+    setWindowTitle(QStringLiteral("护眼闹钟 - 设置 (%1)").arg(QLatin1String(VERSION_KtAlarmClock)));
 
     for (QPushButton* btn : findChildren<QPushButton*>()) {
         btn->setAutoDefault(false);

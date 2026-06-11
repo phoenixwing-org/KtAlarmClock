@@ -43,6 +43,11 @@
 - [x] 高 DPI：`app.manifest`（PerMonitorV2）+ `apply_layout_metrics`
 - [x] 设置窗 `KtDurationEdit`（m:ss + `10s`）；`QPointer` 单例设置窗；参数 `sync` / `refresh_setting_ui`
 - [x] 弹出界面跟随鼠标屏：`KtScreenUtil`
+- [x] 工作时休眠冻结、多路径唤醒续计（`KtWindowsWakeNotifier`、唤醒看门狗）
+- [x] 墙钟 `elapsed≥0` 钳制、`realign_phase_start_if_ahead`；播放/暂停与冻结状态解耦
+- [x] 启动/续计首秒即时反馈（`ensure_work_tick_running`）
+- [x] 单实例启动（`KtSingleInstanceGuard`）；设置窗标题显示 `VERSION_KtAlarmClock`（3.0）
+- [x] Release：`WIN32` 无控制台；Debug：保留终端便于 `qDebug`
 
 ---
 

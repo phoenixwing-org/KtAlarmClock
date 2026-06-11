@@ -37,7 +37,7 @@ KtAlarmClockController::KtAlarmClockController(KtAlarmClockParamShared param, Kt
     , popMenu_(nullptr)             // 7
     , loop_(false)                  // 8
     , workStep_(KtAlarmClock::None) // 9
-    , debugLocate_(true) {          // 10
+    , debugLocate_(false) {         // 10；Debug 构建在 Cmd::build 中开启
 }
 //------------------------------------------------------
 KtAlarmClockController::~KtAlarmClockController() {
@@ -83,7 +83,7 @@ void KtAlarmClockController::clock_start(int workStep, bool resetDurationFromPar
         int counter = mainClock_->get_counter();
         if (resetDurationFromParam || counter <= 0)
             counter = parameter->WorkTime; // Next / 到期 / 首次：以界面参数为准
-        mainClock_->clock_start(KtAlarmClock::WorkTime, counter);
+        mainClock_->clock_start(KtAlarmClock::WorkTime, counter, !resetDurationFromParam);
         break;
     }
     default:
@@ -179,6 +179,23 @@ void KtAlarmClockController::on_setting_action(int actionId) {
     dispatch_user_action(actionId);
 }
 //------------------------------------------------------
+void KtAlarmClockController::on_second_instance_activate() {
+    if (is_forbidden()) {
+        if (tray_) {
+            tray_->show_message(QStringLiteral("KT护眼闹钟"),
+                                QStringLiteral("正在休息中，请从托盘或等待休息结束。"));
+        }
+        return;
+    }
+
+    if (!mainClock_)
+        return;
+
+    mainClock_->show();
+    mainClock_->raise();
+    mainClock_->activateWindow();
+}
+//------------------------------------------------------
 void KtAlarmClockController::dispatch_user_action(int actionId) {
     if (debugLocate_) qDebug() << "[Controller] dispatch_user_action" << actionId;
 
@@ -211,14 +228,14 @@ void KtAlarmClockController::run_command(int actionId) {
             loop_ = true;
             clock_start(KtAlarmClock::WorkTime, true); // 首次播放：以 parameter 为准
         }
-        else if (mainClock_->get_running() || workStep_ == KtAlarmClock::WorkTime) {
+        else if (mainClock_->get_running()) {
             loop_     = false;
             workStep_ = KtAlarmClock::None;
             mainClock_->clock_pause();
         }
         else {
             loop_ = true;
-            clock_start(KtAlarmClock::WorkTime);
+            clock_start(KtAlarmClock::WorkTime); // 手动暂停或休眠冻结后续计
         }
         if (debugLocate_)
             qDebug() << "[Controller] PlayPause loop=" << loop_
@@ -331,8 +348,11 @@ void KtAlarmClockController::start() {
 
     connect(qGuiApp, &QGuiApplication::applicationStateChanged, this,
             [ this ](Qt::ApplicationState state) {
-                if (state == Qt::ApplicationActive && mainClock_->get_running())
-                    mainClock_->sync_from_wall_clock(); // 休眠唤醒校准
+                if (!mainClock_) return;
+                if (state == Qt::ApplicationSuspended)
+                    mainClock_->handle_application_suspended();
+                else if (state == Qt::ApplicationActive)
+                    mainClock_->handle_application_active();
             });
 
     if (debugLocate_) qDebug() << "[Controller] start complete";

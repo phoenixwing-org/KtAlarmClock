@@ -37,6 +37,9 @@ public:
         forbidden_ = forbidden;
     }
 
+    /** @brief 托盘气泡提示 */
+    void show_message(const QString& title, const QString& message, int durationMs = 3000);
+
 signals:
     /** @brief 菜单动作（KtAlarmClock::ActionID） */
     void action_triggered(int actionId);

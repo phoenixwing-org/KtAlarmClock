@@ -21,6 +21,7 @@
 class KtAlarmClockController;
 class KtAlarmClockDlg;
 class KtLockScreenManager;
+class KtSingleInstanceGuard;
 class QGuiApplication;
 
 /**
@@ -71,8 +72,9 @@ private:
     KtAlarmClockCoreShared  core;
     KtAlarmClockParamShared parameter;
     KtAlarmClockDlg*        dialog;
-    KtAlarmClockController* m_pController;
-    QString                 m_ExePath;
+    KtAlarmClockController*   m_pController;
+    KtSingleInstanceGuard*    instanceGuard_;
+    QString                   m_ExePath;
 };
 
 #endif // KtAlarmClockCmd_H

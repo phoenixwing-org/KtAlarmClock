@@ -43,8 +43,11 @@ public:
     /** @brief 暂停倒计时 */
     void clock_pause();
 
-    /** @brief 启动或恢复倒计时 */
-    void clock_start(int state, int counterSec);
+    /**
+     * @brief 启动或恢复倒计时
+     * @param leanFirstSecond 仅播放/继续续计时为 true，Next 与 ±60s 为 false
+     */
+    void clock_start(int state, int counterSec, bool leanFirstSecond = false);
 
     /** @brief 设置是否允许关闭 */
     void set_can_close(bool canClose) {
@@ -53,6 +56,12 @@ public:
 
     /** @brief 从墙钟同步剩余秒数 */
     void sync_from_wall_clock();
+
+    /** @brief 系统休眠（Qt::ApplicationSuspended） */
+    void handle_application_suspended();
+
+    /** @brief 系统唤醒回到前台 */
+    void handle_application_active();
 
 signals:
     /** @brief 阶段倒计时结束 */
@@ -71,6 +80,7 @@ protected:
 
 private slots:
     void on_tick();
+    void on_wake_watchdog();
 
 private:
     /** @brief 移动窗口并限制在四边可用区域内（跨屏时切换 screen 以匹配 DPI） */
@@ -88,18 +98,29 @@ private:
     /** @brief 刷新时间文本与窗口尺寸 */
     void refresh_display();
 
+    /** @brief 根据两次 tick 间隔推断休眠，工作时冻结在末次 tick */
+    void detect_sleep_gap();
+
+    /** @brief 休眠冻结后续计、墙钟纠偏、补启 tick（多路径唤醒共用） */
+    void try_resume_after_wake();
+
+    /** @brief 启动 1s tick 并立即同步一次显示 */
+    void ensure_work_tick_running();
+
     /** @brief 根据窗口矩形中心选取所在屏幕 */
     QScreen* screen_for_position(const QPoint& globalTopLeft) const;
 
 private:
     KtWallClockEngine workClock_;      ///< 1. 工作墙钟
     QLabel*           TimeLabel;     ///< 2. 时间文本
-    QTimer*           TickTimer;     ///< 3. 1s tick
+    QTimer*           TickTimer;     ///< 3. 1s 工作倒计时 tick
+    QTimer*           WakeWatchTimer; ///< 10. 唤醒看门狗（休眠后进程恢复时补续计）
     bool              canClose_;   ///< 4. 是否允许关闭
     bool              dragging_;       ///< 5. 是否正在拖动
     QPoint            dragOffset_;     ///< 6. 按下时窗口角与鼠标的全局偏移
     int               initialCounter_; ///< 7. 未启动标记（-100）
     bool              clampingMove_;   ///< 8. 防止 clamp 递归触发 move
+    qint64            lastTickMs_;     ///< 9. 上次 tick 墙钟 ms，用于休眠间隔检测
 };
 
 #endif // KtMainClockWidget_H

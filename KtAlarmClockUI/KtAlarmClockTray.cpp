@@ -21,7 +21,7 @@ KtAlarmClockTray::KtAlarmClockTray(QObject* parent)
     : QObject(parent)
     , TrayIcon(nullptr)   // 1
     , Menu(nullptr)       // 2
-    , debugLocate_(true)  // 3
+    , debugLocate_(false) // 3
     , forbidden_(false) { // 4
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         qWarning() << "[Tray] system tray not available";
@@ -85,6 +85,14 @@ bool KtAlarmClockTray::check_forbidden() const {
 void KtAlarmClockTray::hide() {
     if (TrayIcon)
         TrayIcon->hide();
+}
+//------------------------------------------------------
+void KtAlarmClockTray::show_message(const QString& title, const QString& message,
+                                    int durationMs) {
+    if (!TrayIcon)
+        return;
+
+    TrayIcon->showMessage(title, message, QSystemTrayIcon::Information, durationMs);
 }
 //------------------------------------------------------
 void KtAlarmClockTray::on_tray_activated(QSystemTrayIcon::ActivationReason reason) {

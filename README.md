@@ -21,7 +21,7 @@ Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘
 | --- | --- | --- |
 | 可执行入口 | `KtAlarmClock/` | `main.cpp`，加载 UI 插件 |
 | UI 插件 | `KtAlarmClockUI/` | QWidget 界面、计时与锁屏逻辑（打进 dll） |
-| 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+，输出到 `${ROOT_DIR}/kt/viewer` |
+| 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+；产物默认 `${ROOT_DIR}/kt/viewer/debug` 与 `.../bin` |
 
 技术栈：Qt 5 Widgets，C++20。QML/JS 主流程已迁移完成，现为纯 QWidget 实现（见 [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)）。
 
@@ -67,7 +67,8 @@ cmake --build . --config Release
 1. **工作计时**：主浮窗显示倒计时；可拖动（左键），右键打开菜单。
 2. **休息 / 锁屏**：到点或点「立刻休息」进入全屏；强制期内不可解锁。
 3. **暂停**：仅工作计时可暂停；锁屏无暂停，始终按墙钟走。
-4. **设置**：托盘 → 显示设置界面；底部可播放/暂停、快进/后退 60 秒、Next。
+4. **设置**：托盘 → 显示设置界面（标题含版本号）；底部可播放/暂停、快进/后退 60 秒、Next。
+5. **单实例**：重复启动 exe 会提示并激活已有托盘进程。
 
 更详细的计时与休眠行为见 **[doc/ 文档目录](doc/README.md)**。
 
@@ -91,15 +92,16 @@ cmake --build . --config Release
 ## 开发约定
 
 - 新建 C++ 遵循 `.cursor/skills/cxx-code-style`（`class_prefix: Kt`）
-- 动作统一经 `KtAlarmClockController::run_command(int actionId)`
-- 调试日志：开启 `set_debug_locate(true)`，前缀见 [QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)
+- 用户操作统一经 `KtAlarmClockController::dispatch_user_action(int actionId)`
+- Debug 构建保留控制台黑窗口；Release 为 `WIN32` 纯 GUI
+- 调试日志：Debug 构建默认 `set_debug_locate(true)`，前缀见 [QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)
 
 ---
 
 ## 待办（概要）
 
 - 产品向：见 [doc/TODO.md](doc/TODO.md)
-- 计时 / 休眠验收：见 [doc/计时与休眠.md](doc/计时与休眠.md#验收状态)（步骤 2「工作中+休眠」需求待确认）
+- 计时 / 休眠验收：见 [doc/计时与休眠.md](doc/计时与休眠.md#验收状态)
 
 ---
 

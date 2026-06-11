@@ -17,6 +17,11 @@
 #include "KtAlarmClockUI.h"
 
 /**
+ * @brief Version of KtAlarmClock
+ */
+#define VERSION_KtAlarmClock "3.1"
+
+/**
  * @brief Class KtAlarmClockParam
  */
 class ExportedByKtAlarmClockUI KtAlarmClockParam {
