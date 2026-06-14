@@ -1,108 +1,105 @@
 # KtAlarmClock
 
-Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘常驻。支持墙钟计时（休眠/合盖后仍准确）。
+KtAlarmClock is a Qt alarm clock for focused work and enforced breaks. It uses a C++ backend for timing, settings, tray integration, and multi-screen lock orchestration, with QML for the visible UI.
 
-开源主页：[https://gitee.com/PhoenixWing321/KtAlarmClock](https://gitee.com/PhoenixWing321/KtAlarmClock)
+## Current Architecture
 
----
-
-## 快速开始
-
-1. 配置环境变量 `ROOT_DIR`（输出根路径，如 `E:/XyRoot`）。
-2. 编译 `KtAlarmClockUI` → `KtAlarmClock`（见下方构建说明）。
-3. 运行 `KtAlarmClock.exe`，与 `KtAlarmClockUI.dll` 同目录。
-4. 托盘或设置页调整 **工作 / 休息 / 强制锁定** 时长，点击播放开始。
-
----
-
-## 软件架构
-
-| 模块 | 路径 | 说明 |
+| Area | Path | Notes |
 | --- | --- | --- |
-| 可执行入口 | `KtAlarmClock/` | `main.cpp`，加载 UI 插件 |
-| UI 插件 | `KtAlarmClockUI/` | QWidget 界面、计时与锁屏逻辑（打进 dll） |
-| 构建 | `CMakeLists.txt`、`common.cmake` | CMake 3.25+，输出到 `${ROOT_DIR}/kt/viewer` |
+| App entry | `KtAlarmClock/` | `QApplication` entry point and Windows rc/manifest setup |
+| UI/backend module | `KtAlarmClockUI/` | C++ controller, QPC countdown, settings, tray service, QML UI |
+| QML UI | `KtAlarmClockUI/res/qml` | Main bubble, settings panel, and lock screen views |
+| Images | `KtAlarmClockUI/res/image` | Runtime SVG resources declared directly in CMake |
 
-技术栈：Qt 5 Widgets，C++20。QML/JS 主流程已迁移完成，现为纯 QWidget 实现（见 [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)）。
+Technology stack:
 
----
+- Qt 6: Core, QML, Quick, QuickControls2, Widgets, Svg, LinguistTools
+- C++20
+- QPC/monotonic countdown as the authoritative time source
+- `QSystemTrayIcon` retained behind `KtTrayService`
 
-## 构建
+## Main Features
 
-### 环境要求
+- Work countdown with pause/resume and remaining-time adjustment.
+- Break countdown with forced period support.
+- QML main floating bubble and QML settings panel.
+- QML lock-screen overlays managed by C++ for primary/secondary screens.
+- System tray actions isolated in `KtTrayService`.
+- Settings are loaded/saved through a user-local ini file managed by `KtAlarmClockSettings`.
+- Runtime translations are generated from `KtAlarmClockUI/res/linguist` and loaded from Qt resources.
+- No standalone `.qrc`; image and QML resources are declared in CMake.
 
-- CMake 3.25+
-- Qt 5（Core、Gui、Widgets 等）
-- MSVC / GCC / Clang（C++20）
+## Build
 
-### 环境变量
+Optional environment variables:
 
-| 变量 | 说明 |
+| Variable | Purpose |
 | --- | --- |
-| `ROOT_DIR` | 工程输出根路径，例如 `E:/XyRoot` |
-| `ROOT_DIR_3rdParty` | 第三方库根路径（`common.cmake` 预留） |
+| `ROOT_DIR` | Output root; defaults to the repository root when unset |
+| `KT_ALARM_CLOCK_LOCK_DEBUG` | Set to `1` to use the single-screen lock-screen debug layout |
 
-### 编译
+Example MSVC build:
 
-```bash
-mkdir build && cd build
-cmake ..
-cmake --build . --config Debug
-cmake --build . --config Release
+```bat
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
+set ROOT_DIR=C:\path\to\KtAlarmClock-master
+cmake -S . -B out\build\debug -G Ninja -DCMAKE_PREFIX_PATH=C:\Qt\6.7.2\msvc2019_64
+cmake --build out\build\debug --config Debug
 ```
 
-**注意**：图标与 `lock-screen.qss` 在 `KtAlarmClock.qrc` 中，改资源后须重新编译 `KtAlarmClockUI.dll`。
+Or run the repository helper:
 
-### 输出目录
+```bat
+build.bat
+```
 
-| 类型 | Debug | Release |
-| --- | --- | --- |
-| 可执行文件 | `${ROOT_DIR}/kt/viewer/debug/KtAlarmClock.exe` | `.../bin/KtAlarmClock.exe` |
-| 动态库 | `.../debug/KtAlarmClockUI.dll` | `.../bin/KtAlarmClockUI.dll` |
+`build.bat` cleans `out`, configures a Release Ninja build, runs core tests, and
+generates the dist folder under `out\kt\viewer\dist`.
+Set `KT_QT_ROOT` to override the Qt installation path; otherwise the helper uses
+`QTDIR`, then falls back to `C:\Qt\6.7.2\msvc2019_64`.
 
----
+Useful CMake options and variables:
 
-## 使用说明
-
-1. **工作计时**：主浮窗显示倒计时；可拖动（左键），右键打开菜单。
-2. **休息 / 锁屏**：到点或点「立刻休息」进入全屏；强制期内不可解锁。
-3. **暂停**：仅工作计时可暂停；锁屏无暂停，始终按墙钟走。
-4. **设置**：托盘 → 显示设置界面；底部可播放/暂停、快进/后退 60 秒、Next。
-
-更详细的计时与休眠行为见 **[doc/ 文档目录](doc/README.md)**。
-
----
-
-## 文档
-
-| 文档 | 说明 |
+| Name | Purpose |
 | --- | --- |
-| **[doc/README.md](doc/README.md)** | 文档总索引 |
-| [doc/计时系统说明.md](doc/计时系统说明.md) | 墙钟模型、工作/休息/暂停 |
-| [doc/计时与休眠.md](doc/计时与休眠.md) | 合盖/休眠场景与**手动测试步骤** |
-| [doc/计时相关文件索引.md](doc/计时相关文件索引.md) | C++ 源码与函数对照 |
-| [doc/多屏锁屏遮罩.md](doc/多屏锁屏遮罩.md) | 多显示器遮罩与热插拔 reconcile |
-| [doc/高分辨率适配.md](doc/高分辨率适配.md) | 高 DPI 适配：manifest、.ui 与 C++ |
-| [doc/TODO.md](doc/TODO.md) | 产品待办（换肤、UI 美化） |
-| [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md) | QML→Widget 迁移备忘 |
+| `KT_APP_NAME` | Executable, settings file, and registry key name |
+| `KT_APP_DISPLAY_NAME` | User-visible application name |
+| `KT_COMPANY` / `KT_DOMAIN` / `KT_DESCRIPTION` | Metadata injected into C++ and Windows version resources |
+| `KT_PROJECT_BRANCH` | `debug` or `release`; Debug branch uses console subsystem for easier logs |
+| `KT_ENABLE_QML_DEBUG` | Enables `QT_QML_DEBUG` for debug-like configs; off by default |
+| `KT_ENABLE_CONSOLE_SUBSYSTEM` | Builds the app executable as a console-subsystem Windows app; defaults to on for debug branches |
+| `KT_DIST_SUBSYSTEM` | Subsystem applied to the copied dist executable: `CONSOLE` or `WINDOWS`; defaults to `WINDOWS` |
+| `KT_ENABLE_WINDEPLOYQT` | Runs deployment target with `windeployqt`; on by default |
+| `KT_DIST_PATH` | Output path for the `KtAlarmClock_dist` target; defaults to `%ROOT_DIR%\kt\viewer\dist` |
+| `KT_DIST_CLEANUP` | Removes unused files from `KtAlarmClock_dist`; on by default |
+| `KT_DIST_STRIP_OWN_QML_SOURCES` | Removes the app's own QML source files from dist after they are embedded; on by default |
 
----
+Outputs are configured by `common.cmake` under:
 
-## 开发约定
+- Debug: `%ROOT_DIR%\kt\viewer\debug`
+- Release: `%ROOT_DIR%\kt\viewer\bin`
+- Dist: `%ROOT_DIR%\kt\viewer\dist`
 
-- 新建 C++ 遵循 `.cursor/skills/cxx-code-style`（`class_prefix: Kt`）
-- 动作统一经 `KtAlarmClockController::run_command(int actionId)`
-- 调试日志：开启 `set_debug_locate(true)`，前缀见 [QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)
+On Windows, `KtAlarmClock_deploy` is part of the default build when
+`KT_ENABLE_WINDEPLOYQT` is on. It refreshes Qt runtime DLLs, `qt.conf`, Qt QML
+modules, and the app's own `qml/KtAlarmClockQml` module beside the executable.
+This keeps debug runs from failing on missing files such as
+`Qt6QuickControls2d.dll`.
 
----
+Create a distributable folder with:
 
-## 待办（概要）
+```bat
+cmake --build out\build\debug --config Debug --target KtAlarmClock_dist
+```
 
-- 产品向：见 [doc/TODO.md](doc/TODO.md)
-- 计时 / 休眠验收：见 [doc/计时与休眠.md](doc/计时与休眠.md#验收状态)（步骤 2「工作中+休眠」需求待确认）
+## Key Code Paths
 
----
+- `KtAlarmClockUI/src/source/KtAlarmClockController.cpp`: application state machine and QML command API.
+- `KtAlarmClockUI/src/source/KtClockRuntime.cpp`: QPC-backed work countdown runtime.
+- `KtAlarmClockUI/src/source/KtLockScreenManager.cpp`: multi-screen QML lock-window orchestration.
+- `KtAlarmClockUI/src/source/KtTrayService.cpp`: isolated `QSystemTrayIcon` and `QMenu` integration.
+- `KtAlarmClockUI/src/source/KtAlarmClockSettings.cpp`: settings normalization and persistence.
+- `KtAlarmClockUI/res/qml/Main.qml`: main QML shell.
+- `KtAlarmClockUI/res/qml/LockPrimary.qml` / `LockSecondary.qml`: lock-screen UI.
 
-## 参与贡献
-
-kevin、Jane
+More notes are in [doc/README.md](doc/README.md).

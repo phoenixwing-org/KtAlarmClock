@@ -3,6 +3,7 @@ bin-debug/
 bin-release/
 bin/
 out/
+kt/
 build-*
 build
 x64

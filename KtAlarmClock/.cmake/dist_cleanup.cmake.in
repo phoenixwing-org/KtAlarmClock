@@ -1,0 +1,73 @@
+set(KT_DIST_PATH "@KT_DIST_PATH@")
+set(KT_DIST_QML_MODULE_DIR "@KT_DIST_QML_MODULE_DIR@")
+
+if(NOT EXISTS "${KT_DIST_PATH}")
+    message(FATAL_ERROR "Distribution directory does not exist: ${KT_DIST_PATH}")
+endif()
+
+set(KT_DIST_REMOVE_DIRECTORIES
+    "${KT_DIST_PATH}/qmltooling"
+    "${KT_DIST_PATH}/qml/QtQuick/Controls/Fusion"
+    "${KT_DIST_PATH}/qml/QtQuick/Controls/Imagine"
+    "${KT_DIST_PATH}/qml/QtQuick/Controls/Material"
+    "${KT_DIST_PATH}/qml/QtQuick/Controls/Universal"
+    "${KT_DIST_PATH}/qml/QtQuick/Controls/Windows"
+    "${KT_DIST_PATH}/qml/QtQuick/Dialogs"
+    "${KT_DIST_PATH}/qml/QtQuick/LocalStorage"
+    "${KT_DIST_PATH}/qml/QtQuick/NativeStyle"
+    "${KT_DIST_PATH}/qml/QtQuick/Particles"
+    "${KT_DIST_PATH}/qml/QtQuick/Pdf"
+    "${KT_DIST_PATH}/qml/QtQuick/Scene2D"
+    "${KT_DIST_PATH}/qml/QtQuick/Scene3D"
+    "${KT_DIST_PATH}/qml/QtQuick/Timeline"
+    "${KT_DIST_PATH}/qml/QtQuick/VirtualKeyboard"
+    "${KT_DIST_PATH}/platforminputcontexts"
+)
+
+foreach(_kt_dist_dir IN LISTS KT_DIST_REMOVE_DIRECTORIES)
+    if(EXISTS "${_kt_dist_dir}")
+        file(REMOVE_RECURSE "${_kt_dist_dir}")
+    endif()
+endforeach()
+
+file(GLOB_RECURSE KT_DIST_REMOVE_FILES
+    "${KT_DIST_PATH}/*.dSYM"
+    "${KT_DIST_PATH}/*.debug"
+    "${KT_DIST_PATH}/*.ilk"
+    "${KT_DIST_PATH}/*.pdb"
+    "${KT_DIST_PATH}/Qt6Pdf*.dll"
+    "${KT_DIST_PATH}/Qt6Quick3DUtils*.dll"
+    "${KT_DIST_PATH}/Qt6QuickControls2Fusion*.dll"
+    "${KT_DIST_PATH}/Qt6QuickControls2Imagine*.dll"
+    "${KT_DIST_PATH}/Qt6QuickControls2Material*.dll"
+    "${KT_DIST_PATH}/Qt6QuickControls2Universal*.dll"
+    "${KT_DIST_PATH}/Qt6QuickControls2WindowsStyleImpl*.dll"
+    "${KT_DIST_PATH}/Qt6VirtualKeyboard*.dll"
+    "${KT_DIST_PATH}/imageformats/qpdf*.dll"
+    "${KT_DIST_PATH}/opengl32sw.dll"
+    "${KT_DIST_PATH}/d3dcompiler_47.dll"
+    "${KT_DIST_PATH}/dxcompiler.dll"
+    "${KT_DIST_PATH}/dxil.dll"
+    "${KT_DIST_PATH}/vc_redist.x64.exe"
+)
+
+if("@KT_DIST_STRIP_OWN_QML_SOURCES@" STREQUAL "ON")
+    file(GLOB_RECURSE KT_DIST_OWN_QML_SOURCE_FILES
+        "${KT_DIST_QML_MODULE_DIR}/res/qml/*.qml"
+        "${KT_DIST_QML_MODULE_DIR}/res/qml/*.qmlc"
+    )
+    list(APPEND KT_DIST_REMOVE_FILES ${KT_DIST_OWN_QML_SOURCE_FILES})
+    list(APPEND KT_DIST_REMOVE_DIRECTORIES
+        "${KT_DIST_QML_MODULE_DIR}/res"
+    )
+endif()
+
+if(KT_DIST_REMOVE_FILES)
+    file(REMOVE ${KT_DIST_REMOVE_FILES})
+endif()
+
+foreach(_kt_dist_dir IN LISTS KT_DIST_REMOVE_DIRECTORIES)
+    if(EXISTS "${_kt_dist_dir}")
+        file(REMOVE_RECURSE "${_kt_dist_dir}")
+    endif()
+endforeach()
