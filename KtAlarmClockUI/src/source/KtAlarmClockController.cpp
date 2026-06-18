@@ -58,6 +58,7 @@ QVariantMap clamp_to_screen(QScreen* screen, int globalX, int globalY, const QSi
 }
 }
 
+//----------------------------------------
 KtAlarmClockController::KtAlarmClockController(KtAlarmClockParamShared param, KtAlarmClockCmd* cmd,
                                                KtTranslationManager* translationManager,
                                                QObject* parent)
@@ -77,19 +78,110 @@ KtAlarmClockController::KtAlarmClockController(KtAlarmClockParamShared param, Kt
     model_->sync_from_param(*parameter);
     model_->locale(KtAlarmClockSettings::read_locale());
 }
-
+//----------------------------------------
 KtAlarmClockController::~KtAlarmClockController() {
     delete qmlShell_;
     qmlShell_ = nullptr;
 }
-
+//----------------------------------------
 void KtAlarmClockController::adjustRemaining(int deltaSeconds) {
     if (is_forbidden())
         return;
     handle_time_adjustment(deltaSeconds);
     sync_model();
 }
+//----------------------------------------
+QVariantMap KtAlarmClockController::clampWindowPosition(int globalX, int globalY, int width,
+                                                        int height) const {
+    const QSize windowSize(qMax(1, width), qMax(1, height));
+    const QPoint topLeft(globalX, globalY);
+    const QPoint center(globalX + windowSize.width() / 2, globalY + windowSize.height() / 2);
 
+    QScreen* screen = QGuiApplication::screenAt(center);
+    if (!screen)
+        screen = QGuiApplication::screenAt(topLeft);
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+
+    return clamp_to_screen(screen, globalX, globalY, windowSize);
+}
+//----------------------------------------
+QVariantMap KtAlarmClockController::clampWindowPositionOnCurrentScreen(
+    int globalX, int globalY, int width, int height, int currentCenterX, int currentCenterY) const {
+    const QSize windowSize(qMax(1, width), qMax(1, height));
+
+    QScreen* screen = QGuiApplication::screenAt(QPoint(currentCenterX, currentCenterY));
+    if (!screen) {
+        const QPoint candidateCenter(globalX + windowSize.width() / 2,
+                                     globalY + windowSize.height() / 2);
+        screen = QGuiApplication::screenAt(candidateCenter);
+    }
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+
+    return clamp_to_screen(screen, globalX, globalY, windowSize);
+}
+//----------------------------------------
+void KtAlarmClockController::clock_timeout_impl(int state) {
+    if (debugLocate_) qDebug() << "[Controller] clock_timeout_impl state=" << state;
+
+    switch (state) {
+    case KtAlarmClock::WorkTime:
+        enter_phase(KtAlarmClock::WorkBreak);
+        break;
+    case KtAlarmClock::WorkBreak:
+        enter_phase(KtAlarmClock::WorkTime, true);
+        break;
+    default:
+        enter_phase(KtAlarmClock::None);
+        break;
+    }
+}
+//----------------------------------------
+void KtAlarmClockController::close_all_windows() {
+    if (debugLocate_) qDebug() << "[Controller] close_all_windows";
+
+    set_phase(KtAlarmClock::None);
+    loop_ = false;
+    if (runtime_) runtime_->pause();
+    force_unload_over_dlg();
+    if (tray_) tray_->hide();
+
+    if (cmd_) cmd_->forceQuit();
+}
+//----------------------------------------
+void KtAlarmClockController::closeSettings() {
+    if (model_)
+        model_->settingsVisible(false);
+}
+//----------------------------------------
+void KtAlarmClockController::dispatch_user_action(int actionId) {
+    dispatch_user_action_impl(actionId);
+}
+//----------------------------------------
+void KtAlarmClockController::dispatch_user_action_impl(int actionId) {
+    if (debugLocate_) qDebug() << "[Controller] dispatch_user_action" << actionId;
+
+    if (is_forbidden()) {
+        if (debugLocate_) qDebug() << "[Controller] dispatch ignored (WorkBreak)";
+        return;
+    }
+
+    run_command(actionId);
+}
+//----------------------------------------
+void KtAlarmClockController::enter_break_phase() {
+    if (runtime_) runtime_->pause();
+    if (model_) model_->settingsVisible(false);
+    load_over_dlg();
+}
+//----------------------------------------
+void KtAlarmClockController::enter_idle_phase() {
+    force_unload_over_dlg();
+    loop_ = false;
+    if (runtime_) runtime_->pause();
+}
+//----------------------------------------
 void KtAlarmClockController::enter_phase(int phase, bool resetDurationFromParam) {
     if (debugLocate_)
         qDebug() << "[Controller] enter_phase" << phase << "resetFromParam=" << resetDurationFromParam;
@@ -110,113 +202,7 @@ void KtAlarmClockController::enter_phase(int phase, bool resetDurationFromParam)
 
     sync_model();
 }
-
-void KtAlarmClockController::clock_timeout_impl(int state) {
-    if (debugLocate_) qDebug() << "[Controller] clock_timeout_impl state=" << state;
-
-    switch (state) {
-    case KtAlarmClock::WorkTime:
-        enter_phase(KtAlarmClock::WorkBreak);
-        break;
-    case KtAlarmClock::WorkBreak:
-        enter_phase(KtAlarmClock::WorkTime, true);
-        break;
-    default:
-        enter_phase(KtAlarmClock::None);
-        break;
-    }
-}
-
-QVariantMap KtAlarmClockController::clampWindowPosition(int globalX, int globalY, int width,
-                                                        int height) const {
-    const QSize windowSize(qMax(1, width), qMax(1, height));
-    const QPoint topLeft(globalX, globalY);
-    const QPoint center(globalX + windowSize.width() / 2, globalY + windowSize.height() / 2);
-
-    QScreen* screen = QGuiApplication::screenAt(center);
-    if (!screen)
-        screen = QGuiApplication::screenAt(topLeft);
-    if (!screen)
-        screen = QGuiApplication::primaryScreen();
-
-    return clamp_to_screen(screen, globalX, globalY, windowSize);
-}
-
-QVariantMap KtAlarmClockController::clampWindowPositionOnCurrentScreen(
-    int globalX, int globalY, int width, int height, int currentCenterX, int currentCenterY) const {
-    const QSize windowSize(qMax(1, width), qMax(1, height));
-
-    QScreen* screen = QGuiApplication::screenAt(QPoint(currentCenterX, currentCenterY));
-    if (!screen) {
-        const QPoint candidateCenter(globalX + windowSize.width() / 2,
-                                     globalY + windowSize.height() / 2);
-        screen = QGuiApplication::screenAt(candidateCenter);
-    }
-    if (!screen)
-        screen = QGuiApplication::primaryScreen();
-
-    return clamp_to_screen(screen, globalX, globalY, windowSize);
-}
-
-QVariantMap KtAlarmClockController::initialWindowPosition(int width, int height) const {
-    const QSize windowSize(qMax(1, width), qMax(1, height));
-
-    QScreen* screen = QGuiApplication::screenAt(QCursor::pos());
-    if (!screen)
-        screen = QGuiApplication::primaryScreen();
-    if (!screen)
-        return {{QStringLiteral("x"), 600}, {QStringLiteral("y"), 2}};
-
-    const QRect available = screen->availableGeometry();
-    const int x = available.left() + qMin(600, qMax(0, available.width() - windowSize.width()));
-    const int y = available.top() + 2;
-    return clamp_to_screen(screen, x, y, windowSize);
-}
-
-void KtAlarmClockController::closeSettings() {
-    if (model_)
-        model_->settingsVisible(false);
-}
-
-void KtAlarmClockController::close_all_windows() {
-    if (debugLocate_) qDebug() << "[Controller] close_all_windows";
-
-    set_phase(KtAlarmClock::None);
-    loop_ = false;
-    if (runtime_) runtime_->pause();
-    force_unload_over_dlg();
-    if (tray_) tray_->hide();
-
-    if (cmd_) cmd_->forceQuit();
-}
-
-void KtAlarmClockController::dispatch_user_action(int actionId) {
-    dispatch_user_action_impl(actionId);
-}
-
-void KtAlarmClockController::dispatch_user_action_impl(int actionId) {
-    if (debugLocate_) qDebug() << "[Controller] dispatch_user_action" << actionId;
-
-    if (is_forbidden()) {
-        if (debugLocate_) qDebug() << "[Controller] dispatch ignored (WorkBreak)";
-        return;
-    }
-
-    run_command(actionId);
-}
-
-void KtAlarmClockController::enter_break_phase() {
-    if (runtime_) runtime_->pause();
-    if (model_) model_->settingsVisible(false);
-    load_over_dlg();
-}
-
-void KtAlarmClockController::enter_idle_phase() {
-    force_unload_over_dlg();
-    loop_ = false;
-    if (runtime_) runtime_->pause();
-}
-
+//----------------------------------------
 void KtAlarmClockController::enter_work_phase(bool resetDurationFromParam) {
     force_unload_over_dlg();
 
@@ -225,7 +211,7 @@ void KtAlarmClockController::enter_work_phase(bool resetDurationFromParam) {
         counter = parameter->WorkTime;
     if (runtime_) runtime_->start(KtAlarmClock::WorkTime, counter);
 }
-
+//----------------------------------------
 void KtAlarmClockController::force_unload_over_dlg() {
     if (!lockScreen_ || !lockScreen_->get_visible())
         return;
@@ -235,7 +221,7 @@ void KtAlarmClockController::force_unload_over_dlg() {
     lockScreen_->hide();
     sync_model();
 }
-
+//----------------------------------------
 void KtAlarmClockController::handle_play_pause_action() {
     if (!runtime_)
         return;
@@ -259,7 +245,7 @@ void KtAlarmClockController::handle_play_pause_action() {
                  << "running=" << runtime_->running()
                  << "counter=" << runtime_->counter() << "phase=" << phase_;
 }
-
+//----------------------------------------
 void KtAlarmClockController::handle_time_adjustment(int deltaSeconds) {
     if (!runtime_)
         return;
@@ -270,11 +256,26 @@ void KtAlarmClockController::handle_time_adjustment(int deltaSeconds) {
     set_phase(KtAlarmClock::WorkTime);
     force_unload_over_dlg();
 }
+//----------------------------------------
+QVariantMap KtAlarmClockController::initialWindowPosition(int width, int height) const {
+    const QSize windowSize(qMax(1, width), qMax(1, height));
 
+    QScreen* screen = QGuiApplication::screenAt(QCursor::pos());
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    if (!screen)
+        return {{QStringLiteral("x"), 600}, {QStringLiteral("y"), 2}};
+
+    const QRect available = screen->availableGeometry();
+    const int x = available.left() + qMin(600, qMax(0, available.width() - windowSize.width()));
+    const int y = available.top() + 2;
+    return clamp_to_screen(screen, x, y, windowSize);
+}
+//----------------------------------------
 bool KtAlarmClockController::is_forbidden() const {
     return phase_ == KtAlarmClock::WorkBreak;
 }
-
+//----------------------------------------
 void KtAlarmClockController::load_over_dlg() {
     if (!lockScreen_)
         return;
@@ -284,16 +285,16 @@ void KtAlarmClockController::load_over_dlg() {
     lockScreen_->show(parameter->WorkBreak, parameter->TimeForce, lockDebugMode_);
     sync_model();
 }
-
+//----------------------------------------
 void KtAlarmClockController::nextLoop() {
     dispatch_user_action(KtAlarmClock::ActionNextLoop);
 }
-
+//----------------------------------------
 void KtAlarmClockController::on_clock_timeout(int state) {
     if (debugLocate_) qDebug() << "[Controller] clock_timeout defer state=" << state;
     QTimer::singleShot(0, this, [this, state]() { clock_timeout_impl(state); });
 }
-
+//----------------------------------------
 void KtAlarmClockController::on_clock_updated(int state, int counterSec, bool running) {
     Q_UNUSED(state);
     if (!model_)
@@ -309,7 +310,7 @@ void KtAlarmClockController::on_clock_updated(int state, int counterSec, bool ru
         tray_->setRemainingText(model_->remainingText());
     }
 }
-
+//----------------------------------------
 void KtAlarmClockController::openSettings() {
     if (is_forbidden())
         return;
@@ -319,21 +320,21 @@ void KtAlarmClockController::openSettings() {
         model_->settingsVisible(true);
     }
 }
-
+//----------------------------------------
 void KtAlarmClockController::playPause() {
     dispatch_user_action(KtAlarmClock::ActionPlayPause);
 }
-
+//----------------------------------------
 void KtAlarmClockController::quit() {
     dispatch_user_action(KtAlarmClock::ActionClose);
 }
-
+//----------------------------------------
 void KtAlarmClockController::resetSettings() {
     parameter->setDefault();
     parameter->save();
     sync_model();
 }
-
+//----------------------------------------
 void KtAlarmClockController::run_command(int actionId) {
     if (debugLocate_) qDebug() << "[Controller] run_command" << actionId;
 
@@ -375,7 +376,7 @@ void KtAlarmClockController::run_command(int actionId) {
 
     sync_model();
 }
-
+//----------------------------------------
 void KtAlarmClockController::saveSettings(int workSeconds, int breakSeconds, int forceSeconds) {
     parameter->WorkTime  = workSeconds;
     parameter->WorkBreak = breakSeconds;
@@ -385,7 +386,7 @@ void KtAlarmClockController::saveSettings(int workSeconds, int breakSeconds, int
     if (model_) model_->settingsVisible(false);
     sync_model();
 }
-
+//----------------------------------------
 void KtAlarmClockController::saveSettingsAndStart(int workSeconds, int breakSeconds,
                                                   int forceSeconds) {
     parameter->WorkTime  = workSeconds;
@@ -399,17 +400,18 @@ void KtAlarmClockController::saveSettingsAndStart(int workSeconds, int breakSeco
     enter_phase(KtAlarmClock::WorkTime, true);
     sync_model();
 }
-
-void KtAlarmClockController::showContextMenu(int globalX, int globalY) {
-    if (tray_)
-        tray_->showContextMenuAt(QPoint(globalX, globalY));
-}
-
+//----------------------------------------
 void KtAlarmClockController::set_debug_locate(bool enabled) {
     debugLocate_ = enabled;
     if (tray_) tray_->setDebugLocate(enabled);
 }
-
+//----------------------------------------
+void KtAlarmClockController::set_phase(int phase) {
+    phase_ = phase;
+    if (model_) model_->set_phase_state(phase_);
+    if (tray_) tray_->setForbidden(phase_ == KtAlarmClock::WorkBreak);
+}
+//----------------------------------------
 void KtAlarmClockController::setLocale(const QString& localeName) {
     const QString normalizedLocale = KtAlarmClockSettings::normalize_locale(localeName);
     if (model_ && model_->locale() == normalizedLocale)
@@ -432,13 +434,12 @@ void KtAlarmClockController::setLocale(const QString& localeName) {
     if (tray_)
         tray_->retranslate();
 }
-
-void KtAlarmClockController::set_phase(int phase) {
-    phase_ = phase;
-    if (model_) model_->set_phase_state(phase_);
-    if (tray_) tray_->setForbidden(phase_ == KtAlarmClock::WorkBreak);
+//----------------------------------------
+void KtAlarmClockController::showContextMenu(int globalX, int globalY) {
+    if (tray_)
+        tray_->showContextMenuAt(QPoint(globalX, globalY));
 }
-
+//----------------------------------------
 void KtAlarmClockController::start() {
     runtime_ = new KtClockRuntime(this);
     lockScreen_ = new KtLockScreenManager(this);
@@ -479,11 +480,11 @@ void KtAlarmClockController::start() {
     if (debugLocate_)
         qDebug() << "[Controller] start complete lockDebugMode=" << lockDebugMode_;
 }
-
+//----------------------------------------
 void KtAlarmClockController::startBreak() {
     dispatch_user_action(KtAlarmClock::ActionBreak);
 }
-
+//----------------------------------------
 void KtAlarmClockController::sync_model() {
     if (!model_)
         return;

@@ -8,6 +8,7 @@
 #include <objbase.h>
 #endif
 
+//----------------------------------------
 KtAudioMuteGuard::KtAudioMuteGuard()
     : active_(false)
     , hasPreviousMute_(false)
@@ -18,11 +19,11 @@ KtAudioMuteGuard::KtAudioMuteGuard()
 #endif
 {
 }
-
+//----------------------------------------
 KtAudioMuteGuard::~KtAudioMuteGuard() {
     disengage();
 }
-
+//----------------------------------------
 void KtAudioMuteGuard::disengage() {
 #ifdef Q_OS_WIN
     auto* volume = static_cast<IAudioEndpointVolume*>(endpointVolume_);
@@ -36,7 +37,7 @@ void KtAudioMuteGuard::disengage() {
     hasPreviousMute_ = false;
     previousMute_ = false;
 }
-
+//----------------------------------------
 void KtAudioMuteGuard::engage() {
     if (active_)
         return;
@@ -64,20 +65,7 @@ void KtAudioMuteGuard::engage() {
 
     active_ = true;
 }
-
-void KtAudioMuteGuard::ensure_muted() {
-    if (!active_)
-        return;
-
-#ifdef Q_OS_WIN
-    if (!ensure_endpoint())
-        return;
-
-    auto* volume = static_cast<IAudioEndpointVolume*>(endpointVolume_);
-    volume->SetMute(TRUE, nullptr);
-#endif
-}
-
+//----------------------------------------
 bool KtAudioMuteGuard::ensure_endpoint() {
 #ifdef Q_OS_WIN
     if (endpointVolume_)
@@ -129,7 +117,20 @@ bool KtAudioMuteGuard::ensure_endpoint() {
     return false;
 #endif
 }
+//----------------------------------------
+void KtAudioMuteGuard::ensure_muted() {
+    if (!active_)
+        return;
 
+#ifdef Q_OS_WIN
+    if (!ensure_endpoint())
+        return;
+
+    auto* volume = static_cast<IAudioEndpointVolume*>(endpointVolume_);
+    volume->SetMute(TRUE, nullptr);
+#endif
+}
+//----------------------------------------
 void KtAudioMuteGuard::release_endpoint() {
 #ifdef Q_OS_WIN
     if (endpointVolume_) {

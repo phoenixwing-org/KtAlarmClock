@@ -38,6 +38,7 @@ QString debug_size_label(double fraction) {
 
 } // namespace
 
+//----------------------------------------
 KtLockScreenManager::KtLockScreenManager(QObject* parent)
     : QObject(parent)
     , breakClock_()
@@ -77,7 +78,7 @@ KtLockScreenManager::KtLockScreenManager(QObject* parent)
             reconcile_screens();
     });
 }
-
+//----------------------------------------
 KtLockScreenManager::~KtLockScreenManager() {
     hide();
 
@@ -87,7 +88,20 @@ KtLockScreenManager::~KtLockScreenManager() {
         primary_.clear();
     }
 }
+//----------------------------------------
+QQuickView* KtLockScreenManager::active_lock_view() const {
+    QWindow* activeWindow = QGuiApplication::focusWindow();
+    if (activeWindow == primary_.data())
+        return primary_.data();
 
+    for (auto* secondary : secondaries_) {
+        if (activeWindow == secondary)
+            return secondary;
+    }
+
+    return nullptr;
+}
+//----------------------------------------
 void KtLockScreenManager::apply_primary_geometry() {
     auto* view = primary_view();
     if (!view)
@@ -122,7 +136,7 @@ void KtLockScreenManager::apply_primary_geometry() {
     for (auto* secondary : secondaries_)
         apply_secondary_geometry(secondary);
 }
-
+//----------------------------------------
 void KtLockScreenManager::apply_secondary_geometry(QQuickView* view) {
     if (!view)
         return;
@@ -163,20 +177,7 @@ void KtLockScreenManager::apply_secondary_geometry(QQuickView* view) {
         view->showFullScreen();
     }
 }
-
-QQuickView* KtLockScreenManager::active_lock_view() const {
-    QWindow* activeWindow = QGuiApplication::focusWindow();
-    if (activeWindow == primary_.data())
-        return primary_.data();
-
-    for (auto* secondary : secondaries_) {
-        if (activeWindow == secondary)
-            return secondary;
-    }
-
-    return nullptr;
-}
-
+//----------------------------------------
 QQuickView* KtLockScreenManager::create_lock_view(const QString& typeName, int screenId) {
     auto* view = new QQuickView;
     view->setResizeMode(QQuickView::SizeRootObjectToView);
@@ -203,7 +204,7 @@ QQuickView* KtLockScreenManager::create_lock_view(const QString& typeName, int s
 
     return view;
 }
-
+//----------------------------------------
 bool KtLockScreenManager::eventFilter(QObject* watched, QEvent* event) {
     if (!is_lock_view(watched))
         return QObject::eventFilter(watched, event);
@@ -231,7 +232,7 @@ bool KtLockScreenManager::eventFilter(QObject* watched, QEvent* event) {
 
     return QObject::eventFilter(watched, event);
 }
-
+//----------------------------------------
 QQuickView* KtLockScreenManager::find_secondary(int screenId) const {
     for (auto* view : secondaries_) {
         if (view && view->property("screenId").toInt() == screenId)
@@ -239,11 +240,11 @@ QQuickView* KtLockScreenManager::find_secondary(int screenId) const {
     }
     return nullptr;
 }
-
+//----------------------------------------
 QString KtLockScreenManager::format_force_time() const {
     return counterForce_ > 0 ? format_clock(counterForce_) : QString();
 }
-
+//----------------------------------------
 void KtLockScreenManager::hide() {
     tickTimer_->stop();
     watchdogTimer_->stop();
@@ -281,14 +282,14 @@ void KtLockScreenManager::hide() {
         emit visible_changed();
     }
 }
-
+//----------------------------------------
 void KtLockScreenManager::initial_formula() {
     const int operandA = QRandomGenerator::global()->bounded(1000);
     const int operandB = QRandomGenerator::global()->bounded(1000);
     formulaValue_ = operandA + operandB;
     formulaText_ = QStringLiteral("%1 + %2 =").arg(operandA).arg(operandB);
 }
-
+//----------------------------------------
 bool KtLockScreenManager::is_lock_view(const QObject* object) const {
     if (!object)
         return false;
@@ -303,7 +304,11 @@ bool KtLockScreenManager::is_lock_view(const QObject* object) const {
 
     return false;
 }
-
+//----------------------------------------
+void KtLockScreenManager::on_answer_submitted(const QString& answer, bool requireFormula) {
+    try_unlock(answer, requireFormula);
+}
+//----------------------------------------
 void KtLockScreenManager::on_application_state_changed(Qt::ApplicationState state) {
     if (!visible_)
         return;
@@ -314,11 +319,7 @@ void KtLockScreenManager::on_application_state_changed(Qt::ApplicationState stat
         raise_all(true);
     }
 }
-
-void KtLockScreenManager::on_answer_submitted(const QString& answer, bool requireFormula) {
-    try_unlock(answer, requireFormula);
-}
-
+//----------------------------------------
 void KtLockScreenManager::on_debug_exit_requested() {
     if (!debugMode_ || !visible_)
         return;
@@ -326,7 +327,7 @@ void KtLockScreenManager::on_debug_exit_requested() {
     hide();
     emit clock_out(KtAlarmClock::WorkBreak);
 }
-
+//----------------------------------------
 void KtLockScreenManager::on_debug_size_toggle_requested() {
     if (!debugMode_ || !primary_view())
         return;
@@ -342,25 +343,21 @@ void KtLockScreenManager::on_debug_size_toggle_requested() {
     refresh_ui();
     raise_all(true);
 }
-
+//----------------------------------------
 void KtLockScreenManager::on_secondary_unlock_requested() {
     try_unlock(QString(), false);
 }
-
+//----------------------------------------
 void KtLockScreenManager::on_tick() {
     audioMuteGuard_.ensure_muted();
     sync_clocks_from_monotonic_clock();
 }
-
+//----------------------------------------
 void KtLockScreenManager::on_watchdog() {
     audioMuteGuard_.ensure_muted();
     reconcile_screens();
 }
-
-QQuickView* KtLockScreenManager::primary_view() const {
-    return primary_.data();
-}
-
+//----------------------------------------
 void KtLockScreenManager::prepare_primary_for_show() {
     if (!primary_)
         return;
@@ -368,7 +365,11 @@ void KtLockScreenManager::prepare_primary_for_show() {
     if (auto* root = primary_->rootObject())
         QMetaObject::invokeMethod(root, "prepareForShow", Qt::DirectConnection);
 }
-
+//----------------------------------------
+QQuickView* KtLockScreenManager::primary_view() const {
+    return primary_.data();
+}
+//----------------------------------------
 void KtLockScreenManager::raise_all(bool requestFocus) {
     if (!visible_)
         return;
@@ -388,7 +389,7 @@ void KtLockScreenManager::raise_all(bool requestFocus) {
     if (requestFocus && focusTarget)
         focusTarget->requestActivate();
 }
-
+//----------------------------------------
 void KtLockScreenManager::reconcile_screens() {
     if (!visible_ || !primary_view())
         return;
@@ -471,19 +472,7 @@ void KtLockScreenManager::reconcile_screens() {
     qDebug() << "[LockScreen] reconcile screens=" << screens.size()
              << "primaryId=" << primaryScreenId_ << "secondaryCount=" << secondaries_.size();
 }
-
-void KtLockScreenManager::retranslate() {
-    if (auto* view = primary_view()) {
-        if (view->engine())
-            view->engine()->retranslate();
-    }
-
-    for (auto* secondary : secondaries_) {
-        if (secondary && secondary->engine())
-            secondary->engine()->retranslate();
-    }
-}
-
+//----------------------------------------
 void KtLockScreenManager::refresh_ui() {
     const bool showUnlock = !isForced_;
     const bool showFormula = breakClock_.get_running();
@@ -518,7 +507,19 @@ void KtLockScreenManager::refresh_ui() {
         }
     }
 }
+//----------------------------------------
+void KtLockScreenManager::retranslate() {
+    if (auto* view = primary_view()) {
+        if (view->engine())
+            view->engine()->retranslate();
+    }
 
+    for (auto* secondary : secondaries_) {
+        if (secondary && secondary->engine())
+            secondary->engine()->retranslate();
+    }
+}
+//----------------------------------------
 void KtLockScreenManager::set_exiting(bool exiting) {
     if (exiting_ == exiting)
         return;
@@ -526,11 +527,11 @@ void KtLockScreenManager::set_exiting(bool exiting) {
     exiting_ = exiting;
     emit exiting_changed();
 }
-
+//----------------------------------------
 void KtLockScreenManager::set_view_can_close(bool canClose) {
     canClose_ = canClose;
 }
-
+//----------------------------------------
 void KtLockScreenManager::show(int breakSeconds, int forceSeconds, bool debugMode) {
     debugMode_ = debugMode;
 
@@ -592,7 +593,7 @@ void KtLockScreenManager::show(int breakSeconds, int forceSeconds, bool debugMod
     if (notifyVisible)
         emit visible_changed();
 }
-
+//----------------------------------------
 void KtLockScreenManager::sync_clocks_from_monotonic_clock() {
     if (!visible_)
         return;
@@ -611,7 +612,7 @@ void KtLockScreenManager::sync_clocks_from_monotonic_clock() {
     sync_force_from_monotonic_clock();
     refresh_ui();
 }
-
+//----------------------------------------
 void KtLockScreenManager::sync_force_from_monotonic_clock() {
     if (forceEndMs_ <= 0) {
         isForced_ = false;
@@ -630,7 +631,7 @@ void KtLockScreenManager::sync_force_from_monotonic_clock() {
         counterForce_ = remainingSec;
     }
 }
-
+//----------------------------------------
 void KtLockScreenManager::try_unlock(const QString& answer, bool requireFormula) {
     if (exiting_ || unlockPending_ || isForced_)
         return;

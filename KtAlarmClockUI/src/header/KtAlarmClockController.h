@@ -24,12 +24,28 @@ public:
                                     QObject* parent = nullptr);
     ~KtAlarmClockController() override;
 
+    void set_debug_locate(bool enabled);
+    void start();
     KtAlarmClockViewModel* view_model() const {
         return model_;
     }
 
-    void set_debug_locate(bool enabled);
-    void start();
+private:
+    void clock_timeout_impl(int state);
+    void close_all_windows();
+    void dispatch_user_action_impl(int actionId);
+    void enter_break_phase();
+    void enter_idle_phase();
+    void enter_phase(int phase, bool resetDurationFromParam = false);
+    void enter_work_phase(bool resetDurationFromParam);
+    void force_unload_over_dlg();
+    void handle_play_pause_action();
+    void handle_time_adjustment(int deltaSeconds);
+    bool is_forbidden() const;
+    void load_over_dlg();
+    void run_command(int actionId);
+    void set_phase(int phase);
+    void sync_model();
 
 public slots:
     void dispatch_user_action(int actionId);
@@ -56,23 +72,6 @@ public slots:
 private slots:
     void on_clock_timeout(int state);
     void on_clock_updated(int state, int counterSec, bool running);
-
-private:
-    void clock_timeout_impl(int state);
-    void close_all_windows();
-    void dispatch_user_action_impl(int actionId);
-    void enter_break_phase();
-    void enter_idle_phase();
-    void enter_phase(int phase, bool resetDurationFromParam = false);
-    void enter_work_phase(bool resetDurationFromParam);
-    void force_unload_over_dlg();
-    void handle_play_pause_action();
-    void handle_time_adjustment(int deltaSeconds);
-    bool is_forbidden() const;
-    void load_over_dlg();
-    void run_command(int actionId);
-    void set_phase(int phase);
-    void sync_model();
 
 private:
     KtAlarmClockParamShared parameter;

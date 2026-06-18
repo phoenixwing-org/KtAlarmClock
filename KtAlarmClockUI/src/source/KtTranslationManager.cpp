@@ -5,12 +5,13 @@
 #include <QCoreApplication>
 #include <QLocale>
 
+//----------------------------------------
 KtTranslationManager::KtTranslationManager(QObject* parent)
     : QObject(parent)
     , locale_()
     , translator_(this) {
 }
-
+//----------------------------------------
 bool KtTranslationManager::install(const QString& localeName) {
     const QString normalizedLocale = normalize_locale(localeName);
 
@@ -27,11 +28,11 @@ bool KtTranslationManager::install(const QString& localeName) {
     QLocale::setDefault(QLocale(locale_));
     return loaded;
 }
-
+//----------------------------------------
 QString KtTranslationManager::locale() const {
     return locale_;
 }
-
+//----------------------------------------
 QString KtTranslationManager::normalize_locale(const QString& localeName) {
     return KtAlarmClockSettings::normalize_locale(localeName);
 }

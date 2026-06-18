@@ -16,12 +16,15 @@ public:
     ~KtClockRuntime() override;
 
     int counter() const;
+    void pause();
     int phase() const;
     bool running() const;
 
-    void pause();
     void start(int phase, int counterSec);
     void sync_from_monotonic_clock();
+
+private:
+    void emit_updated();
 
 signals:
     void timeout(int phase);
@@ -29,9 +32,6 @@ signals:
 
 private slots:
     void on_tick();
-
-private:
-    void emit_updated();
 
 private:
     KtMonotonicCountdown clock_;

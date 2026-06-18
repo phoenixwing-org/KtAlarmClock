@@ -8,6 +8,7 @@
 #include <QIcon>
 #include <QMenu>
 
+//----------------------------------------
 KtTrayService::KtTrayService(QObject* parent)
     : QObject(parent)
     , trayIcon_(nullptr)
@@ -37,7 +38,7 @@ KtTrayService::KtTrayService(QObject* parent)
     connect(trayIcon_, &QSystemTrayIcon::activated, this, &KtTrayService::on_tray_activated);
     trayIcon_->show();
 }
-
+//----------------------------------------
 KtTrayService::~KtTrayService() {
     hide();
     if (trayIcon_)
@@ -45,7 +46,7 @@ KtTrayService::~KtTrayService() {
     delete menu_;
     menu_ = nullptr;
 }
-
+//----------------------------------------
 void KtTrayService::build_menu() {
     menu_ = new QMenu();
 
@@ -75,7 +76,35 @@ void KtTrayService::build_menu() {
         trayIcon_->setContextMenu(menu_);
     update_menu_state();
 }
+//----------------------------------------
+void KtTrayService::emit_if_allowed(void (KtTrayService::*signalMethod)()) {
+    if (forbidden_ && signalMethod != &KtTrayService::quitRequested) {
+        if (debugLocate_)
+            qDebug() << "[Tray] ignored while forbidden";
+        return;
+    }
+    emit (this->*signalMethod)();
+}
+//----------------------------------------
+void KtTrayService::hide() {
+    if (trayIcon_)
+        trayIcon_->hide();
+}
+//----------------------------------------
+void KtTrayService::on_tray_activated(QSystemTrayIcon::ActivationReason reason) {
+    const QPoint cursorPos = QCursor::pos();
+    if (debugLocate_)
+        qDebug() << "[Tray] activated reason=" << reason << "cursor=" << cursorPos;
 
+    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
+        emit_if_allowed(&KtTrayService::playPauseRequested);
+        return;
+    }
+
+    if (reason == QSystemTrayIcon::Context)
+        showContextMenuAt(cursorPos);
+}
+//----------------------------------------
 void KtTrayService::retranslate() {
     if (titleAction_)
         titleAction_->setText(QStringLiteral(PROJECT_APP_DISPLAY_NAME));
@@ -95,53 +124,25 @@ void KtTrayService::retranslate() {
     update_menu_state();
     update_tooltip();
 }
-
-void KtTrayService::emit_if_allowed(void (KtTrayService::*signalMethod)()) {
-    if (forbidden_ && signalMethod != &KtTrayService::quitRequested) {
-        if (debugLocate_)
-            qDebug() << "[Tray] ignored while forbidden";
-        return;
-    }
-    emit (this->*signalMethod)();
-}
-
-void KtTrayService::hide() {
-    if (trayIcon_)
-        trayIcon_->hide();
-}
-
-void KtTrayService::on_tray_activated(QSystemTrayIcon::ActivationReason reason) {
-    const QPoint cursorPos = QCursor::pos();
-    if (debugLocate_)
-        qDebug() << "[Tray] activated reason=" << reason << "cursor=" << cursorPos;
-
-    if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick) {
-        emit_if_allowed(&KtTrayService::playPauseRequested);
-        return;
-    }
-
-    if (reason == QSystemTrayIcon::Context)
-        showContextMenuAt(cursorPos);
-}
-
+//----------------------------------------
 void KtTrayService::setDebugLocate(bool enabled) {
     debugLocate_ = enabled;
 }
-
+//----------------------------------------
 void KtTrayService::setForbidden(bool forbidden) {
     if (forbidden_ == forbidden)
         return;
     forbidden_ = forbidden;
     update_menu_state();
 }
-
+//----------------------------------------
 void KtTrayService::setRemainingText(const QString& text) {
     if (remainingText_ == text)
         return;
     remainingText_ = text;
     update_tooltip();
 }
-
+//----------------------------------------
 void KtTrayService::setRunning(bool running) {
     if (running_ == running)
         return;
@@ -149,7 +150,7 @@ void KtTrayService::setRunning(bool running) {
     update_menu_state();
     update_tooltip();
 }
-
+//----------------------------------------
 void KtTrayService::showContextMenuAt(const QPoint& globalPos) {
     if (!menu_)
         return;
@@ -158,7 +159,7 @@ void KtTrayService::showContextMenuAt(const QPoint& globalPos) {
     const QPoint menuPos = KtScreenUtil::place_popup(globalPos, menu_->sizeHint(), true);
     menu_->popup(menuPos);
 }
-
+//----------------------------------------
 void KtTrayService::update_menu_state() {
     if (playPauseAction_)
         playPauseAction_->setText(running_ ? tr("Pause") : tr("Start"));
@@ -168,7 +169,7 @@ void KtTrayService::update_menu_state() {
             action->setEnabled(!forbidden_);
     }
 }
-
+//----------------------------------------
 void KtTrayService::update_tooltip() {
     if (!trayIcon_)
         return;

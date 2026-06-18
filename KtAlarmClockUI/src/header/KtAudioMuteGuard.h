@@ -21,10 +21,10 @@ private:
     bool hasPreviousMute_;
     bool previousMute_;
 
+#endif
+    bool  comInitialized_;
 #ifdef Q_OS_WIN
     void* endpointVolume_;
-    bool  comInitialized_;
-#endif
 };
 
 #endif // KtAudioMuteGuard_H

@@ -6,6 +6,7 @@
  */
 #include "KtAlarmClock.h"
 
+//----------------------------------------
 KtAlarmClock::KtAlarmClock(QObject* parent)
     : QObject(parent) {
 }

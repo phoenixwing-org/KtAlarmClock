@@ -24,26 +24,26 @@ public:
     static constexpr int DefaultWorkBreak = 600;
     static constexpr int DefaultTimeForce = 600;
 
-    static constexpr KtDurationBounds work_time_bounds() {
-        return {60, 5400, DefaultWorkTime};
+    static void apply_defaults(KtAlarmClockParam& param);
+    static QString file_path();
+    static void normalize(KtAlarmClockParam& param);
+    static QString normalize_locale(const QString& localeName);
+    static void read(KtAlarmClockParam& param);
+    static QString read_locale();
+    static constexpr KtDurationBounds time_force_bounds() {
+        return {0, 3600, DefaultTimeForce};
     }
 
     static constexpr KtDurationBounds work_break_bounds() {
         return {10, 3600, DefaultWorkBreak};
     }
 
-    static constexpr KtDurationBounds time_force_bounds() {
-        return {0, 3600, DefaultTimeForce};
+    static constexpr KtDurationBounds work_time_bounds() {
+        return {60, 5400, DefaultWorkTime};
     }
 
-    static void apply_defaults(KtAlarmClockParam& param);
-    static QString file_path();
-    static QString normalize_locale(const QString& localeName);
-    static QString read_locale();
-    static void normalize(KtAlarmClockParam& param);
-    static void read(KtAlarmClockParam& param);
-    static void write_locale(const QString& localeName);
     static void write(KtAlarmClockParam& param);
+    static void write_locale(const QString& localeName);
 };
 
 #endif // KtAlarmClockSettings_H

@@ -18,9 +18,9 @@ private:
 private:
     bool enabled_;
 
+#endif
 #ifdef Q_OS_WIN
     void* hook_;
-#endif
 };
 
 #endif // KtKeyboardBlocker_H

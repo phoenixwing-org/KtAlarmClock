@@ -13,6 +13,7 @@
 #include <windows.h>
 #endif
 
+//----------------------------------------
 KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     : QObject(parent)
     , parameter_(std::make_shared<KtAlarmClockParam>())
@@ -20,12 +21,12 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     , translationManager_(nullptr)
     , exePath_() {
 }
-
+//----------------------------------------
 KtAlarmClockCmd::~KtAlarmClockCmd() {
     controller_.clear();
     parameter_.reset();
 }
-
+//----------------------------------------
 int KtAlarmClockCmd::build() {
     if (controller_)
         return KT_S_OK;
@@ -43,7 +44,7 @@ int KtAlarmClockCmd::build() {
     setAutoStart(true);
     return KT_S_OK;
 }
-
+//----------------------------------------
 void KtAlarmClockCmd::forceQuit() {
     if (qGuiApp)
         qGuiApp->quit();
@@ -54,7 +55,7 @@ void KtAlarmClockCmd::forceQuit() {
     std::_Exit(0);
 #endif
 }
-
+//----------------------------------------
 int KtAlarmClockCmd::setAutoStart(bool enabled) {
     qDebug() << "Auto Start Path =" << exePath_;
     QSettings reg(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"),

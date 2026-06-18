@@ -15,13 +15,6 @@ class ExportedByKtAlarmClockUI KtAlarmClockViewModel : public QObject {
 public:
     explicit KtAlarmClockViewModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE QString formatDuration(int seconds) const;
-
-    void set_phase_state(int phaseValue);
-    void set_remaining_seconds(int seconds);
-    void set_running_state(bool runningValue);
-    void sync_from_param(const KtAlarmClockParam& param);
-
     KT_Q_PROPERTY_AUTO(int, phase)
     KT_Q_PROPERTY_AUTO(bool, running)
     KT_Q_PROPERTY_AUTO(bool, loop)
@@ -34,6 +27,13 @@ public:
     KT_Q_PROPERTY_AUTO(int, forceSeconds)
     KT_Q_PROPERTY_AUTO(bool, settingsVisible)
     KT_Q_PROPERTY_AUTO(QString, locale)
+    Q_INVOKABLE QString formatDuration(int seconds) const;
+
+    void set_phase_state(int phaseValue);
+    void set_remaining_seconds(int seconds);
+    void set_running_state(bool runningValue);
+    void sync_from_param(const KtAlarmClockParam& param);
+
 };
 
 #endif // KtAlarmClockViewModel_H
