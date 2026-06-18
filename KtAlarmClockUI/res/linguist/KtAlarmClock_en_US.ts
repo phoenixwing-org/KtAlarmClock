@@ -55,59 +55,59 @@
 <context>
     <name>KtTrayService</name>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="64"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="164"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="65"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="165"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="65"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="83"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="66"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="112"/>
         <source>Break now</source>
         <translation>Break now</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="66"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="85"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="67"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="114"/>
         <source>Next loop</source>
         <translation>Next loop</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="67"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="87"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="68"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="116"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="69"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="89"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="70"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="118"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="70"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="91"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="71"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="120"/>
         <source>Website</source>
         <translation>Website</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="72"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="93"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="73"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="122"/>
         <source>Exit</source>
         <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="164"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="165"/>
         <source>Pause</source>
         <translation>Pause</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="176"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="177"/>
         <source>running</source>
         <translation>running</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="176"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="177"/>
         <source>paused</source>
         <translation>paused</translation>
     </message>
