@@ -55,59 +55,59 @@
 <context>
     <name>KtTrayService</name>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="64"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="164"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="65"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="165"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="65"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="83"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="66"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="112"/>
         <source>Break now</source>
         <translation>立刻休息</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="66"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="85"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="67"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="114"/>
         <source>Next loop</source>
         <translation>下一轮</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="67"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="87"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="68"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="116"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="69"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="89"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="70"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="118"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="70"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="91"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="71"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="120"/>
         <source>Website</source>
         <translation>官网</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="72"/>
-        <location filename="../../src/source/KtTrayService.cpp" line="93"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="73"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="122"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="164"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="165"/>
         <source>Pause</source>
         <translation>暂停</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="176"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="177"/>
         <source>running</source>
         <translation>运行中</translation>
     </message>
     <message>
-        <location filename="../../src/source/KtTrayService.cpp" line="176"/>
+        <location filename="../../src/source/KtTrayService.cpp" line="177"/>
         <source>paused</source>
         <translation>已暂停</translation>
     </message>

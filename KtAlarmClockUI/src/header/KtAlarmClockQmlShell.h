@@ -17,8 +17,8 @@ public:
                                   KtAlarmClockController* controller,
                                   QObject* parent = nullptr);
 
-    bool start();
     void retranslate();
+    bool start();
 
 private:
     QQmlApplicationEngine  engine_;

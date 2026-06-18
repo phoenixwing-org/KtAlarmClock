@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
+//----------------------------------------
 KtMonotonicCountdown::KtMonotonicCountdown()
     : state_(0)
     , counter_(0)
@@ -11,7 +12,7 @@ KtMonotonicCountdown::KtMonotonicCountdown()
     , phaseStartMs_(0)
     , running_(false) {
 }
-
+//----------------------------------------
 void KtMonotonicCountdown::pause() {
     if (running_) update_remaining_from_monotonic_clock();
 
@@ -19,7 +20,7 @@ void KtMonotonicCountdown::pause() {
     phaseStartMs_ = 0;
     if (counter_ > 0) phaseDurationSec_ = counter_;
 }
-
+//----------------------------------------
 void KtMonotonicCountdown::reset(int state, int counterSec) {
     state_            = state;
     counter_          = counterSec;
@@ -27,7 +28,7 @@ void KtMonotonicCountdown::reset(int state, int counterSec) {
     phaseStartMs_     = 0;
     running_          = false;
 }
-
+//----------------------------------------
 void KtMonotonicCountdown::start(int state, int counterSec) {
     state_   = state;
     counter_ = counterSec;
@@ -42,12 +43,12 @@ void KtMonotonicCountdown::start(int state, int counterSec) {
     update_remaining_from_monotonic_clock();
     running_ = true;
 }
-
+//----------------------------------------
 void KtMonotonicCountdown::sync_from_monotonic_clock() {
     if (!running_) return;
     update_remaining_from_monotonic_clock();
 }
-
+//----------------------------------------
 void KtMonotonicCountdown::update_remaining_from_monotonic_clock() {
     if (state_ == 0 || phaseDurationSec_ <= 0 || phaseStartMs_ <= 0) return;
 

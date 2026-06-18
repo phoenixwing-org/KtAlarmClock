@@ -13,10 +13,10 @@ public:
     KtAlarmClockParam(const KtAlarmClockParam&) = default;
     KtAlarmClockParam& operator=(const KtAlarmClockParam&) = default;
 
-    void setDefault();
     void load();
     void normalize();
     void save();
+    void setDefault();
 
 public:
     int WorkTime;

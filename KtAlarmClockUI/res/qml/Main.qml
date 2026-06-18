@@ -6,10 +6,10 @@ Window {
 
     width: bubble.implicitWidth
     height: bubble.implicitHeight
-    minimumWidth: width
-    minimumHeight: height
-    maximumWidth: width
-    maximumHeight: height
+    minimumWidth: bubble.implicitWidth
+    minimumHeight: bubble.implicitHeight
+    maximumWidth: bubble.implicitWidth
+    maximumHeight: bubble.implicitHeight
     property bool positioned: false
     x: 0
     y: 0
@@ -42,10 +42,10 @@ Window {
 
         width: contextMenuPanel.implicitWidth
         height: contextMenuPanel.implicitHeight
-        minimumWidth: width
-        minimumHeight: height
-        maximumWidth: width
-        maximumHeight: height
+        minimumWidth: contextMenuPanel.implicitWidth
+        minimumHeight: contextMenuPanel.implicitHeight
+        maximumWidth: contextMenuPanel.implicitWidth
+        maximumHeight: contextMenuPanel.implicitHeight
         visible: false
         color: "transparent"
         flags: Qt.Tool | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint
@@ -85,10 +85,10 @@ Window {
 
         width: 320
         height: 286
-        minimumWidth: width
-        minimumHeight: height
-        maximumWidth: width
-        maximumHeight: height
+        minimumWidth: 320
+        minimumHeight: 286
+        maximumWidth: 320
+        maximumHeight: 286
         title: "Settings"
         visible: alarmModel.settingsVisible && !alarmModel.lockVisible
         color: "transparent"

@@ -5,6 +5,7 @@
 
 #include <QDebug>
 
+//----------------------------------------
 KtAlarmClockParam::KtAlarmClockParam()
     : WorkTime(KtAlarmClockSettings::DefaultWorkTime)
     , WorkBreak(KtAlarmClockSettings::DefaultWorkBreak)
@@ -13,23 +14,23 @@ KtAlarmClockParam::KtAlarmClockParam()
     , WorkStep(KtAlarmClock::None)
     , TimeCounter(0) {
 }
-
+//----------------------------------------
 KtAlarmClockParam::~KtAlarmClockParam() = default;
-
-void KtAlarmClockParam::setDefault() {
-    KtAlarmClockSettings::apply_defaults(*this);
-}
-
+//----------------------------------------
 void KtAlarmClockParam::load() {
     qDebug() << "KtAlarmClockParam::load() ";
     KtAlarmClockSettings::read(*this);
 }
-
+//----------------------------------------
+void KtAlarmClockParam::normalize() {
+    KtAlarmClockSettings::normalize(*this);
+}
+//----------------------------------------
 void KtAlarmClockParam::save() {
     qDebug() << "KtAlarmClockParam::save() ";
     KtAlarmClockSettings::write(*this);
 }
-
-void KtAlarmClockParam::normalize() {
-    KtAlarmClockSettings::normalize(*this);
+//----------------------------------------
+void KtAlarmClockParam::setDefault() {
+    KtAlarmClockSettings::apply_defaults(*this);
 }

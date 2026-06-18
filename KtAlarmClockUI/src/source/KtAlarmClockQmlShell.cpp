@@ -9,6 +9,7 @@
 #include <QQmlContext>
 #include <QtQml/qqml.h>
 
+//----------------------------------------
 KtAlarmClockQmlShell::KtAlarmClockQmlShell(KtAlarmClockViewModel* model,
                                            KtAlarmClockController* controller,
                                            QObject* parent)
@@ -17,7 +18,11 @@ KtAlarmClockQmlShell::KtAlarmClockQmlShell(KtAlarmClockViewModel* model,
     , model_(model)
     , controller_(controller) {
 }
-
+//----------------------------------------
+void KtAlarmClockQmlShell::retranslate() {
+    engine_.retranslate();
+}
+//----------------------------------------
 bool KtAlarmClockQmlShell::start() {
     if (!model_ || !controller_)
         return false;
@@ -38,8 +43,4 @@ bool KtAlarmClockQmlShell::start() {
     if (!loaded)
         qWarning() << "[QML] failed to load Main";
     return loaded;
-}
-
-void KtAlarmClockQmlShell::retranslate() {
-    engine_.retranslate();
 }

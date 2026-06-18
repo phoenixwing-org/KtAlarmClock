@@ -49,6 +49,7 @@ LRESULT CALLBACK keyboard_hook_proc(int code, WPARAM wParam, LPARAM lParam) {
 } // namespace
 #endif
 
+//----------------------------------------
 KtKeyboardBlocker::KtKeyboardBlocker()
     : enabled_(false)
 #ifdef Q_OS_WIN
@@ -56,26 +57,15 @@ KtKeyboardBlocker::KtKeyboardBlocker()
 #endif
 {
 }
-
+//----------------------------------------
 KtKeyboardBlocker::~KtKeyboardBlocker() {
     set_enabled(false);
 }
-
+//----------------------------------------
 bool KtKeyboardBlocker::enabled() const {
     return enabled_;
 }
-
-void KtKeyboardBlocker::set_enabled(bool enabled) {
-    if (enabled_ == enabled)
-        return;
-
-    enabled_ = enabled;
-    if (enabled_)
-        install();
-    else
-        uninstall();
-}
-
+//----------------------------------------
 void KtKeyboardBlocker::install() {
 #ifdef Q_OS_WIN
     if (hook_)
@@ -91,7 +81,18 @@ void KtKeyboardBlocker::install() {
     }
 #endif
 }
+//----------------------------------------
+void KtKeyboardBlocker::set_enabled(bool enabled) {
+    if (enabled_ == enabled)
+        return;
 
+    enabled_ = enabled;
+    if (enabled_)
+        install();
+    else
+        uninstall();
+}
+//----------------------------------------
 void KtKeyboardBlocker::uninstall() {
 #ifdef Q_OS_WIN
     if (hook_) {

@@ -36,27 +36,13 @@ public:
     void set_exiting(bool exiting);
     void show(int breakSeconds, int forceSeconds, bool debugMode);
 
-signals:
-    void clock_out(int state);
-    void exiting_changed();
-    void visible_changed();
-
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;
 
-private slots:
-    void on_application_state_changed(Qt::ApplicationState state);
-    void on_answer_submitted(const QString& answer, bool requireFormula);
-    void on_debug_exit_requested();
-    void on_debug_size_toggle_requested();
-    void on_secondary_unlock_requested();
-    void on_tick();
-    void on_watchdog();
-
 private:
+    QQuickView* active_lock_view() const;
     void apply_primary_geometry();
     void apply_secondary_geometry(QQuickView* view);
-    QQuickView* active_lock_view() const;
     QQuickView* create_lock_view(const QString& typeName, int screenId);
     QQuickView* find_secondary(int screenId) const;
     QString format_force_time() const;
@@ -71,6 +57,20 @@ private:
     void sync_clocks_from_monotonic_clock();
     void sync_force_from_monotonic_clock();
     void try_unlock(const QString& answer, bool requireFormula);
+
+signals:
+    void clock_out(int state);
+    void exiting_changed();
+    void visible_changed();
+
+private slots:
+    void on_answer_submitted(const QString& answer, bool requireFormula);
+    void on_application_state_changed(Qt::ApplicationState state);
+    void on_debug_exit_requested();
+    void on_debug_size_toggle_requested();
+    void on_secondary_unlock_requested();
+    void on_tick();
+    void on_watchdog();
 
 private:
     KtMonotonicCountdown breakClock_;

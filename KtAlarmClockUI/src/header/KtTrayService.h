@@ -20,12 +20,17 @@ public:
 
     void hide();
     void retranslate();
-    void showContextMenuAt(const QPoint& globalPos);
-
     void setDebugLocate(bool enabled);
     void setForbidden(bool forbidden);
     void setRemainingText(const QString& text);
     void setRunning(bool running);
+    void showContextMenuAt(const QPoint& globalPos);
+
+private:
+    void build_menu();
+    void emit_if_allowed(void (KtTrayService::*signalMethod)());
+    void update_menu_state();
+    void update_tooltip();
 
 signals:
     void breakRequested();
@@ -38,12 +43,6 @@ signals:
 
 private slots:
     void on_tray_activated(QSystemTrayIcon::ActivationReason reason);
-
-private:
-    void build_menu();
-    void emit_if_allowed(void (KtTrayService::*signalMethod)());
-    void update_menu_state();
-    void update_tooltip();
 
 private:
     QSystemTrayIcon* trayIcon_;
