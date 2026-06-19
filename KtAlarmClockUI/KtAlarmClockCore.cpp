@@ -21,6 +21,14 @@ KtAlarmClockCore::~KtAlarmClockCore() {
     parameter = nullptr; // outside
 }
 //------------------------------------------------
+int KtAlarmClockCore::calculate() {
+    qDebug() << "KtAlarmClockCore::calculate()";
+    if (m_Pretreat > KT_S_OK) {
+        return m_Pretreat;
+    }
+    return KT_E_UNEXPECTED; // unfinish
+}
+//------------------------------------------------
 int KtAlarmClockCore::pretreat() {
     qDebug() << "KtAlarmClockCore::pretreat()";
     m_Pretreat = KT_E_FAIL;
@@ -29,12 +37,4 @@ int KtAlarmClockCore::pretreat() {
     }
     m_Pretreat = KT_E_UNEXPECTED; // unfinish
     return m_Pretreat;
-}
-//------------------------------------------------
-int KtAlarmClockCore::calculate() {
-    qDebug() << "KtAlarmClockCore::calculate()";
-    if (m_Pretreat > KT_S_OK) {
-        return m_Pretreat;
-    }
-    return KT_E_UNEXPECTED; // unfinish
 }

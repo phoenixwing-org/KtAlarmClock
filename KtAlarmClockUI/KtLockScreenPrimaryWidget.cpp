@@ -127,6 +127,21 @@ QString KtLockScreenPrimaryWidget::answer_text() const {
     return EditAnswer->text();
 }
 //------------------------------------------------------
+void KtLockScreenPrimaryWidget::append_answer_digit(QChar digit) {
+    if (!EditAnswer || !digit.isDigit()) return;
+
+    const QString next = EditAnswer->text() + digit;
+    if (EditAnswer->maxLength() > 0 && next.length() > EditAnswer->maxLength()) return;
+
+    int pos = 0;
+    if (auto* validator = EditAnswer->validator()) {
+        QString copy = next;
+        if (validator->validate(copy, pos) == QValidator::Invalid) return;
+    }
+
+    EditAnswer->setText(next);
+}
+//------------------------------------------------------
 void KtLockScreenPrimaryWidget::apply_screen_geometry(bool fullScreen, bool debugMode,
                                                       double debugFraction) {
     const auto screens = QGuiApplication::screens();
@@ -261,6 +276,12 @@ void KtLockScreenPrimaryWidget::build_ui() {
     LabelForce->hide();
 }
 //------------------------------------------------------
+void KtLockScreenPrimaryWidget::clamp_floating_widgets() {
+    if (DragCoffee) DragCoffee->clamp_to_parent_bounds();
+    if (DragKtBlue) DragKtBlue->clamp_to_parent_bounds();
+    if (DragBreakTime && DragBreakTime->isVisible()) DragBreakTime->clamp_to_parent_bounds();
+}
+//------------------------------------------------------
 void KtLockScreenPrimaryWidget::clear_answer() {
     EditAnswer->clear();
     QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
@@ -271,24 +292,6 @@ void KtLockScreenPrimaryWidget::closeEvent(QCloseEvent* event) {
         event->ignore();
     else
         QWidget::closeEvent(event);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::showEvent(QShowEvent* event) {
-    QWidget::showEvent(event);
-    if (!floatingWidgetsPlaced_) {
-        place_floating_widgets_default();
-        floatingWidgetsPlaced_ = true;
-    }
-    else {
-        clamp_floating_widgets();
-    }
-    raise_floating_widgets();
-    QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::resizeEvent(QResizeEvent* event) {
-    QWidget::resizeEvent(event);
-    clamp_floating_widgets();
 }
 //------------------------------------------------------
 bool KtLockScreenPrimaryWidget::event(QEvent* event) {
@@ -308,21 +311,6 @@ void KtLockScreenPrimaryWidget::focus_answer_input() {
     activateWindow();
     raise();
     EditAnswer->setFocus(Qt::OtherFocusReason);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::append_answer_digit(QChar digit) {
-    if (!EditAnswer || !digit.isDigit()) return;
-
-    const QString next = EditAnswer->text() + digit;
-    if (EditAnswer->maxLength() > 0 && next.length() > EditAnswer->maxLength()) return;
-
-    int pos = 0;
-    if (auto* validator = EditAnswer->validator()) {
-        QString copy = next;
-        if (validator->validate(copy, pos) == QValidator::Invalid) return;
-    }
-
-    EditAnswer->setText(next);
 }
 //------------------------------------------------------
 void KtLockScreenPrimaryWidget::keyPressEvent(QKeyEvent* event) {
@@ -380,84 +368,6 @@ void KtLockScreenPrimaryWidget::on_unlock_clicked() {
     submit_answer();
 }
 //------------------------------------------------------
-void KtLockScreenPrimaryWidget::raise_quiet() {
-    raise();
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::refresh_after_wake() {
-    clamp_floating_widgets();
-    raise_floating_widgets();
-    QTimer::singleShot(150, this, &KtLockScreenPrimaryWidget::focus_answer_input);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_can_close(bool canClose) {
-    canClose_ = canClose;
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_debug_controls_visible(bool visible) {
-    if (DebugPanel) DebugPanel->setVisible(visible);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_break_time_text(const QString& text) {
-    LabelBreakTime->setText(text);
-    LabelBreakTime->setVisible(!text.isEmpty());
-    DragBreakTime->setVisible(!text.isEmpty());
-    sync_break_time_drag_size();
-    clamp_floating_widgets();
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_force_visible(bool visible, int seconds) {
-    Q_UNUSED(visible);
-    Q_UNUSED(seconds);
-    LabelForce->hide();
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_formula_text(const QString& text) {
-    LabelFormula->setText(text);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_formula_visible(bool visible) {
-    FormulaRow->setVisible(visible);
-    if (visible) QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_message_text(const QString& text) {
-    LabelMsg->setText(text);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::set_unlock_panel_visible(bool visible) {
-    UnlockPanel->setVisible(visible);
-    if (visible) QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::update_debug_size_button_text(double debugFraction) {
-    if (!BtnDebugSize) return;
-    if (debugFraction >= 1.0)
-        BtnDebugSize->setText(tr("半屏"));
-    else if (debugFraction <= 0.25)
-        BtnDebugSize->setText(tr("半屏"));
-    else
-        BtnDebugSize->setText(tr("全屏"));
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::submit_answer() {
-    emit answer_submitted();
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::sync_break_time_drag_size() {
-    if (!DragBreakTime || !LabelBreakTime) return;
-
-    LabelBreakTime->adjustSize();
-    DragBreakTime->setFixedSize(LabelBreakTime->size());
-    LabelBreakTime->move(0, 0);
-}
-//------------------------------------------------------
-void KtLockScreenPrimaryWidget::clamp_floating_widgets() {
-    if (DragCoffee) DragCoffee->clamp_to_parent_bounds();
-    if (DragKtBlue) DragKtBlue->clamp_to_parent_bounds();
-    if (DragBreakTime && DragBreakTime->isVisible()) DragBreakTime->clamp_to_parent_bounds();
-}
-//------------------------------------------------------
 void KtLockScreenPrimaryWidget::place_floating_widgets_default() {
     const QRect bounds = rect().adjusted(kEdgeMargin, kEdgeMargin, -kEdgeMargin, -kEdgeMargin);
     if (!bounds.isValid()) return;
@@ -486,4 +396,94 @@ void KtLockScreenPrimaryWidget::raise_floating_widgets() {
     if (DragCoffee) DragCoffee->raise();
     if (DragKtBlue) DragKtBlue->raise();
     if (DragBreakTime) DragBreakTime->raise();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::raise_quiet() {
+    raise();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::refresh_after_wake() {
+    clamp_floating_widgets();
+    raise_floating_widgets();
+    QTimer::singleShot(150, this, &KtLockScreenPrimaryWidget::focus_answer_input);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+    clamp_floating_widgets();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_break_time_text(const QString& text) {
+    LabelBreakTime->setText(text);
+    LabelBreakTime->setVisible(!text.isEmpty());
+    DragBreakTime->setVisible(!text.isEmpty());
+    sync_break_time_drag_size();
+    clamp_floating_widgets();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_can_close(bool canClose) {
+    canClose_ = canClose;
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_debug_controls_visible(bool visible) {
+    if (DebugPanel) DebugPanel->setVisible(visible);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_force_visible(bool visible, int seconds) {
+    Q_UNUSED(visible);
+    Q_UNUSED(seconds);
+    LabelForce->hide();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_formula_text(const QString& text) {
+    LabelFormula->setText(text);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_formula_visible(bool visible) {
+    FormulaRow->setVisible(visible);
+    if (visible) QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_message_text(const QString& text) {
+    LabelMsg->setText(text);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::set_unlock_panel_visible(bool visible) {
+    UnlockPanel->setVisible(visible);
+    if (visible) QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::showEvent(QShowEvent* event) {
+    QWidget::showEvent(event);
+    if (!floatingWidgetsPlaced_) {
+        place_floating_widgets_default();
+        floatingWidgetsPlaced_ = true;
+    }
+    else {
+        clamp_floating_widgets();
+    }
+    raise_floating_widgets();
+    QTimer::singleShot(0, this, &KtLockScreenPrimaryWidget::focus_answer_input);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::submit_answer() {
+    emit answer_submitted();
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::sync_break_time_drag_size() {
+    if (!DragBreakTime || !LabelBreakTime) return;
+
+    LabelBreakTime->adjustSize();
+    DragBreakTime->setFixedSize(LabelBreakTime->size());
+    LabelBreakTime->move(0, 0);
+}
+//------------------------------------------------------
+void KtLockScreenPrimaryWidget::update_debug_size_button_text(double debugFraction) {
+    if (!BtnDebugSize) return;
+    if (debugFraction >= 1.0)
+        BtnDebugSize->setText(tr("半屏"));
+    else if (debugFraction <= 0.25)
+        BtnDebugSize->setText(tr("半屏"));
+    else
+        BtnDebugSize->setText(tr("全屏"));
 }

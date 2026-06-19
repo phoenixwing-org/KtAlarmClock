@@ -26,6 +26,9 @@ public:
     ~KtMovableWidget() override; // @nodoc
 
 public:
+    /** @brief 将当前位置限制在父控件可用区域内 */
+    void clamp_to_parent_bounds();
+
     /** @brief 父区域内限制拖动时的边距（像素） */
     int get_clamp_margins() const {
         return clampMargins_;
@@ -34,16 +37,9 @@ public:
     /** @brief 设置限制边距 */
     void set_clamp_margins(int margins);
 
-    /** @brief 将当前位置限制在父控件可用区域内 */
-    void clamp_to_parent_bounds();
-
-signals:
-    /** @brief 拖动导致位置变化后发出 */
-    void position_changed(const QPoint& pos);
-
 protected:
-    void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
@@ -52,6 +48,10 @@ private:
 
     /** @brief 父控件上允许放置的矩形（客户区减边距） */
     QRect parent_bounds() const;
+
+signals:
+    /** @brief 拖动导致位置变化后发出 */
+    void position_changed(const QPoint& pos);
 
 private:
     int    clampMargins_; ///< 1. 限制边距

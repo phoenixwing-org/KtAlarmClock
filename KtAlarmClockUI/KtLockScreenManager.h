@@ -57,43 +57,19 @@ public:
      */
     void show(int breakSeconds, int forceSeconds, bool debugMode);
 
-signals:
-    /** @brief 休息结束并解锁；参数为下一阶段 state */
-    void clock_out(int state);
-
-    /** @brief 退出动画状态改变 */
-    void exiting_changed();
-
-    /** @brief 锁屏显示状态改变 */
-    void visible_changed();
-
-private slots:
-
-    /** @brief 应用状态改变 */
-    void on_application_state_changed(Qt::ApplicationState state);
-
-    /** @brief 休眠/关屏唤醒后恢复休息计时与界面 */
-    void try_resume_after_wake();
-
-    /** @brief 唤醒看门狗：补发 ApplicationActive 未触发的恢复 */
-    void on_wake_watchdog();
-
-    /** @brief 定时器超时 */
-    void on_tick();
-
-    /** @brief 解锁请求 */
-    void on_unlock_requested();
-
-    /** @brief 多屏巡检 */
-    void on_watchdog();
-
-    /** @brief 调试：强制退出锁屏 */
-    void on_debug_exit_requested();
-
-    /** @brief 调试：切换半屏/全屏 */
-    void on_debug_size_toggle_requested();
-
 private:
+    /** @brief 按当前 debug/生产 参数刷新主屏几何 */
+    void apply_primary_geometry();
+
+    /** @brief 检测 tick 间隔异常（系统休眠/关屏）并冻结休息计时 */
+    void detect_sleep_gap();
+
+    /** @brief 进入系统休眠：冻结休息倒计时并停表 */
+    void enter_system_sleep();
+
+    /** @brief 在指定墙钟时刻冻结休息倒计时 */
+    void enter_system_sleep_at(qint64 wallMs);
+
     /** @brief 格式化休息时间 */
     QString format_break_time() const;
 
@@ -130,17 +106,40 @@ private:
     /** @brief 更新算式可见性 */
     void update_formula_visibility();
 
-    /** @brief 按当前 debug/生产 参数刷新主屏几何 */
-    void apply_primary_geometry();
+signals:
+    /** @brief 休息结束并解锁；参数为下一阶段 state */
+    void clock_out(int state);
 
-    /** @brief 检测 tick 间隔异常（系统休眠/关屏）并冻结休息计时 */
-    void detect_sleep_gap();
+    /** @brief 退出动画状态改变 */
+    void exiting_changed();
 
-    /** @brief 进入系统休眠：冻结休息倒计时并停表 */
-    void enter_system_sleep();
+    /** @brief 锁屏显示状态改变 */
+    void visible_changed();
 
-    /** @brief 在指定墙钟时刻冻结休息倒计时 */
-    void enter_system_sleep_at(qint64 wallMs);
+private slots:
+    /** @brief 应用状态改变 */
+    void on_application_state_changed(Qt::ApplicationState state);
+
+    /** @brief 调试：强制退出锁屏 */
+    void on_debug_exit_requested();
+
+    /** @brief 调试：切换半屏/全屏 */
+    void on_debug_size_toggle_requested();
+
+    /** @brief 定时器超时 */
+    void on_tick();
+
+    /** @brief 解锁请求 */
+    void on_unlock_requested();
+
+    /** @brief 唤醒看门狗：补发 ApplicationActive 未触发的恢复 */
+    void on_wake_watchdog();
+
+    /** @brief 多屏巡检 */
+    void on_watchdog();
+
+    /** @brief 休眠/关屏唤醒后恢复休息计时与界面 */
+    void try_resume_after_wake();
 
 private:
     KtWallClockEngine                     breakClock_;        ///< 1. 休息墙钟

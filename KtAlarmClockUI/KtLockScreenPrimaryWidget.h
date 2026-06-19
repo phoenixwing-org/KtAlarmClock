@@ -50,19 +50,8 @@ public:
      */
     void apply_screen_geometry(bool fullScreen, bool debugMode, double debugFraction = 1.0);
 
-    /** @brief 显示/隐藏调试按钮栏 */
-    void set_debug_controls_visible(bool visible);
-
-    /** @brief 更新「半屏/全屏」按钮文案 */
-    void update_debug_size_button_text(double debugFraction);
-
     /** @brief 清空答案输入 */
     void clear_answer();
-
-    /** @brief 目标屏幕索引（热插拔后由 Manager 更新） */
-    void set_screen_id(int screenId) {
-        screenId_ = screenId;
-    }
 
     /** @brief 置顶但不 activateWindow */
     void raise_quiet();
@@ -70,11 +59,14 @@ public:
     /** @brief 唤醒后修正浮层位置并延迟聚焦答案框 */
     void refresh_after_wake();
 
+    /** @brief 更新休息倒计时标签 */
+    void set_break_time_text(const QString& text);
+
     /** @brief 设置是否允许关闭窗口 */
     void set_can_close(bool canClose);
 
-    /** @brief 更新休息倒计时标签 */
-    void set_break_time_text(const QString& text);
+    /** @brief 显示/隐藏调试按钮栏 */
+    void set_debug_controls_visible(bool visible);
 
     /** @brief 显示/隐藏强制等待秒数 */
     void set_force_visible(bool visible, int seconds);
@@ -88,11 +80,57 @@ public:
     /** @brief 设置提示消息（如答错） */
     void set_message_text(const QString& text);
 
+    /** @brief 目标屏幕索引（热插拔后由 Manager 更新） */
+    void set_screen_id(int screenId) {
+        screenId_ = screenId;
+    }
+
     /** @brief 显示/隐藏整块解锁面板 */
     void set_unlock_panel_visible(bool visible);
 
     /** @brief 提交答案（键盘/按钮共用） */
     void submit_answer();
+
+    /** @brief 更新「半屏/全屏」按钮文案 */
+    void update_debug_size_button_text(double debugFraction);
+
+protected:
+    /** @brief 未到点或答错时禁止关闭 */
+    void closeEvent(QCloseEvent* event) override;
+
+    /** @brief 失焦时静默置顶 */
+    bool event(QEvent* event) override;
+
+    /** @brief 回车提交；数字键写入答案框（无需先点输入框） */
+    void keyPressEvent(QKeyEvent* event) override;
+
+    /** @brief 尺寸变化时将浮层限制在可视区域内 */
+    void resizeEvent(QResizeEvent* event) override;
+
+    /** @brief 显示后尝试聚焦答案框 */
+    void showEvent(QShowEvent* event) override;
+
+private:
+    /** @brief 向答案框追加一位数字（窗口级键盘捕获） */
+    void append_answer_digit(QChar digit);
+
+    /** @brief 创建解锁区与可拖动浮层 */
+    void build_ui();
+
+    /** @brief 将所有可拖动浮层限制在窗口边距内 */
+    void clamp_floating_widgets();
+
+    /** @brief 解锁区可见时将焦点置于答案输入框 */
+    void focus_answer_input();
+
+    /** @brief 首次显示时将三个浮层置于默认位置 */
+    void place_floating_widgets_default();
+
+    /** @brief 将浮层置于最前 */
+    void raise_floating_widgets();
+
+    /** @brief 更新休息倒计时浮层尺寸 */
+    void sync_break_time_drag_size();
 
 signals:
     /** @brief 用户提交答案（键盘或 Unlock 按钮） */
@@ -104,53 +142,15 @@ signals:
     /** @brief 调试：请求切换半屏/全屏 */
     void debug_size_toggle_requested();
 
-protected:
-    /** @brief 未到点或答错时禁止关闭 */
-    void closeEvent(QCloseEvent* event) override;
-
-    /** @brief 显示后尝试聚焦答案框 */
-    void showEvent(QShowEvent* event) override;
-
-    /** @brief 尺寸变化时将浮层限制在可视区域内 */
-    void resizeEvent(QResizeEvent* event) override;
-
-    /** @brief 失焦时静默置顶 */
-    bool event(QEvent* event) override;
-
-    /** @brief 回车提交；数字键写入答案框（无需先点输入框） */
-    void keyPressEvent(QKeyEvent* event) override;
-
 private slots:
-    /** @brief Unlock 按钮 → submit_answer */
-    void on_unlock_clicked();
-
     /** @brief 调试退出按钮 */
     void on_debug_exit_clicked();
 
     /** @brief 调试半屏/全屏按钮 */
     void on_debug_size_clicked();
 
-private:
-    /** @brief 创建解锁区与可拖动浮层 */
-    void build_ui();
-
-    /** @brief 解锁区可见时将焦点置于答案输入框 */
-    void focus_answer_input();
-
-    /** @brief 向答案框追加一位数字（窗口级键盘捕获） */
-    void append_answer_digit(QChar digit);
-
-    /** @brief 更新休息倒计时浮层尺寸 */
-    void sync_break_time_drag_size();
-
-    /** @brief 将所有可拖动浮层限制在窗口边距内 */
-    void clamp_floating_widgets();
-
-    /** @brief 首次显示时将三个浮层置于默认位置 */
-    void place_floating_widgets_default();
-
-    /** @brief 将浮层置于最前 */
-    void raise_floating_widgets();
+    /** @brief Unlock 按钮 → submit_answer */
+    void on_unlock_clicked();
 
 private:
     int              screenId_;            ///< 1. 目标屏幕索引

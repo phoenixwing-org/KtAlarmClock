@@ -43,20 +43,6 @@ public:
     /** @brief 在全局参考点（通常为鼠标）附近显示，并限制在当前屏幕内 */
     void show_near(const QPoint& globalRef);
 
-public slots:
-    /** @brief 从参数刷新 UI */
-    void update_dialog();
-
-    /** @brief 从 UI 写回参数（以 m:ss 输入框秒数为准） */
-    void update_infos();
-
-    /** @brief 按计时状态切换播放/暂停图标与 tooltip */
-    void update_play_pause_button(bool running);
-
-signals:
-    /** @brief 底部控制按钮动作（KtAlarmClock::ActionID） */
-    void action_triggered(int actionId);
-
 protected:
     void closeEvent(QCloseEvent* event) override;
 
@@ -79,6 +65,20 @@ private:
 
     /** @brief 恢复工作/休息/强制时长为默认值并写回 parameter */
     void restore_defaults();
+
+signals:
+    /** @brief 底部控制按钮动作（KtAlarmClock::ActionID） */
+    void action_triggered(int actionId);
+
+public slots:
+    /** @brief 从参数刷新 UI */
+    void update_dialog();
+
+    /** @brief 从 UI 写回参数（以 m:ss 输入框秒数为准） */
+    void update_infos();
+
+    /** @brief 按计时状态切换播放/暂停图标与 tooltip */
+    void update_play_pause_button(bool running);
 
 private:
     Ui::KtAlarmClockSettingWindow* ui;           ///< 1. Designer 生成的界面

@@ -87,14 +87,6 @@ void KtAlarmClockTray::hide() {
         TrayIcon->hide();
 }
 //------------------------------------------------------
-void KtAlarmClockTray::show_message(const QString& title, const QString& message,
-                                    int durationMs) {
-    if (!TrayIcon)
-        return;
-
-    TrayIcon->showMessage(title, message, QSystemTrayIcon::Information, durationMs);
-}
-//------------------------------------------------------
 void KtAlarmClockTray::on_tray_activated(QSystemTrayIcon::ActivationReason reason) {
     const QPoint cursorPos = QCursor::pos();
     if (debugLocate_)
@@ -108,4 +100,12 @@ void KtAlarmClockTray::on_tray_activated(QSystemTrayIcon::ActivationReason reaso
         if (debugLocate_)
             qDebug() << "[Tray] menu.popup at" << menuPos << "cursor=" << cursorPos;
     }
+}
+//------------------------------------------------------
+void KtAlarmClockTray::show_message(const QString& title, const QString& message,
+                                    int durationMs) {
+    if (!TrayIcon)
+        return;
+
+    TrayIcon->showMessage(title, message, QSystemTrayIcon::Information, durationMs);
 }

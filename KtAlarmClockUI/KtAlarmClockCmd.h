@@ -37,15 +37,15 @@ public:
 
 public:
     /**
+     * @brief Build Dialog
+     */
+    int build();
+
+    /**
      * @brief Print Message
      * @param[in] iMsg message
      */
     void debug(const QString& iMsg);
-
-    /**
-     * @brief Build Dialog
-     */
-    int build();
 
     /**
      * @brief Give My Panel
@@ -57,16 +57,15 @@ public:
     };
 
 public slots:
+    /**
+     * @brief Force terminate process (bypass QML event loop cleanup)
+     */
+    void forceQuit();
 
     /**
      * @brief auto start
      */
     int setAutoStart(bool iValue);
-
-    /**
-     * @brief Force terminate process (bypass QML event loop cleanup)
-     */
-    void forceQuit();
 
 private:
     KtAlarmClockCoreShared  core;

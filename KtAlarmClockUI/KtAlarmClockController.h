@@ -44,6 +44,39 @@ public:
     /** @brief 初始化 UI 与信号连接 */
     void start();
 
+private:
+    void apply_debug_defaults();
+
+    /**
+     * @brief 切换工作阶段并启动/暂停 UI
+     * @param resetDurationFromParam 为 true 时工作阶段强制使用 parameter->WorkTime（Next / 休息结束）
+     */
+    void clock_start(int workStep, bool resetDurationFromParam = false);
+    void clock_timeout_impl(int state);
+    void close_all_windows();
+
+    /** @brief 关闭并销毁设置窗 */
+    void close_setting_dlg();
+
+    void force_unload_over_dlg();
+
+    /** @brief 休息中是否禁止用户操作 */
+    bool is_forbidden() const;
+    void load_over_dlg();
+
+    /** @brief 设置窗打开时，从 parameter 刷新界面与播放按钮 */
+    void refresh_setting_ui();
+
+    /** @brief 执行动作（内部状态机，不经 forbidden 校验） */
+    void run_command(int actionId);
+
+    void show_pop_menu(const QPoint& globalPos);
+
+    /** @brief 显示或复用唯一设置窗（跟随 globalPos 所在屏幕） */
+    void show_setting_dlg(const QPoint& globalPos);
+
+    void sync_param_from_setting();
+
 public slots:
     /** @brief 用户操作统一入口（托盘/右键/设置底部按钮） */
     void dispatch_user_action(int actionId);
@@ -57,36 +90,6 @@ private slots:
 
     /** @brief 设置窗底部按钮：先写回参数再分发动作 */
     void on_setting_action(int actionId);
-
-private:
-    void apply_debug_defaults();
-    /**
-     * @brief 切换工作阶段并启动/暂停 UI
-     * @param resetDurationFromParam 为 true 时工作阶段强制使用 parameter->WorkTime（Next / 休息结束）
-     */
-    void clock_start(int workStep, bool resetDurationFromParam = false);
-    void clock_timeout_impl(int state);
-    void close_all_windows();
-    void force_unload_over_dlg();
-    void load_over_dlg();
-    void show_pop_menu(const QPoint& globalPos);
-
-    /** @brief 显示或复用唯一设置窗（跟随 globalPos 所在屏幕） */
-    void show_setting_dlg(const QPoint& globalPos);
-
-    /** @brief 关闭并销毁设置窗 */
-    void close_setting_dlg();
-
-    void sync_param_from_setting();
-
-    /** @brief 设置窗打开时，从 parameter 刷新界面与播放按钮 */
-    void refresh_setting_ui();
-
-    /** @brief 执行动作（内部状态机，不经 forbidden 校验） */
-    void run_command(int actionId);
-
-    /** @brief 休息中是否禁止用户操作 */
-    bool is_forbidden() const;
 
 private:
     KtAlarmClockParamShared    parameter;    ///< 1. 参数

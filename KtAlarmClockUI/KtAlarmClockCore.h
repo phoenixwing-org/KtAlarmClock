@@ -29,16 +29,16 @@ public:
 
 public:
     /**
-     * @brief pretreat
-     * @return int, 0: succeed, plus: failed
-     */
-    int pretreat();
-
-    /**
      * @brief calculate
      * @return int, 0: succeed, plus: failed
      */
     int calculate();
+
+    /**
+     * @brief pretreat
+     * @return int, 0: succeed, plus: failed
+     */
+    int pretreat();
 
 public:
     KtAlarmClockParamShared parameter;

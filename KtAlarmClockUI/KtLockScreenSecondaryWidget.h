@@ -39,11 +39,6 @@ public:
      */
     void apply_screen_geometry(bool fullScreen, bool debugMode, const QWidget* anchor);
 
-    /** @brief 目标屏幕索引（热插拔后由 Manager 更新） */
-    void set_screen_id(int screenId) {
-        screenId_ = screenId;
-    }
-
     /** @brief 置顶但不 activateWindow */
     void raise_quiet();
 
@@ -53,9 +48,10 @@ public:
     /** @brief 切换强制等待态；副屏文案始终显示，仅 Unlock 在强制期隐藏 */
     void set_forced(bool forced, int counterForce);
 
-signals:
-    /** @brief 解锁请求 */
-    void unlock_requested();
+    /** @brief 目标屏幕索引（热插拔后由 Manager 更新） */
+    void set_screen_id(int screenId) {
+        screenId_ = screenId;
+    }
 
 private:
     /** @brief 构建 UI */
@@ -70,6 +66,10 @@ protected:
 
     /** @brief 全屏尺寸变化时更新文案换行宽度 */
     void resizeEvent(QResizeEvent* event) override;
+
+signals:
+    /** @brief 解锁请求 */
+    void unlock_requested();
 
 private:
     int          screenId_;    ///< 1. 目标屏幕索引

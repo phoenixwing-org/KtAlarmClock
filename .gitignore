@@ -24,3 +24,4 @@ Release
 .vs
 *.user
 *.bmp
+.phoenix/

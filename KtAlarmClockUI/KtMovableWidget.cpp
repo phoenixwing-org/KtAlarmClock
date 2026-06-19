@@ -57,14 +57,6 @@ void KtMovableWidget::clamp_to_parent_bounds() {
     apply_clamped_position(mapToGlobal(QPoint(0, 0)));
 }
 //------------------------------------------------------
-QRect KtMovableWidget::parent_bounds() const {
-    QWidget* host = parentWidget();
-    if (!host)
-        return QRect();
-
-    return host->rect().adjusted(clampMargins_, clampMargins_, -clampMargins_, -clampMargins_);
-}
-//------------------------------------------------------
 void KtMovableWidget::mouseMoveEvent(QMouseEvent* event) {
     if (dragging_ && (event->buttons() & Qt::LeftButton)) {
         apply_clamped_position(event->globalPos() - dragOffset_);
@@ -91,6 +83,14 @@ void KtMovableWidget::mouseReleaseEvent(QMouseEvent* event) {
         clamp_to_parent_bounds();
     }
     QWidget::mouseReleaseEvent(event);
+}
+//------------------------------------------------------
+QRect KtMovableWidget::parent_bounds() const {
+    QWidget* host = parentWidget();
+    if (!host)
+        return QRect();
+
+    return host->rect().adjusted(clampMargins_, clampMargins_, -clampMargins_, -clampMargins_);
 }
 //------------------------------------------------------
 void KtMovableWidget::set_clamp_margins(int margins) {

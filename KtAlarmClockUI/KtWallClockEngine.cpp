@@ -62,16 +62,6 @@ void KtWallClockEngine::freeze_for_system_sleep_at(qint64 wallMs) {
     if (counter_ > 0) phaseDurationSec_ = counter_;
 }
 //------------------------------------------------------
-bool KtWallClockEngine::resume_after_system_sleep() {
-    if (!sleepSuspended_) return false;
-
-    sleepSuspended_ = false;
-    if (counter_ <= 0) return false;
-
-    start(state_, counter_);
-    return running_;
-}
-//------------------------------------------------------
 void KtWallClockEngine::pause() {
     // 暂停：先同步剩余时间，再清除墙钟起点
 
@@ -84,6 +74,15 @@ void KtWallClockEngine::pause() {
     if (counter_ > 0) phaseDurationSec_ = counter_; // 保留剩余时长供 resume 使用
 }
 //------------------------------------------------------
+void KtWallClockEngine::realign_phase_start_if_ahead() {
+    if (!running_ || phaseStartMs_ <= 0)
+        return;
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now < phaseStartMs_)
+        phaseStartMs_ = now; // 从当前墙钟重新计 elapsed，保持 counter_ 不变
+}
+//------------------------------------------------------
 void KtWallClockEngine::reset(int state, int counterSec) {
     // 停止计时并写入新的阶段与剩余秒数
 
@@ -93,6 +92,16 @@ void KtWallClockEngine::reset(int state, int counterSec) {
     phaseStartMs_     = 0;          // 清除墙钟，尚未运行
     running_          = false;      // 标记停止
     sleepSuspended_   = false;
+}
+//------------------------------------------------------
+bool KtWallClockEngine::resume_after_system_sleep() {
+    if (!sleepSuspended_) return false;
+
+    sleepSuspended_ = false;
+    if (counter_ <= 0) return false;
+
+    start(state_, counter_);
+    return running_;
 }
 //------------------------------------------------------
 void KtWallClockEngine::start(int state, int counterSec, bool leanFirstSecond) {
@@ -119,15 +128,6 @@ void KtWallClockEngine::sync_from_wall_clock() {
     if (!running_) return;              // 暂停态不更新
     realign_phase_start_if_ahead();
     update_remaining_from_wall_clock(); // 外部每秒 tick 调用
-}
-//------------------------------------------------------
-void KtWallClockEngine::realign_phase_start_if_ahead() {
-    if (!running_ || phaseStartMs_ <= 0)
-        return;
-
-    const qint64 now = QDateTime::currentMSecsSinceEpoch();
-    if (now < phaseStartMs_)
-        phaseStartMs_ = now; // 从当前墙钟重新计 elapsed，保持 counter_ 不变
 }
 //------------------------------------------------------
 void KtWallClockEngine::update_remaining_from_wall_clock() {

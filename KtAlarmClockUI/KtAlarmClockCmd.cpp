@@ -94,6 +94,16 @@ void KtAlarmClockCmd::debug(const QString& iMsg) {
     qDebug() << "Hello to KtAlarmClockCmd. msg = " << iMsg;
 }
 //------------------------------------------------
+void KtAlarmClockCmd::forceQuit() {
+    if (qGuiApp) qGuiApp->quit();
+
+#ifdef _WIN32
+    ::TerminateProcess(::GetCurrentProcess(), 0);
+#else
+    std::_Exit(0);
+#endif
+}
+//------------------------------------------------
 KtAlarmClockDlg* KtAlarmClockCmd::giveMyPanel() const {
     return dialog;
 }
@@ -108,14 +118,4 @@ int KtAlarmClockCmd::setAutoStart(bool iValue) {
 
     reg.setValue("KtAlarmClock", m_ExePath);
     return 0; // ok
-}
-//------------------------------------------------
-void KtAlarmClockCmd::forceQuit() {
-    if (qGuiApp) qGuiApp->quit();
-
-#ifdef _WIN32
-    ::TerminateProcess(::GetCurrentProcess(), 0);
-#else
-    std::_Exit(0);
-#endif
 }

@@ -26,17 +26,6 @@ KtDurationEdit::KtDurationEdit(QWidget* parent)
     set_seconds(0);
 }
 //------------------------------------------------------
-void KtDurationEdit::keyPressEvent(QKeyEvent* event) {
-    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
-        commit_text();
-        clearFocus();
-        event->accept();
-        return;
-    }
-
-    QLineEdit::keyPressEvent(event);
-}
-//------------------------------------------------------
 KtDurationEdit::~KtDurationEdit() {
     // seconds_     // 1
     // minSeconds_  // 2
@@ -65,6 +54,17 @@ QString KtDurationEdit::format_seconds(int seconds) {
     const int minutePart = seconds / 60;
     const int secondPart = seconds % 60;
     return QStringLiteral("%1:%2").arg(minutePart).arg(secondPart, 2, 10, QChar('0'));
+}
+//------------------------------------------------------
+void KtDurationEdit::keyPressEvent(QKeyEvent* event) {
+    if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) {
+        commit_text();
+        clearFocus();
+        event->accept();
+        return;
+    }
+
+    QLineEdit::keyPressEvent(event);
 }
 //------------------------------------------------------
 bool KtDurationEdit::parse_text(const QString& text, int* outSeconds) {
