@@ -11,9 +11,20 @@ if(MSVC)
 endif()
 
 # Read env paths and normalize separators (\ -> /) in one step per variable
-file(TO_CMAKE_PATH "$ENV{ROOT_DIR}" ROOT_DIR)
-file(TO_CMAKE_PATH "$ENV{ROOT_DIR}/kt/viewer" ROOT_DIR_VIEWER)
-file(TO_CMAKE_PATH "$ENV{ROOT_DIR_3rdParty}" ROOT_DIR_3rdParty)
+# 如果环境变量未设置，使用项目内部 build 目录作为默认输出路径
+if(DEFINED ENV{ROOT_DIR})
+    file(TO_CMAKE_PATH "$ENV{ROOT_DIR}" ROOT_DIR)
+    file(TO_CMAKE_PATH "$ENV{ROOT_DIR}/kt/viewer" ROOT_DIR_VIEWER)
+else()
+    set(ROOT_DIR ${CMAKE_BINARY_DIR})
+    set(ROOT_DIR_VIEWER ${CMAKE_BINARY_DIR}/out)
+endif()
+
+if(DEFINED ENV{ROOT_DIR_3rdParty})
+    file(TO_CMAKE_PATH "$ENV{ROOT_DIR_3rdParty}" ROOT_DIR_3rdParty)
+else()
+    set(ROOT_DIR_3rdParty "")
+endif()
 
 # set default for output directory
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT_DIR_VIEWER}/lib)

@@ -39,17 +39,29 @@ Qt 5 护眼闹钟：工作倒计时、全屏锁屏休息、多屏覆盖、托盘
 
 | 变量 | 说明 |
 | --- | --- |
-| `ROOT_DIR` | 工程输出根路径，例如 `E:/XyRoot` |
-| `ROOT_DIR_3rdParty` | 第三方库根路径（`common.cmake` 预留） |
+| `ROOT_DIR` | 工程输出根路径，例如 `E:/XyRoot`（Windows 必设；macOS 可选，未设则输出至 `build/` 内） |
+| `ROOT_DIR_3rdParty` | 第三方库根路径（`common.cmake` 预留，可选） |
 
 ### 编译
 
+项目使用 `CMakePresets.json` 管理跨平台构建预设。根据操作系统选择对应 preset：
+
+**macOS：**
+
 ```bash
-mkdir build && cd build
-cmake ..
-cmake --build . --config Debug
-cmake --build . --config Release
+# Qt5 通过 Homebrew 安装：brew install qt@5
+cmake --preset macos-debug
+cmake --build --preset macos-debug
 ```
+
+**Windows：**
+
+```bash
+cmake --preset win-debug
+cmake --build --preset win-debug
+```
+
+> **平台说明**：`KtAlarmClock` 在 Windows 上通过 `LockWorkStation` API 锁屏；macOS 下通过全屏遮罩覆盖实现同等效果。两个平台均完整编译。
 
 **注意**：图标与 `lock-screen.qss` 在 `KtAlarmClock.qrc` 中，改资源后须重新编译 `KtAlarmClockUI.dll`。
 

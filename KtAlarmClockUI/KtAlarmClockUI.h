@@ -16,7 +16,7 @@
 #else
 #define ExportedByKtAlarmClockUI __declspec(dllimport)
 #endif
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 #define ExportedByKtAlarmClockUI
 #else
 #error "Unknown compiler"
