@@ -37,7 +37,7 @@ KtAlarmClockController::KtAlarmClockController(KtAlarmClockParamShared param, Kt
     , popMenu_(nullptr)             // 7
     , loop_(false)                  // 8
     , workStep_(KtAlarmClock::None) // 9
-    , debugLocate_(true) {          // 10
+    , debugLocate_(false) {         // 10；Debug 构建在 Cmd::build 中开启
 }
 //------------------------------------------------------
 KtAlarmClockController::~KtAlarmClockController() {
@@ -83,7 +83,7 @@ void KtAlarmClockController::clock_start(int workStep, bool resetDurationFromPar
         int counter = mainClock_->get_counter();
         if (resetDurationFromParam || counter <= 0)
             counter = parameter->WorkTime; // Next / 到期 / 首次：以界面参数为准
-        mainClock_->clock_start(KtAlarmClock::WorkTime, counter);
+        mainClock_->clock_start(KtAlarmClock::WorkTime, counter, !resetDurationFromParam);
         break;
     }
     default:
@@ -129,11 +129,30 @@ void KtAlarmClockController::close_all_windows() {
     if (cmd_) cmd_->forceQuit();
 }
 //------------------------------------------------------
+void KtAlarmClockController::close_setting_dlg() {
+    if (settingDlg_.isNull()) return;
+    if (debugLocate_) qDebug() << "[Setting] close";
+
+    settingDlg_->hide();
+    delete settingDlg_.data(); // settingDlg_ 由 QPointer 自动置空
+}
+//------------------------------------------------------
+void KtAlarmClockController::dispatch_user_action(int actionId) {
+    if (debugLocate_) qDebug() << "[Controller] dispatch_user_action" << actionId;
+
+    if (is_forbidden()) {
+        if (debugLocate_) qDebug() << "[Controller] dispatch ignored (WorkBreak)";
+        return;
+    }
+
+    run_command(actionId);
+}
+//------------------------------------------------------
 void KtAlarmClockController::force_unload_over_dlg() {
     if (!lockScreen_->get_visible()) return;
     if (debugLocate_) qDebug() << "[Controller] force_unload_over_dlg";
     lockScreen_->set_exiting(true);
-    lockScreen_->hide();
+    lockScreen_->dismiss();
 }
 //------------------------------------------------------
 bool KtAlarmClockController::is_forbidden() const {
@@ -147,23 +166,6 @@ void KtAlarmClockController::load_over_dlg() {
     lockScreen_->show(parameter->WorkBreak, parameter->TimeForce, false);
 }
 //------------------------------------------------------
-void KtAlarmClockController::show_setting_dlg(const QPoint& globalPos) {
-    if (settingDlg_.isNull()) {
-        settingDlg_ = new KtAlarmClockSettingWindow();
-        settingDlg_->set_debug_locate(debugLocate_);
-        connect(settingDlg_, &KtAlarmClockSettingWindow::action_triggered, this,
-                &KtAlarmClockController::on_setting_action);
-        if (debugLocate_) qDebug() << "[Setting] create at" << globalPos;
-    }
-    else if (debugLocate_) {
-        qDebug() << "[Setting] reuse at" << globalPos;
-    }
-
-    settingDlg_->set_param(parameter);
-    refresh_setting_ui();
-    settingDlg_->show_near(globalPos);
-}
-//------------------------------------------------------
 void KtAlarmClockController::on_clock_timeout(int state) {
     if (debugLocate_) qDebug() << "[Controller] clock_timeout defer state=" << state;
     // 延迟切换，避免在锁屏信号栈内销毁 UI
@@ -174,20 +176,34 @@ void KtAlarmClockController::on_context_menu_requested(const QPoint& globalPos) 
     show_pop_menu(globalPos);
 }
 //------------------------------------------------------
+void KtAlarmClockController::on_second_instance_activate() {
+    if (is_forbidden()) {
+        if (tray_) {
+            tray_->show_message(QStringLiteral("KT护眼闹钟"),
+                                QStringLiteral("正在休息中，请从托盘或等待休息结束。"));
+        }
+        return;
+    }
+
+    if (!mainClock_)
+        return;
+
+    mainClock_->show();
+    mainClock_->raise();
+    mainClock_->activateWindow();
+}
+//------------------------------------------------------
 void KtAlarmClockController::on_setting_action(int actionId) {
     sync_param_from_setting();
     dispatch_user_action(actionId);
 }
 //------------------------------------------------------
-void KtAlarmClockController::dispatch_user_action(int actionId) {
-    if (debugLocate_) qDebug() << "[Controller] dispatch_user_action" << actionId;
+void KtAlarmClockController::refresh_setting_ui() {
+    if (settingDlg_.isNull()) return;
 
-    if (is_forbidden()) {
-        if (debugLocate_) qDebug() << "[Controller] dispatch ignored (WorkBreak)";
-        return;
-    }
-
-    run_command(actionId);
+    settingDlg_->update_dialog();
+    if (mainClock_)
+        settingDlg_->update_play_pause_button(mainClock_->get_running());
 }
 //------------------------------------------------------
 void KtAlarmClockController::run_command(int actionId) {
@@ -211,14 +227,14 @@ void KtAlarmClockController::run_command(int actionId) {
             loop_ = true;
             clock_start(KtAlarmClock::WorkTime, true); // 首次播放：以 parameter 为准
         }
-        else if (mainClock_->get_running() || workStep_ == KtAlarmClock::WorkTime) {
+        else if (mainClock_->get_running()) {
             loop_     = false;
             workStep_ = KtAlarmClock::None;
             mainClock_->clock_pause();
         }
         else {
             loop_ = true;
-            clock_start(KtAlarmClock::WorkTime);
+            clock_start(KtAlarmClock::WorkTime); // 手动暂停或休眠冻结后续计
         }
         if (debugLocate_)
             qDebug() << "[Controller] PlayPause loop=" << loop_
@@ -286,6 +302,23 @@ void KtAlarmClockController::show_pop_menu(const QPoint& globalPos) {
     popMenu_->popup(menuPos);
 }
 //------------------------------------------------------
+void KtAlarmClockController::show_setting_dlg(const QPoint& globalPos) {
+    if (settingDlg_.isNull()) {
+        settingDlg_ = new KtAlarmClockSettingWindow();
+        settingDlg_->set_debug_locate(debugLocate_);
+        connect(settingDlg_, &KtAlarmClockSettingWindow::action_triggered, this,
+                &KtAlarmClockController::on_setting_action);
+        if (debugLocate_) qDebug() << "[Setting] create at" << globalPos;
+    }
+    else if (debugLocate_) {
+        qDebug() << "[Setting] reuse at" << globalPos;
+    }
+
+    settingDlg_->set_param(parameter);
+    refresh_setting_ui();
+    settingDlg_->show_near(globalPos);
+}
+//------------------------------------------------------
 void KtAlarmClockController::start() {
     apply_debug_defaults();
 
@@ -331,19 +364,14 @@ void KtAlarmClockController::start() {
 
     connect(qGuiApp, &QGuiApplication::applicationStateChanged, this,
             [ this ](Qt::ApplicationState state) {
-                if (state == Qt::ApplicationActive && mainClock_->get_running())
-                    mainClock_->sync_from_wall_clock(); // 休眠唤醒校准
+                if (!mainClock_) return;
+                if (state == Qt::ApplicationSuspended)
+                    mainClock_->handle_application_suspended();
+                else if (state == Qt::ApplicationActive)
+                    mainClock_->handle_application_active();
             });
 
     if (debugLocate_) qDebug() << "[Controller] start complete";
-}
-//------------------------------------------------------
-void KtAlarmClockController::refresh_setting_ui() {
-    if (settingDlg_.isNull()) return;
-
-    settingDlg_->update_dialog();
-    if (mainClock_)
-        settingDlg_->update_play_pause_button(mainClock_->get_running());
 }
 //------------------------------------------------------
 void KtAlarmClockController::sync_param_from_setting() {
@@ -353,12 +381,4 @@ void KtAlarmClockController::sync_param_from_setting() {
     if (debugLocate_)
         qDebug() << "[Setting] sync_param_from_setting saved Work=" << parameter->WorkTime
                  << "Break=" << parameter->WorkBreak << "Force=" << parameter->TimeForce;
-}
-//------------------------------------------------------
-void KtAlarmClockController::close_setting_dlg() {
-    if (settingDlg_.isNull()) return;
-    if (debugLocate_) qDebug() << "[Setting] close";
-
-    settingDlg_->hide();
-    delete settingDlg_.data(); // settingDlg_ 由 QPointer 自动置空
 }

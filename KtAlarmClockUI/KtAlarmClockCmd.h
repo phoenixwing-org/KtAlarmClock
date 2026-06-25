@@ -21,6 +21,7 @@
 class KtAlarmClockController;
 class KtAlarmClockDlg;
 class KtLockScreenManager;
+class KtSingleInstanceGuard;
 class QGuiApplication;
 
 /**
@@ -36,15 +37,15 @@ public:
 
 public:
     /**
+     * @brief Build Dialog
+     */
+    int build();
+
+    /**
      * @brief Print Message
      * @param[in] iMsg message
      */
     void debug(const QString& iMsg);
-
-    /**
-     * @brief Build Dialog
-     */
-    int build();
 
     /**
      * @brief Give My Panel
@@ -56,23 +57,23 @@ public:
     };
 
 public slots:
+    /**
+     * @brief Force terminate process (bypass QML event loop cleanup)
+     */
+    void forceQuit();
 
     /**
      * @brief auto start
      */
     int setAutoStart(bool iValue);
 
-    /**
-     * @brief Force terminate process (bypass QML event loop cleanup)
-     */
-    void forceQuit();
-
 private:
     KtAlarmClockCoreShared  core;
     KtAlarmClockParamShared parameter;
     KtAlarmClockDlg*        dialog;
-    KtAlarmClockController* m_pController;
-    QString                 m_ExePath;
+    KtAlarmClockController*   m_pController;
+    KtSingleInstanceGuard*    instanceGuard_;
+    QString                   m_ExePath;
 };
 
 #endif // KtAlarmClockCmd_H

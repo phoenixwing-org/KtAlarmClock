@@ -16,6 +16,7 @@
 
 // Kt
 #include "KtAlarmClockCmd.h"
+#include "KtAlarmClockUI.h"
 
 // std
 #include <iostream>
@@ -37,10 +38,11 @@ int main(int argc, char* argv[]) {
     cmd.setExePath(argv[ 0 ]); // set path
 
     // cmd.debug(" Clock");      // debug
-    int code = cmd.build(); // build dialog
-    if (code) {
-        QCoreApplication::exit(-1);
-    }
+    const int code = cmd.build();
+    if (code == KT_S_ALREADY_RUNNING)
+        return 0;
+    if (code != KT_S_OK)
+        return -1;
 
     return app.exec();
 }

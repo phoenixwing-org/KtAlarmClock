@@ -16,13 +16,14 @@
 #else
 #define ExportedByKtAlarmClockUI __declspec(dllimport)
 #endif
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 #define ExportedByKtAlarmClockUI
 #else
 #error "Unknown compiler"
 #endif
 
-#define KT_S_OK 0
+#define KT_S_OK              0
+#define KT_S_ALREADY_RUNNING 1
 #define KT_E_FAIL 100001
 #define KT_E_INVALIDARG 100002
 #define KT_E_UNEXPECTED 100003

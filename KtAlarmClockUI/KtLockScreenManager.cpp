@@ -9,6 +9,7 @@
 #include "KtAlarmClock.h"
 #include "KtLockScreenPrimaryWidget.h"
 #include "KtLockScreenSecondaryWidget.h"
+#include "KtWindowsWakeNotifier.h"
 
 #include <QDateTime>
 #include <QDebug>
@@ -18,6 +19,11 @@
 #include <QScreen>
 #include <QTimer>
 #include <QtMath>
+
+namespace {
+// 与主浮窗一致：短于该间隔视为 UI 卡顿，长于该间隔视为真休眠/关屏
+constexpr int kSleepGapMs = 12000;
+} // namespace
 
 /** @brief 将秒数格式化为 m:ss */
 static QString format_clock(int counter) {
@@ -40,17 +46,20 @@ KtLockScreenManager::KtLockScreenManager(QObject* parent)
     , primary_(nullptr)         // 2
     , tickTimer_(nullptr)       // 3
     , watchdogTimer_(nullptr)   // 4
-    , visible_(false)           // 5
-    , exiting_(false)           // 6
-    , debugMode_(false)         // 7
-    , unlockPending_(false)     // 8
-    , isForced_(false)          // 9
-    , counterForce_(0)          // 10
-    , forceEndMs_(0)            // 11
-    , formulaValue_(0)          // 12
-    , primaryScreenId_(0)       // 13
-    , secondaries_()            // 14
-    , debugSizeFraction_(1.0) { // 15
+    , wakeWatchTimer_(nullptr)  // 5
+    , visible_(false)           // 6
+    , exiting_(false)           // 7
+    , debugMode_(false)         // 8
+    , unlockPending_(false)     // 9
+    , isForced_(false)          // 10
+    , counterForce_(0)          // 11
+    , forceEndMs_(0)            // 12
+    , formulaValue_(0)          // 13
+    , primaryScreenId_(0)       // 14
+    , secondaries_()            // 15
+    , debugSizeFraction_(1.0)   // 16
+    , lastTickMs_(0)            // 17
+    , sleepStartedMs_(0) {      // 18
     // 1s 同步休息倒计时；10s 检查显示器热插拔
 
     tickTimer_ = new QTimer(this);
@@ -60,6 +69,15 @@ KtLockScreenManager::KtLockScreenManager(QObject* parent)
     watchdogTimer_ = new QTimer(this);
     watchdogTimer_->setInterval(10000); // 10s
     connect(watchdogTimer_, &QTimer::timeout, this, &KtLockScreenManager::on_watchdog);
+
+    wakeWatchTimer_ = new QTimer(this);
+    wakeWatchTimer_->setInterval(1000);
+    connect(wakeWatchTimer_, &QTimer::timeout, this, &KtLockScreenManager::on_wake_watchdog);
+    wakeWatchTimer_->start();
+
+    auto* wakeNotifier = new KtWindowsWakeNotifier(this);
+    connect(wakeNotifier, &KtWindowsWakeNotifier::system_resumed, this,
+            &KtLockScreenManager::try_resume_after_wake);
 
     connect(qGuiApp, &QGuiApplication::applicationStateChanged, this,
             &KtLockScreenManager::on_application_state_changed); // 休眠唤醒校正
@@ -72,14 +90,14 @@ KtLockScreenManager::KtLockScreenManager(QObject* parent)
 }
 //------------------------------------------------------
 KtLockScreenManager::~KtLockScreenManager() {
-    hide();
+    dismiss(); // 内部已 delete primary_
 
     // breakClock_            // 1
-    delete primary_.data(); // 2
-    primary_.clear();
-    tickTimer_     = nullptr; // 3
-    watchdogTimer_ = nullptr; // 4
-    // visible_               // 5
+    // primary_               // 2 dismiss() 已销毁
+    tickTimer_       = nullptr; // 3
+    watchdogTimer_   = nullptr; // 4
+    wakeWatchTimer_  = nullptr; // 5
+    // visible_                 // 6
     // exiting_               // 6
     // debugMode_             // 7
     // unlockPending_         // 8
@@ -89,11 +107,9 @@ KtLockScreenManager::~KtLockScreenManager() {
     // formulaValue_          // 12
     // primaryScreenId_       // 13
     secondaries_.clear(); // 14
-    // debugSizeFraction_     // 15
-}
-//------------------------------------------------------
-QString KtLockScreenManager::format_break_time() const {
-    return format_clock(breakClock_.get_counter());
+    // debugSizeFraction_     // 16
+    // lastTickMs_            // 17
+    // sleepStartedMs_        // 18
 }
 //------------------------------------------------------
 void KtLockScreenManager::apply_primary_geometry() {
@@ -106,21 +122,65 @@ void KtLockScreenManager::apply_primary_geometry() {
         secondary->apply_screen_geometry(!debugMode_, debugMode_, primary_widget());
 }
 //------------------------------------------------------
-void KtLockScreenManager::hide() {
-    // 停表 → 销毁副屏 → 隐藏主屏 → 重置状态
+void KtLockScreenManager::detect_sleep_gap() {
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (lastTickMs_ <= 0) {
+        lastTickMs_ = now;
+        return;
+    }
+
+    if (!breakClock_.get_running() || breakClock_.is_sleep_suspended()) {
+        lastTickMs_ = now;
+        return;
+    }
+
+    if (now - lastTickMs_ > kSleepGapMs)
+        enter_system_sleep_at(lastTickMs_);
+
+    lastTickMs_ = now;
+}
+//------------------------------------------------------
+void KtLockScreenManager::enter_system_sleep() {
+    enter_system_sleep_at(QDateTime::currentMSecsSinceEpoch());
+}
+//------------------------------------------------------
+void KtLockScreenManager::enter_system_sleep_at(qint64 wallMs) {
+    if (!visible_ || breakClock_.is_sleep_suspended())
+        return;
+
+    sleepStartedMs_ = wallMs;
+    if (breakClock_.get_running())
+        breakClock_.freeze_for_system_sleep_at(wallMs);
+
+    if (tickTimer_)
+        tickTimer_->stop();
+
+    lastTickMs_ = wallMs;
+    qDebug() << "[LockScreen] enter_system_sleep breakCounter=" << breakClock_.get_counter();
+}
+//------------------------------------------------------
+QString KtLockScreenManager::format_break_time() const {
+    return format_clock(breakClock_.get_counter());
+}
+//------------------------------------------------------
+void KtLockScreenManager::dismiss() {
+    // 停表 → 销毁遮罩窗口 → 重置状态
 
     tickTimer_->stop();
     watchdogTimer_->stop();
 
+    // 副屏：直接销毁（show 时按屏数重建）
     for (auto* overlay : secondaries_) {
         overlay->hide();
-        overlay->deleteLater(); // 副屏随 hide 销毁
+        overlay->deleteLater();
     }
     secondaries_.clear();
 
+    // 主屏：showFullScreen() 的窗口 hide() 后可能残留，直接销毁，show 时重建
     if (primary_) {
         primary_->set_debug_controls_visible(false);
-        primary_->hide(); // 主屏仅隐藏，下次 show 复用
+        delete primary_.data();
+        Q_ASSERT(primary_.isNull());
     }
 
     breakClock_.pause(); // 停止休息倒计时
@@ -149,18 +209,24 @@ void KtLockScreenManager::initial_formula() {
 void KtLockScreenManager::on_application_state_changed(Qt::ApplicationState state) {
     if (!visible_) return;
 
-    // 应用回到前台时重新同步计时并校正多屏
-    if (state == Qt::ApplicationActive) {
-        sync_wall_clocks();
-        reconcile_screens();
-        raise_all(true);
+    switch (state) {
+    case Qt::ApplicationSuspended:
+    case Qt::ApplicationHidden:
+        enter_system_sleep();
+        break;
+    case Qt::ApplicationActive:
+        // 推迟到事件循环下一轮，避免在系统唤醒回调栈内重入 showFullScreen
+        QTimer::singleShot(0, this, &KtLockScreenManager::try_resume_after_wake);
+        break;
+    default:
+        break;
     }
 }
 //------------------------------------------------------
 void KtLockScreenManager::on_debug_exit_requested() {
     if (!debugMode_ || !visible_) return;
 
-    hide();
+    dismiss();
     emit clock_out(KtAlarmClock::WorkBreak); // 调试直接退出，恢复工作计时
 }
 //------------------------------------------------------
@@ -179,11 +245,30 @@ void KtLockScreenManager::on_debug_size_toggle_requested() {
 }
 //------------------------------------------------------
 void KtLockScreenManager::on_tick() {
+    detect_sleep_gap();
     sync_wall_clocks(); // 每秒驱动休息/强制倒计时
 }
 //------------------------------------------------------
 void KtLockScreenManager::on_unlock_requested() {
     try_unlock(false); // 主屏算式提交
+}
+//------------------------------------------------------
+void KtLockScreenManager::on_wake_watchdog() {
+    if (!visible_) return;
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    if (breakClock_.is_sleep_suspended()) {
+        if (lastTickMs_ > 0 && now - lastTickMs_ >= kSleepGapMs)
+            try_resume_after_wake();
+        return;
+    }
+
+    if (breakClock_.get_running()) {
+        breakClock_.realign_phase_start_if_ahead();
+        if (tickTimer_ && !tickTimer_->isActive())
+            tickTimer_->start();
+    }
 }
 //------------------------------------------------------
 void KtLockScreenManager::on_watchdog() {
@@ -403,6 +488,8 @@ void KtLockScreenManager::show(int breakSeconds, int forceSeconds, bool debugMod
 
     tickTimer_->start();
     watchdogTimer_->start();
+    lastTickMs_     = QDateTime::currentMSecsSinceEpoch();
+    sleepStartedMs_ = 0;
 
     if (!visible_) {
         visible_ = true;
@@ -451,6 +538,44 @@ void KtLockScreenManager::sync_wall_clocks() {
     refresh_ui();
 }
 //------------------------------------------------------
+void KtLockScreenManager::try_resume_after_wake() {
+    if (!visible_) return;
+
+    const qint64 now                 = QDateTime::currentMSecsSinceEpoch();
+    const bool   wasSleepSuspended   = breakClock_.is_sleep_suspended();
+    const bool   hadSleepStartedMs   = sleepStartedMs_ > 0;
+
+    if (hadSleepStartedMs && forceEndMs_ > 0)
+        forceEndMs_ += (now - sleepStartedMs_); // 强制等待期不随休眠流逝
+
+    sleepStartedMs_ = 0;
+
+    if (breakClock_.get_running()) {
+        breakClock_.realign_phase_start_if_ahead();
+    }
+    else if (!breakClock_.resume_after_system_sleep()) {
+        if (wasSleepSuspended && breakClock_.get_counter() <= 0)
+            sync_wall_clocks();
+    }
+
+    if (tickTimer_ && !tickTimer_->isActive())
+        tickTimer_->start();
+
+    sync_wall_clocks();
+    refresh_ui();
+
+    for (auto* secondary : secondaries_)
+        secondary->raise_quiet();
+    if (primary_widget()) {
+        primary_widget()->raise_quiet();
+        primary_widget()->refresh_after_wake();
+    }
+
+    lastTickMs_ = now;
+    qDebug() << "[LockScreen] try_resume_after_wake breakCounter=" << breakClock_.get_counter()
+             << "forced=" << isForced_;
+}
+//------------------------------------------------------
 void KtLockScreenManager::try_unlock(bool /*fromSecondary*/) {
     // 验算 → 更新 canClose → 成功则延迟 clock_out
 
@@ -487,7 +612,7 @@ void KtLockScreenManager::try_unlock(bool /*fromSecondary*/) {
     // 推迟到事件循环下一轮，避免在 answer_submitted 栈内 destroy UI
     QTimer::singleShot(0, this, [ this ]() {
         if (!exiting_) {
-            hide();
+            dismiss();
             emit clock_out(KtAlarmClock::WorkBreak); // 通知 JS 切回工作计时
         }
         unlockPending_ = false;

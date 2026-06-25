@@ -32,9 +32,10 @@ KtAlarmClockSettingWindow::KtAlarmClockSettingWindow(QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::KtAlarmClockSettingWindow) // 1
     , parameter_(nullptr)                   // 2
-    , debugLocate_(true)                    // 3
+    , debugLocate_(false)                   // 3
     , syncingUi_(false) {                   // 4
     ui->setupUi(this);
+    setWindowTitle(QStringLiteral("护眼闹钟 - 设置 (%1)").arg(QLatin1String(VERSION_KtAlarmClock)));
 
     for (QPushButton* btn : findChildren<QPushButton*>()) {
         btn->setAutoDefault(false);
@@ -223,17 +224,6 @@ void KtAlarmClockSettingWindow::update_dialog() {
     if (debugLocate_) qDebug() << "[Setting] update_dialog";
 }
 //------------------------------------------------------
-void KtAlarmClockSettingWindow::update_play_pause_button(bool running) {
-    if (running) {
-        ui->pushButtonPlayPause->setIcon(QIcon(QStringLiteral(":/image/pause.svg")));
-        ui->pushButtonPlayPause->setToolTip(QStringLiteral("暂停"));
-    }
-    else {
-        ui->pushButtonPlayPause->setIcon(QIcon(QStringLiteral(":/image/play.svg")));
-        ui->pushButtonPlayPause->setToolTip(QStringLiteral("播放"));
-    }
-}
-//------------------------------------------------------
 void KtAlarmClockSettingWindow::update_infos() {
     if (!parameter_) return;
 
@@ -248,4 +238,15 @@ void KtAlarmClockSettingWindow::update_infos() {
     if (debugLocate_)
         qDebug() << "[Setting] update_infos Work=" << parameter_->WorkTime
                  << "Break=" << parameter_->WorkBreak << "Force=" << parameter_->TimeForce;
+}
+//------------------------------------------------------
+void KtAlarmClockSettingWindow::update_play_pause_button(bool running) {
+    if (running) {
+        ui->pushButtonPlayPause->setIcon(QIcon(QStringLiteral(":/image/pause.svg")));
+        ui->pushButtonPlayPause->setToolTip(QStringLiteral("暂停"));
+    }
+    else {
+        ui->pushButtonPlayPause->setIcon(QIcon(QStringLiteral(":/image/play.svg")));
+        ui->pushButtonPlayPause->setToolTip(QStringLiteral("播放"));
+    }
 }

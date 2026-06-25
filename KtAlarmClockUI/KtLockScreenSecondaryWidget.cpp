@@ -120,13 +120,13 @@ void KtLockScreenSecondaryWidget::raise_quiet() {
     raise(); // 仅置顶，不 activateWindow
 }
 //------------------------------------------------------
-void KtLockScreenSecondaryWidget::set_can_close(bool canClose) {
-    canClose_ = canClose; // 控制 closeEvent 是否 ignore
-}
-//------------------------------------------------------
 void KtLockScreenSecondaryWidget::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
     update_message_layout();
+}
+//------------------------------------------------------
+void KtLockScreenSecondaryWidget::set_can_close(bool canClose) {
+    canClose_ = canClose; // 控制 closeEvent 是否 ignore
 }
 //------------------------------------------------------
 void KtLockScreenSecondaryWidget::set_forced(bool forced, int counterForce) {

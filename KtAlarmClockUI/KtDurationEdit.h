@@ -24,9 +24,9 @@ public:
     ~KtDurationEdit() override;
 
 public:
-    /** @brief 当前秒数 */
-    int get_seconds() const {
-        return seconds_;
+    /** @brief 合法范围上限（秒） */
+    int get_maximum() const {
+        return maxSeconds_;
     }
 
     /** @brief 合法范围下限（秒） */
@@ -34,24 +34,16 @@ public:
         return minSeconds_;
     }
 
-    /** @brief 合法范围上限（秒） */
-    int get_maximum() const {
-        return maxSeconds_;
+    /** @brief 当前秒数 */
+    int get_seconds() const {
+        return seconds_;
     }
-
-    /** @brief 设置秒数并刷新显示（不向外发射信号） */
-    void set_seconds(int seconds);
 
     /** @brief 设置合法范围（秒） */
     void set_range(int minSeconds, int maxSeconds);
 
-public slots:
-    /** @brief 解析当前文本、校正格式并发射 seconds_changed */
-    void commit_text();
-
-signals:
-    /** @brief 用户确认输入后的秒数 */
-    void seconds_changed(int seconds);
+    /** @brief 设置秒数并刷新显示（不向外发射信号） */
+    void set_seconds(int seconds);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
@@ -62,6 +54,14 @@ private:
 
     /** @brief 解析 m:ss、Ns（秒）或纯分钟文本为秒 */
     static bool parse_text(const QString& text, int* outSeconds);
+
+signals:
+    /** @brief 用户确认输入后的秒数 */
+    void seconds_changed(int seconds);
+
+public slots:
+    /** @brief 解析当前文本、校正格式并发射 seconds_changed */
+    void commit_text();
 
 private:
     int seconds_;    ///< 1. 当前秒数

@@ -17,6 +17,11 @@
 #include "KtAlarmClockUI.h"
 
 /**
+ * @brief Version of KtAlarmClock
+ */
+#define VERSION_KtAlarmClock "3.1"
+
+/**
  * @brief Class KtAlarmClockParam
  */
 class ExportedByKtAlarmClockUI KtAlarmClockParam {
@@ -38,9 +43,15 @@ public: // functions
     void clear();
 
     /**
-     * @brief Get Work Time
+     * @brief cout class members for debug
+     * @return void
      */
-    int GetWorkTime() const;
+    void dump();
+
+    /**
+     * @brief Get Time Counter
+     */
+    int GetTimeForce() const;
 
     /**
      * @brief Get Work Break
@@ -48,9 +59,20 @@ public: // functions
     int GetWorkBreak() const;
 
     /**
-     * @brief Get Time Counter
+     * @brief Get Work Time
      */
-    int GetTimeForce() const;
+    int GetWorkTime() const;
+
+    /**
+     * @brief Register Read from registry
+     * 
+     */
+    void registerRead();
+
+    /**
+     * @brief Register Write to registry
+     */
+    void registerWrite();
 
     /**
      * @brief set default value for debug
@@ -59,19 +81,9 @@ public: // functions
     void setDefault();
 
     /**
-     * @brief cout class members for debug
-     * @return void
+     * @brief Set Time Counter
      */
-    void dump();
-
-    void registerRead();
-
-    void registerWrite();
-
-    /**
-     * @brief Set Work Time
-     */
-    void setWorkTime(int iValue);
+    void setTimeForce(int iValue);
 
     /**
      * @brief Set Work Break
@@ -79,9 +91,9 @@ public: // functions
     void setWorkBreak(int iValue);
 
     /**
-     * @brief Set Time Counter
+     * @brief Set Work Time
      */
-    void setTimeForce(int iValue);
+    void setWorkTime(int iValue);
 
 public:
     // clang-format off
@@ -137,5 +149,6 @@ public:
     // clang-format on
 };
 
+/** @brief Shared pointer to KtAlarmClockParam */
 using KtAlarmClockParamShared = std::shared_ptr<KtAlarmClockParam>;
 #endif

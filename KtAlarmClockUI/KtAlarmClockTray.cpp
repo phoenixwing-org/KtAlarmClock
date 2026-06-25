@@ -21,7 +21,7 @@ KtAlarmClockTray::KtAlarmClockTray(QObject* parent)
     : QObject(parent)
     , TrayIcon(nullptr)   // 1
     , Menu(nullptr)       // 2
-    , debugLocate_(true)  // 3
+    , debugLocate_(false) // 3
     , forbidden_(false) { // 4
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         qWarning() << "[Tray] system tray not available";
@@ -100,4 +100,12 @@ void KtAlarmClockTray::on_tray_activated(QSystemTrayIcon::ActivationReason reaso
         if (debugLocate_)
             qDebug() << "[Tray] menu.popup at" << menuPos << "cursor=" << cursorPos;
     }
+}
+//------------------------------------------------------
+void KtAlarmClockTray::show_message(const QString& title, const QString& message,
+                                    int durationMs) {
+    if (!TrayIcon)
+        return;
+
+    TrayIcon->showMessage(title, message, QSystemTrayIcon::Information, durationMs);
 }

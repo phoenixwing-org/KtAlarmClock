@@ -7,7 +7,6 @@
 // Qt
 #include <QDebug>
 #include <QGuiApplication>
-#include <QQmlContext>
 #include <QSettings>
 
 // std
@@ -24,6 +23,7 @@
 #include "KtAlarmClockCore.h"
 #include "KtAlarmClockDlg.h"
 #include "KtAlarmClockParam.h"
+#include "KtSingleInstanceGuard.h"
 
 //------------------------------------------------
 KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
@@ -32,6 +32,7 @@ KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     , parameter(nullptr)
     , dialog(nullptr)
     , m_pController(nullptr)
+    , instanceGuard_(nullptr)
     , m_ExePath() {
     // qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
     //  new
@@ -47,6 +48,7 @@ KtAlarmClockCmd::~KtAlarmClockCmd() {
     parameter = nullptr;
     core      = nullptr;
     KTDelete(m_pController);
+    KTDelete(instanceGuard_);
 
     // only set NULL
     KTSetNULL(dialog);
@@ -62,14 +64,23 @@ int KtAlarmClockCmd::build() {
         return KT_E_INVALIDARG;
     }
 
+    instanceGuard_ = new KtSingleInstanceGuard(this);
+    if (!instanceGuard_->try_acquire_primary()) return KT_S_ALREADY_RUNNING;
+
     // dialog
     dialog = new KtAlarmClockDlg();
 
     parameter->registerRead();
 
     m_pController = new KtAlarmClockController(parameter, this);
+#ifndef NDEBUG
     m_pController->set_debug_locate(true);
+#endif
     m_pController->start();
+
+    connect(instanceGuard_, &KtSingleInstanceGuard::activate_requested, m_pController,
+            &KtAlarmClockController::on_second_instance_activate);
+    instanceGuard_->start_listening();
 
     m_pController->dispatch_user_action(KtAlarmClock::ActionPlayPause);
 
@@ -83,20 +94,6 @@ void KtAlarmClockCmd::debug(const QString& iMsg) {
     qDebug() << "Hello to KtAlarmClockCmd. msg = " << iMsg;
 }
 //------------------------------------------------
-KtAlarmClockDlg* KtAlarmClockCmd::giveMyPanel() const {
-    return dialog;
-}
-//------------------------------------------------
-int KtAlarmClockCmd::setAutoStart(bool iValue) {
-    // qDebug() << "KtAlarmClockCmd::setAutoStart" << iValue;
-    qDebug() << "Auto Start Path = " << m_ExePath;
-    QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                  QSettings::NativeFormat);
-
-    reg.setValue("KtAlarmClock", m_ExePath);
-    return 0; // ok
-}
-//------------------------------------------------
 void KtAlarmClockCmd::forceQuit() {
     if (qGuiApp) qGuiApp->quit();
 
@@ -105,4 +102,20 @@ void KtAlarmClockCmd::forceQuit() {
 #else
     std::_Exit(0);
 #endif
+}
+//------------------------------------------------
+KtAlarmClockDlg* KtAlarmClockCmd::giveMyPanel() const {
+    return dialog;
+}
+//------------------------------------------------
+int KtAlarmClockCmd::setAutoStart(bool iValue) {
+    // qDebug() << "KtAlarmClockCmd::setAutoStart" << iValue;
+#ifndef NDEBUG
+    qDebug() << "Auto Start Path = " << m_ExePath;
+#endif
+    QSettings reg("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                  QSettings::NativeFormat);
+
+    reg.setValue("KtAlarmClock", m_ExePath);
+    return 0; // ok
 }

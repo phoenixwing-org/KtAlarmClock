@@ -37,12 +37,8 @@ public:
         forbidden_ = forbidden;
     }
 
-signals:
-    /** @brief 菜单动作（KtAlarmClock::ActionID） */
-    void action_triggered(int actionId);
-
-private slots:
-    void on_tray_activated(QSystemTrayIcon::ActivationReason reason);
+    /** @brief 托盘气泡提示 */
+    void show_message(const QString& title, const QString& message, int durationMs = 3000);
 
 private:
     /** @brief 构建托盘菜单 */
@@ -50,6 +46,13 @@ private:
 
     /** @brief 休息中则忽略操作 */
     bool check_forbidden() const;
+
+signals:
+    /** @brief 菜单动作（KtAlarmClock::ActionID） */
+    void action_triggered(int actionId);
+
+private slots:
+    void on_tray_activated(QSystemTrayIcon::ActivationReason reason);
 
 private:
     QSystemTrayIcon* TrayIcon;   ///< 1. 托盘图标

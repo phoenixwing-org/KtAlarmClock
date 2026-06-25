@@ -6,7 +6,11 @@
  */
 #include "KtMainClockWidget.h"
 
+#include "KtAlarmClock.h"
+#include "KtWindowsWakeNotifier.h"
+
 #include <QCloseEvent>
+#include <QDateTime>
 #include <QDebug>
 #include <QFont>
 #include <QGuiApplication>
@@ -24,6 +28,8 @@ constexpr int kMinWidth   = 80;
 constexpr int kMinHeight  = 34;
 constexpr int kHPad       = 20;
 constexpr int kTimePointSize = 12; // 点字号随 DPI 缩放，比固定 pixel 更清晰
+// 真休眠/合盖睡眠时 tick 通常停很久；阈值过小会把 UI 卡顿误判为休眠并冻结计时
+constexpr int kSleepGapMs = 12000;
 } // namespace
 
 //------------------------------------------------------
@@ -36,7 +42,9 @@ KtMainClockWidget::KtMainClockWidget(QWidget* parent)
     , dragging_(false)         // 5
     , dragOffset_()            // 6
     , initialCounter_(-100)    // 7
-    , clampingMove_(false) {   // 8
+    , clampingMove_(false)   // 8
+    , lastTickMs_(0)          // 9
+    , WakeWatchTimer(nullptr) { // 10
     setAttribute(Qt::WA_TranslucentBackground, true); // 圆角胶囊需透明底
     setMinimumSize(kMinWidth, kMinHeight);
 
@@ -53,8 +61,18 @@ KtMainClockWidget::KtMainClockWidget(QWidget* parent)
     workClock_.reset(0, initialCounter_); // 未启动：counter = -100
 
     TickTimer = new QTimer(this);
+    TickTimer->setTimerType(Qt::PreciseTimer);
     TickTimer->setInterval(1000);
     connect(TickTimer, &QTimer::timeout, this, &KtMainClockWidget::on_tick);
+
+    WakeWatchTimer = new QTimer(this);
+    WakeWatchTimer->setInterval(1000);
+    connect(WakeWatchTimer, &QTimer::timeout, this, &KtMainClockWidget::on_wake_watchdog);
+    WakeWatchTimer->start();
+
+    auto* wakeNotifier = new KtWindowsWakeNotifier(this);
+    connect(wakeNotifier, &KtWindowsWakeNotifier::system_resumed, this,
+            &KtMainClockWidget::try_resume_after_wake);
 
     move(600, 2); // 与 QML root.x 默认一致
     refresh_display();
@@ -69,6 +87,7 @@ KtMainClockWidget::~KtMainClockWidget() {
     // dragOffset_           // 6
     // initialCounter_       // 7
     // clampingMove_         // 8
+    // lastTickMs_           // 9
 }
 //------------------------------------------------------
 void KtMainClockWidget::apply_clamped_position(const QPoint& globalTopLeft) {
@@ -118,32 +137,16 @@ QPoint KtMainClockWidget::clamp_to_screen(const QPoint& globalTopLeft) const {
     return QPoint(posX, posY);
 }
 //------------------------------------------------------
-void KtMainClockWidget::ensure_within_screen() {
-    apply_clamped_position(frameGeometry().topLeft());
-}
-//------------------------------------------------------
-QScreen* KtMainClockWidget::screen_for_position(const QPoint& globalTopLeft) const {
-    const QRect widgetRect(globalTopLeft.x(), globalTopLeft.y(), width(), height());
-    QScreen*    screen     = QGuiApplication::screenAt(widgetRect.center());
-    if (!screen)
-        screen = QGuiApplication::screenAt(globalTopLeft);
-    if (!screen && windowHandle())
-        screen = windowHandle()->screen();
-    if (!screen)
-        screen = QGuiApplication::primaryScreen();
-    return screen;
-}
-//------------------------------------------------------
 void KtMainClockWidget::clock_pause() {
     workClock_.pause();
     TickTimer->stop();
     refresh_display();
 }
 //------------------------------------------------------
-void KtMainClockWidget::clock_start(int state, int counterSec) {
-    workClock_.start(state, counterSec);
+void KtMainClockWidget::clock_start(int state, int counterSec, bool leanFirstSecond) {
+    workClock_.start(state, counterSec, leanFirstSecond);
     if (workClock_.get_running())
-        TickTimer->start();
+        ensure_work_tick_running();
     else
         TickTimer->stop();
     refresh_display();
@@ -154,6 +157,42 @@ void KtMainClockWidget::closeEvent(QCloseEvent* event) {
         event->ignore(); // 默认禁止用户直接关窗
     else
         QWidget::closeEvent(event);
+}
+//------------------------------------------------------
+void KtMainClockWidget::detect_sleep_gap() {
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (lastTickMs_ <= 0) {
+        lastTickMs_ = now;
+        return;
+    }
+
+    if (!workClock_.get_running() || workClock_.get_state() != KtAlarmClock::WorkTime) {
+        lastTickMs_ = now;
+        return;
+    }
+
+    if (now - lastTickMs_ > kSleepGapMs) {
+        workClock_.freeze_for_system_sleep_at(lastTickMs_);
+        TickTimer->stop();
+    }
+
+    lastTickMs_ = now;
+}
+//------------------------------------------------------
+void KtMainClockWidget::ensure_within_screen() {
+    apply_clamped_position(frameGeometry().topLeft());
+}
+//------------------------------------------------------
+void KtMainClockWidget::ensure_work_tick_running() {
+    if (!TickTimer || !workClock_.get_running()) {
+        if (TickTimer)
+            TickTimer->stop();
+        return;
+    }
+
+    lastTickMs_ = QDateTime::currentMSecsSinceEpoch();
+    on_tick(); // 点击播放/下一个后立即刷新，不等首个 1s 定时器
+    TickTimer->start();
 }
 //------------------------------------------------------
 QString KtMainClockWidget::format_time(int counterSec) {
@@ -170,6 +209,19 @@ int KtMainClockWidget::get_counter() const {
 //------------------------------------------------------
 bool KtMainClockWidget::get_running() const {
     return workClock_.get_running();
+}
+//------------------------------------------------------
+void KtMainClockWidget::handle_application_active() {
+    try_resume_after_wake();
+}
+//------------------------------------------------------
+void KtMainClockWidget::handle_application_suspended() {
+    if (workClock_.get_running() && workClock_.get_state() == KtAlarmClock::WorkTime) {
+        workClock_.enter_system_sleep();
+        TickTimer->stop();
+    }
+    lastTickMs_ = QDateTime::currentMSecsSinceEpoch();
+    refresh_display();
 }
 //------------------------------------------------------
 void KtMainClockWidget::mouseMoveEvent(QMouseEvent* event) {
@@ -206,7 +258,25 @@ void KtMainClockWidget::mouseReleaseEvent(QMouseEvent* event) {
 }
 //------------------------------------------------------
 void KtMainClockWidget::on_tick() {
+    detect_sleep_gap();
     sync_from_wall_clock();
+}
+//------------------------------------------------------
+void KtMainClockWidget::on_wake_watchdog() {
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+
+    if (workClock_.is_sleep_suspended()) {
+        // 进程定时器恢复跑、且距末次 tick 已久 → 认定机器已唤醒
+        if (lastTickMs_ > 0 && now - lastTickMs_ >= kSleepGapMs)
+            try_resume_after_wake();
+        return;
+    }
+
+    if (workClock_.get_running() && workClock_.get_state() == KtAlarmClock::WorkTime) {
+        workClock_.realign_phase_start_if_ahead();
+        if (TickTimer && !TickTimer->isActive())
+            ensure_work_tick_running();
+    }
 }
 //------------------------------------------------------
 void KtMainClockWidget::paintEvent(QPaintEvent* event) {
@@ -232,6 +302,18 @@ void KtMainClockWidget::refresh_display() {
     ensure_within_screen(); // resize 后防止右侧/下侧越界
 }
 //------------------------------------------------------
+QScreen* KtMainClockWidget::screen_for_position(const QPoint& globalTopLeft) const {
+    const QRect widgetRect(globalTopLeft.x(), globalTopLeft.y(), width(), height());
+    QScreen*    screen     = QGuiApplication::screenAt(widgetRect.center());
+    if (!screen)
+        screen = QGuiApplication::screenAt(globalTopLeft);
+    if (!screen && windowHandle())
+        screen = windowHandle()->screen();
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    return screen;
+}
+//------------------------------------------------------
 void KtMainClockWidget::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
     if (auto* window = windowHandle()) {
@@ -249,4 +331,24 @@ void KtMainClockWidget::sync_from_wall_clock() {
     refresh_display();
     if (workClock_.is_expired())
         emit clock_out(workClock_.get_state());
+}
+//------------------------------------------------------
+void KtMainClockWidget::try_resume_after_wake() {
+    const bool wasSleepSuspended = workClock_.is_sleep_suspended();
+
+    if (workClock_.get_running()) {
+        workClock_.realign_phase_start_if_ahead();
+        ensure_work_tick_running();
+        return;
+    }
+
+    if (!workClock_.resume_after_system_sleep()) {
+        if (wasSleepSuspended && workClock_.get_counter() <= 0)
+            emit clock_out(workClock_.get_state());
+        lastTickMs_ = QDateTime::currentMSecsSinceEpoch();
+        refresh_display();
+        return;
+    }
+
+    ensure_work_tick_running();
 }
