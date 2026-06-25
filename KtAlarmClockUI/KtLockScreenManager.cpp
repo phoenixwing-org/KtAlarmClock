@@ -90,11 +90,10 @@ KtLockScreenManager::KtLockScreenManager(QObject* parent)
 }
 //------------------------------------------------------
 KtLockScreenManager::~KtLockScreenManager() {
-    hide();
+    dismiss(); // 内部已 delete primary_
 
     // breakClock_            // 1
-    delete primary_.data(); // 2
-    primary_.clear();
+    // primary_               // 2 dismiss() 已销毁
     tickTimer_       = nullptr; // 3
     watchdogTimer_   = nullptr; // 4
     wakeWatchTimer_  = nullptr; // 5
@@ -164,21 +163,24 @@ QString KtLockScreenManager::format_break_time() const {
     return format_clock(breakClock_.get_counter());
 }
 //------------------------------------------------------
-void KtLockScreenManager::hide() {
-    // 停表 → 销毁副屏 → 隐藏主屏 → 重置状态
+void KtLockScreenManager::dismiss() {
+    // 停表 → 销毁遮罩窗口 → 重置状态
 
     tickTimer_->stop();
     watchdogTimer_->stop();
 
+    // 副屏：直接销毁（show 时按屏数重建）
     for (auto* overlay : secondaries_) {
         overlay->hide();
-        overlay->deleteLater(); // 副屏随 hide 销毁
+        overlay->deleteLater();
     }
     secondaries_.clear();
 
+    // 主屏：showFullScreen() 的窗口 hide() 后可能残留，直接销毁，show 时重建
     if (primary_) {
         primary_->set_debug_controls_visible(false);
-        primary_->hide(); // 主屏仅隐藏，下次 show 复用
+        delete primary_.data();
+        Q_ASSERT(primary_.isNull());
     }
 
     breakClock_.pause(); // 停止休息倒计时
@@ -224,7 +226,7 @@ void KtLockScreenManager::on_application_state_changed(Qt::ApplicationState stat
 void KtLockScreenManager::on_debug_exit_requested() {
     if (!debugMode_ || !visible_) return;
 
-    hide();
+    dismiss();
     emit clock_out(KtAlarmClock::WorkBreak); // 调试直接退出，恢复工作计时
 }
 //------------------------------------------------------
@@ -610,7 +612,7 @@ void KtLockScreenManager::try_unlock(bool /*fromSecondary*/) {
     // 推迟到事件循环下一轮，避免在 answer_submitted 栈内 destroy UI
     QTimer::singleShot(0, this, [ this ]() {
         if (!exiting_) {
-            hide();
+            dismiss();
             emit clock_out(KtAlarmClock::WorkBreak); // 通知 JS 切回工作计时
         }
         unlockPending_ = false;

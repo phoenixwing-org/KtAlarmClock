@@ -152,7 +152,7 @@ void KtAlarmClockController::force_unload_over_dlg() {
     if (!lockScreen_->get_visible()) return;
     if (debugLocate_) qDebug() << "[Controller] force_unload_over_dlg";
     lockScreen_->set_exiting(true);
-    lockScreen_->hide();
+    lockScreen_->dismiss();
 }
 //------------------------------------------------------
 bool KtAlarmClockController::is_forbidden() const {

@@ -43,8 +43,8 @@ public:
         return visible_;
     }
 
-    /** @brief 隐藏锁屏 */
-    void hide();
+    /** @brief 关闭锁屏遮罩，销毁原生窗口避免残留黑屏 */
+    void dismiss();
 
     /** @brief 设置是否正在退出动画 */
     void set_exiting(bool exiting);
