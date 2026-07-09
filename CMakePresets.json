@@ -71,11 +71,13 @@
         },
         {
             "name": "win-debug",
-            "configurePreset": "win-debug"
+            "configurePreset": "win-debug",
+            "configuration": "Debug"
         },
         {
             "name": "win-release",
-            "configurePreset": "win-release"
+            "configurePreset": "win-release",
+            "configuration": "Release"
         }
     ]
 }

@@ -1,5 +1,3 @@
-include(../common.cmake)
-
 # 指定工程名
 project(KtAlarmClock LANGUAGES CXX)
 
@@ -14,16 +12,14 @@ if(NOT WIN32)
 endif()
 
 # 构建可执行文件
+add_executable(${PROJECT_NAME} main.cpp)
+
 if(WIN32)
-    if(CMAKE_BUILD_TYPE MATCHES Debug)
-        add_executable(${PROJECT_NAME} main.cpp)
-    else()
-        add_executable(${PROJECT_NAME} WIN32 main.cpp)
-    endif()
     target_sources(${PROJECT_NAME} PRIVATE main.rc)
-else()
-    # macOS / Linux：无 WIN32 子系统概念，无 .rc 资源文件
-    add_executable(${PROJECT_NAME} main.cpp)
+    # Release 使用 WIN32 子系统（无控制台）；Debug 保留控制台便于调试
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE "$<NOT:$<CONFIG:Debug>>"
+    )
 endif()
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE QT_DEPRECATED_WARNINGS)

@@ -1,4 +1,3 @@
-include(../common.cmake)
 # 指定工程名
 project(KtAlarmClockUI LANGUAGES CXX)
 

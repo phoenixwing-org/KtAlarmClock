@@ -1,43 +1,43 @@
-﻿#used for several cmake file
-cmake_minimum_required(VERSION 3.25)
+﻿# 公共 CMake 配置，由根 CMakeLists.txt include 一次
+if(KT_COMMON_CMAKE_INCLUDED)
+    return()
+endif()
+set(KT_COMMON_CMAKE_INCLUDED TRUE)
 
-# 设置C++
+# C++ 标准
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(MSVC)
     add_compile_options(/utf-8)
 endif()
 
-# Read env paths and normalize separators (\ -> /) in one step per variable
-# 如果环境变量未设置，使用项目内部 build 目录作为默认输出路径
+# 读取环境路径并统一分隔符；未设置时回退到 build 目录
 if(DEFINED ENV{ROOT_DIR})
-    file(TO_CMAKE_PATH "$ENV{ROOT_DIR}" ROOT_DIR)
     file(TO_CMAKE_PATH "$ENV{ROOT_DIR}/kt/viewer" ROOT_DIR_VIEWER)
 else()
-    set(ROOT_DIR ${CMAKE_BINARY_DIR})
     set(ROOT_DIR_VIEWER ${CMAKE_BINARY_DIR}/out)
 endif()
 
 if(DEFINED ENV{ROOT_DIR_3rdParty})
     file(TO_CMAKE_PATH "$ENV{ROOT_DIR_3rdParty}" ROOT_DIR_3rdParty)
+    set(KT_BASE_INCLUDE ${ROOT_DIR_3rdParty})
 else()
-    set(ROOT_DIR_3rdParty "")
+    set(KT_BASE_INCLUDE "")
 endif()
 
-# set default for output directory
+# 输出目录（Debug -> debug，其余 -> bin）
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${ROOT_DIR_VIEWER}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${ROOT_DIR_VIEWER}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO ${ROOT_DIR_VIEWER}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_MINSIZEREL ${ROOT_DIR_VIEWER}/lib)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${ROOT_DIR_VIEWER}/debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${ROOT_DIR_VIEWER}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${ROOT_DIR_VIEWER}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${ROOT_DIR_VIEWER}/bin)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${ROOT_DIR_VIEWER}/debug)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${ROOT_DIR_VIEWER}/bin)
-
-# 根据构建类型设置CMAKE_BUILD_TYPE
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-else()
-    set(CMAKE_BUILD_TYPE Release)
-endif()
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${ROOT_DIR_VIEWER}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${ROOT_DIR_VIEWER}/bin)
