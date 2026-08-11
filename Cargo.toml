@@ -1,0 +1,47 @@
+[workspace]
+members = [
+    "app",
+    "crates/clock-app",
+    "crates/clock-domain",
+    "crates/clock-platform",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "LGPL-3.0-only"
+rust-version = "1.96"
+
+[workspace.dependencies]
+clock-app = { path = "crates/clock-app" }
+clock-domain = { path = "crates/clock-domain" }
+clock-platform = { path = "crates/clock-platform" }
+libc = "0.2.189"
+raw-window-handle = "0.6.2"
+serde = { version = "1.0.228", features = ["derive"] }
+slint = { version = "~1.17.1", default-features = false, features = [
+    "backend-winit",
+    "compat-1-2",
+    "raw-window-handle-06",
+    "renderer-software",
+    "std",
+    "system-tray",
+    "unstable-winit-030",
+] }
+slint-build = "~1.17.1"
+tempfile = "3.27.0"
+toml = "1.1.2"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+opt-level = "s"
+panic = "abort"
+strip = "symbols"
+
+# Slint's build-time compiler has a large generic dependency graph. Keeping
+# debug symbols for every build dependency adds substantial disk and memory
+# pressure without helping application-level debugging.
+[profile.dev.build-override]
+debug = 0

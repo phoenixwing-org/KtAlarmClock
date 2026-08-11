@@ -1,0 +1,327 @@
+import { Button, CheckBox, LineEdit, SpinBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    width: 300px;
+    height: 58px;
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "KT 护眼闹钟";
+    icon: @image-url("../../image/alarm-clock.svg");
+
+    in property <string> time-text: "45:00";
+    in property <bool> running: false;
+    in property <bool> in-break: false;
+
+    callback toggle-play();
+    callback start-break();
+    callback adjust-work(int);
+    callback show-settings();
+    callback drag-requested();
+
+    Rectangle {
+        border-radius: 18px;
+        background: #f4efe5;
+        border-color: #cfbf9d;
+        border-width: 1px;
+
+        HorizontalLayout {
+            padding-left: 10px;
+            padding-right: 8px;
+            padding-top: 7px;
+            padding-bottom: 7px;
+            spacing: 5px;
+
+            Rectangle {
+                width: 102px;
+                HorizontalLayout {
+                    spacing: 5px;
+                    Image {
+                        source: @image-url("../../image/alarm-clock.svg");
+                        width: 26px;
+                        height: 26px;
+                        image-fit: contain;
+                    }
+                    Text {
+                        text: root.time-text;
+                        color: #312b22;
+                        font-size: 20px;
+                        font-weight: 600;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                        min-width: 68px;
+                    }
+                }
+                TouchArea {
+                    pointer-event(event) => {
+                        if event.button == PointerEventButton.left
+                            && event.kind == PointerEventKind.down {
+                            root.drag-requested();
+                        }
+                    }
+                }
+            }
+
+            Button {
+                text: "−";
+                enabled: !root.in-break;
+                clicked => { root.adjust-work(-60); }
+            }
+            Button {
+                text: root.running ? "暂停" : "开始";
+                enabled: !root.in-break;
+                clicked => { root.toggle-play(); }
+            }
+            Button {
+                text: "+";
+                enabled: !root.in-break;
+                clicked => { root.adjust-work(60); }
+            }
+            Button {
+                text: "设置";
+                enabled: !root.in-break;
+                clicked => { root.show-settings(); }
+            }
+        }
+    }
+}
+
+component DurationRow inherits HorizontalLayout {
+    in property <string> label;
+    in-out property <int> seconds;
+    in property <int> minimum;
+    in property <int> maximum;
+
+    spacing: 12px;
+    Text {
+        text: root.label;
+        min-width: 112px;
+        vertical-alignment: center;
+        color: #312b22;
+    }
+    SpinBox {
+        value <=> root.seconds;
+        minimum: root.minimum;
+        maximum: root.maximum;
+        min-width: 150px;
+    }
+    Text {
+        text: "秒";
+        vertical-alignment: center;
+        color: #6b6255;
+    }
+}
+
+export component SettingsWindow inherits Window {
+    width: 500px;
+    height: 380px;
+    title: "KT 护眼闹钟 - 设置";
+    icon: @image-url("../../image/alarm-clock.svg");
+    background: #f8f5ef;
+
+    in-out property <int> work-seconds: 2700;
+    in-out property <int> break-seconds: 600;
+    in-out property <int> force-seconds: 300;
+    in-out property <bool> auto-start: true;
+    in property <bool> running: false;
+    in property <string> error-text: "";
+
+    callback save-settings(int, int, int, bool);
+    callback restore-defaults();
+    callback toggle-play();
+    callback start-break();
+    callback next-work();
+    callback adjust-work(int);
+
+    VerticalLayout {
+        padding: 22px;
+        spacing: 16px;
+
+        Text {
+            text: "计时设置";
+            font-size: 22px;
+            font-weight: 600;
+            color: #312b22;
+        }
+
+        DurationRow {
+            label: "工作时间";
+            seconds <=> root.work-seconds;
+            minimum: 60;
+            maximum: 5400;
+        }
+        DurationRow {
+            label: "休息时间";
+            seconds <=> root.break-seconds;
+            minimum: 10;
+            maximum: 3600;
+        }
+        DurationRow {
+            label: "强制休息";
+            seconds <=> root.force-seconds;
+            minimum: 0;
+            maximum: root.break-seconds;
+        }
+
+        CheckBox {
+            text: "开机自动启动";
+            checked <=> root.auto-start;
+        }
+
+        if root.error-text != "": Text {
+            text: root.error-text;
+            color: #b3261e;
+            wrap: word-wrap;
+        }
+
+        Rectangle { vertical-stretch: 1; }
+
+        HorizontalLayout {
+            spacing: 8px;
+            Button { text: "立刻休息"; clicked => { root.start-break(); } }
+            Button { text: "−60 秒"; clicked => { root.adjust-work(-60); } }
+            Button { text: root.running ? "暂停" : "开始"; clicked => { root.toggle-play(); } }
+            Button { text: "+60 秒"; clicked => { root.adjust-work(60); } }
+            Button { text: "下一轮"; clicked => { root.next-work(); } }
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            Rectangle { horizontal-stretch: 1; }
+            Button { text: "恢复默认"; clicked => { root.restore-defaults(); } }
+            Button {
+                text: "保存";
+                primary: true;
+                clicked => {
+                    root.save-settings(root.work-seconds, root.break-seconds,
+                                       root.force-seconds, root.auto-start);
+                }
+            }
+        }
+    }
+}
+
+export component BreakWindow inherits Window {
+    no-frame: true;
+    always-on-top: true;
+    background: #1f2937;
+    title: "休息时间";
+
+    in property <string> time-text: "10:00";
+    in property <bool> forced: true;
+    in property <bool> can-unlock: false;
+    in property <bool> break-finished: false;
+    in property <string> formula-text: "";
+    in property <string> message-text: "";
+
+    callback unlock-requested(string);
+
+    VerticalLayout {
+        alignment: center;
+        spacing: 18px;
+        padding: 36px;
+
+        Image {
+            source: @image-url("../../image/coffee.svg");
+            width: 150px;
+            height: 150px;
+            image-fit: contain;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.break-finished ? "休息完成，可以解锁" : "请离开屏幕，休息一下";
+            color: white;
+            font-size: 28px;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.time-text;
+            color: #f8df9d;
+            font-size: 54px;
+            font-weight: 700;
+            horizontal-alignment: center;
+        }
+        Text {
+            text: root.forced ? "强制休息中" : (root.break-finished ? "点击解锁继续工作" : "完成算式后可提前结束休息");
+            color: #d1d5db;
+            font-size: 18px;
+            horizontal-alignment: center;
+        }
+
+        if root.can-unlock && !root.break-finished: HorizontalLayout {
+            alignment: center;
+            spacing: 10px;
+            Text {
+                text: root.formula-text;
+                color: white;
+                font-size: 20px;
+                vertical-alignment: center;
+            }
+            answer := LineEdit {
+                width: 120px;
+                input-type: number;
+                accepted => { root.unlock-requested(self.text); }
+            }
+            Button {
+                text: "解锁";
+                clicked => { root.unlock-requested(answer.text); }
+            }
+        }
+
+        if root.can-unlock && root.break-finished: Button {
+            text: "解锁并继续工作";
+            clicked => { root.unlock-requested(""); }
+        }
+
+        if root.message-text != "": Text {
+            text: root.message-text;
+            color: #fca5a5;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+export component AppTray inherits SystemTrayIcon {
+    icon: @image-url("../../image/alarm-clock.svg");
+    tooltip: root.status-text;
+    title: "";
+
+    in property <string> status-text: "KT 护眼闹钟";
+    in property <bool> running: false;
+    in property <bool> in-break: false;
+
+    callback toggle-play();
+    callback start-break();
+    callback show-main();
+    callback show-settings();
+    callback quit();
+
+    clicked => { root.show-main(); }
+
+    Menu {
+        MenuItem {
+            title: root.running ? "暂停计时" : "开始计时";
+            enabled: !root.in-break;
+            activated => { root.toggle-play(); }
+        }
+        MenuItem {
+            title: "立刻休息";
+            enabled: !root.in-break;
+            activated => { root.start-break(); }
+        }
+        MenuItem {
+            title: "显示计时器";
+            activated => { root.show-main(); }
+        }
+        MenuItem {
+            title: "设置";
+            enabled: !root.in-break;
+            activated => { root.show-settings(); }
+        }
+        MenuSeparator {}
+        MenuItem {
+            title: "退出";
+            activated => { root.quit(); }
+        }
+    }
+}

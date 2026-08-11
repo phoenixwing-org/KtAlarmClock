@@ -8,6 +8,7 @@ build
 x64
 Debug
 Release
+target/
 [Oo]bj/
 [Bb]in/
 

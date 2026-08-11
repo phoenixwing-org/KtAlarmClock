@@ -1,0 +1,30 @@
+name: Rust
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-14
+          - windows-2022
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust and Clippy
+        run: rustup component add clippy
+      - name: Check workspace
+        run: cargo check --workspace
+      - name: Run tests
+        run: cargo test --workspace
+      - name: Run strict Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
