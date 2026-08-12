@@ -11,6 +11,12 @@
 
 ## 行为约定
 
+- 工作、暂停和打开设置时，胶囊始终显示并置于普通窗口上方；休息时胶囊隐藏，休息遮罩使用更高的原生窗口层级。
+- 胶囊是随时间文字自动收缩的深灰色半圆角标签，时间文字沿用设置界面的亮蓝色；不放图标和按钮。左键拖动可移动，右键菜单提供开始/暂停、立刻休息、设置和退出。时间增减只放在设置窗口。
+- 胶囊拖动或文字宽度变化后会自动限制在当前屏幕工作区内，不会跑到菜单栏、Dock 或 Windows 任务栏之外。
+- 设置窗沿用旧版黑底蓝色主题与五个 SVG 动作按钮；三组时长均以 10 秒步进，并支持旧 Qt 的 `分:秒`、`Ns`（秒）和纯数字分钟输入。底部动作先提交设置再执行；窗口由内容决定固定尺寸，用户不能拉伸。
+- macOS 胶囊使用透明、无系统阴影的原生窗口和 CALayer 圆角裁剪；Windows 使用 DPI 感知的圆角窗口区域和 `HWND_TOPMOST`。两端的内容仍由同一份 Slint UI 绘制。
+- macOS 以辅助应用运行，不显示 Dock 图标，也不占用 `Command+Tab`；操作入口保留在胶囊右键菜单和菜单栏托盘。
 - 工作计时使用单调时钟；系统真正挂起时冻结，唤醒后从冻结点继续。
 - 休息倒计时和强制期使用墙钟绝对截止时间；系统休眠时间计入休息，唤醒后立即补算。
 - 休息到点不会自动关闭遮罩，而是允许用户解锁。
@@ -34,7 +40,7 @@ cargo build --release
 - macOS/Linux：`target/release/KtAlarmClock`
 - Windows：`target/release/KtAlarmClock.exe`
 
-程序运行时不需要 Qt、浏览器内核或额外 UI 动态库。Slint UI 和两个实际使用的 SVG 会在构建时编入程序。
+程序运行时不需要 Qt、浏览器内核或额外 UI 动态库。Slint UI 和实际使用的 SVG 会在构建时编入程序。
 
 开发运行：
 
@@ -83,7 +89,7 @@ app/                         Slint UI、桌面事件循环、窗口编排、资�
 crates/clock-domain/         纯计时状态机与设置校验
 crates/clock-app/            Controller、Effect、TOML 配置存储
 crates/clock-platform/       Windows/macOS 单实例、休眠、自启动、窗口与资源适配
-image/                       实际使用的 alarm-clock.svg、coffee.svg
+image/                       Slint 实际使用的托盘、休息与设置动作 SVG
 docs/                        设计、验收和迁移调研
 ```
 

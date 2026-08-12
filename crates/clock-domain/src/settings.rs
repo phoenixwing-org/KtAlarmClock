@@ -11,6 +11,46 @@ pub const MIN_BREAK_SECONDS: u32 = 10;
 pub const MAX_BREAK_SECONDS: u32 = 3_600;
 pub const MAX_FORCE_SECONDS: u32 = 3_600;
 
+/// 解析旧 Qt `KtDurationEdit` 接受的时长文本。
+///
+/// 支持 `分:秒`、带 `s`/`S` 后缀的秒数和表示分钟的纯数字；其余输入无效。
+pub fn parse_duration_text(text: &str) -> Option<u32> {
+    let body = text.trim();
+    if body.is_empty() {
+        return None;
+    }
+
+    if let Some(seconds) = body.strip_suffix('s').or_else(|| body.strip_suffix('S')) {
+        return seconds.trim().parse().ok();
+    }
+
+    if let Some((minutes, seconds)) = body.split_once(':') {
+        let minutes: u32 = minutes.trim().parse().ok()?;
+        let seconds: u32 = seconds.trim().parse().ok()?;
+        if seconds > 59 {
+            return None;
+        }
+        return minutes.checked_mul(60)?.checked_add(seconds);
+    }
+
+    body.parse::<u32>().ok()?.checked_mul(60)
+}
+
+/// 按旧 Qt 控件的行为解析输入，并将合法结果限制到控件范围内。
+pub fn parse_duration_in_range(text: &str, minimum: u32, maximum: u32) -> Option<u32> {
+    let (minimum, maximum) = if minimum <= maximum {
+        (minimum, maximum)
+    } else {
+        (maximum, minimum)
+    };
+    parse_duration_text(text).map(|seconds| seconds.clamp(minimum, maximum))
+}
+
+/// 使用旧 Qt 控件的规范格式显示秒数。
+pub fn format_duration(seconds: u32) -> String {
+    format!("{}:{:02}", seconds / 60, seconds % 60)
+}
+
 /// 与 UI/存储无关的用户设置。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Settings {
@@ -148,5 +188,29 @@ mod tests {
             settings.validate(),
             Err(SettingsError::ForceLongerThanBreak { .. })
         ));
+    }
+
+    #[test]
+    fn duration_text_rules_match_the_qt_editor() {
+        assert_eq!(parse_duration_text("45:00"), Some(2_700));
+        assert_eq!(parse_duration_text(" 3:07 "), Some(187));
+        assert_eq!(parse_duration_text("3: 07"), Some(187));
+        assert_eq!(parse_duration_text("10s"), Some(10));
+        assert_eq!(parse_duration_text("10S"), Some(10));
+        assert_eq!(parse_duration_text("45"), Some(2_700));
+        assert_eq!(parse_duration_text("0"), Some(0));
+
+        for invalid in ["", " ", "1:60", "1:2:3", "-1", "-1s", "abc"] {
+            assert_eq!(parse_duration_text(invalid), None, "{invalid}");
+        }
+    }
+
+    #[test]
+    fn duration_text_is_clamped_without_rounding() {
+        assert_eq!(parse_duration_in_range("1s", 10, 3_600), Some(10));
+        assert_eq!(parse_duration_in_range("90", 60, 5_400), Some(5_400));
+        assert_eq!(parse_duration_in_range("1:23", 60, 5_400), Some(83));
+        assert_eq!(format_duration(83), "1:23");
+        assert_eq!(format_duration(0), "0:00");
     }
 }

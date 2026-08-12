@@ -14,12 +14,16 @@ block2 = "0.6.2"
 libc.workspace = true
 objc2 = "0.6.4"
 objc2-app-kit = { version = "0.3.2", default-features = false, features = [
+    "NSApplication",
+    "NSColor",
     "NSResponder",
+    "NSRunningApplication",
     "NSScreen",
     "NSView",
     "NSWindow",
     "NSWorkspace",
     "block2",
+    "objc2-quartz-core",
     "std",
 ] }
 objc2-foundation = { version = "0.3.2", default-features = false, features = [
@@ -28,6 +32,11 @@ objc2-foundation = { version = "0.3.2", default-features = false, features = [
     "NSObject",
     "NSString",
     "block2",
+    "std",
+] }
+objc2-quartz-core = { version = "0.3.2", default-features = false, features = [
+    "CALayer",
+    "objc2-core-foundation",
     "std",
 ] }
 
@@ -41,6 +50,7 @@ windows = { version = "0.62.2", features = [
     "Win32_System_Power",
     "Win32_System_Registry",
     "Win32_System_Threading",
+    "Win32_UI_HiDpi",
     "Win32_UI_WindowsAndMessaging",
 ] }
 

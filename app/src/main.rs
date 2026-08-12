@@ -1,10 +1,13 @@
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
 use clock_app::{Controller, Effect, Event, FileConfigStore, UserAction};
-use clock_domain::{Phase, Settings, Snapshot, TimePoint};
+use clock_domain::{
+    Phase, Settings, Snapshot, TimePoint, format_duration, parse_duration_in_range,
+};
 use clock_platform::{
-    InstanceRole, MonitorGeometry, PowerEvent, PowerMonitor, SingleInstance,
-    configure_overlay_window, native_monitor_geometries,
+    InstanceRole, MonitorGeometry, PowerEvent, PowerMonitor, SingleInstance, configure_application,
+    configure_main_window, configure_overlay_window, constrain_main_window,
+    native_monitor_geometries,
 };
 use slint::winit_030::{WinitWindowAccessor, winit};
 use slint::{ComponentHandle, SharedString, Timer, TimerMode};
@@ -71,8 +74,11 @@ struct MonitorKey {
     scale_bits: u64,
 }
 
+#[derive(Clone)]
 struct MonitorSpec {
     key: MonitorKey,
+    #[cfg(not(target_os = "macos"))]
+    handle: Option<winit::monitor::MonitorHandle>,
 }
 
 struct BreakOverlay {
@@ -89,10 +95,19 @@ const FALLBACK_MONITOR_KEY: MonitorKey = MonitorKey {
 };
 
 fn main() -> AppResult<()> {
-    slint::BackendSelector::new()
+    let backend = slint::BackendSelector::new()
         .backend_name("winit".into())
-        .renderer_name("software".into())
-        .select()?;
+        .renderer_name("software".into());
+    #[cfg(target_os = "macos")]
+    let backend = {
+        use winit::platform::macos::{ActivationPolicy, EventLoopBuilderExtMacOS};
+        let mut event_loop =
+            winit::event_loop::EventLoop::<slint::winit_030::SlintEvent>::with_user_event();
+        event_loop.with_activation_policy(ActivationPolicy::Accessory);
+        backend.with_winit_event_loop_builder(event_loop)
+    };
+    backend.select()?;
+    configure_application()?;
 
     let arguments: Vec<_> = std::env::args_os().collect();
     let resource_test = arguments
@@ -148,7 +163,7 @@ fn main() -> AppResult<()> {
     install_callbacks(&runtime);
     refresh_views(&runtime);
 
-    runtime.borrow().main.show()?;
+    show_main(&runtime, false)?;
     runtime.borrow().tray.show()?;
     write_resource_state(&runtime)?;
     dispatch(&runtime, Event::User(UserAction::PlayPause));
@@ -197,6 +212,31 @@ fn main() -> AppResult<()> {
 }
 
 fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
+    runtime
+        .borrow()
+        .main
+        .window()
+        .on_winit_window_event(|window, event| {
+            if matches!(event, winit::event::WindowEvent::Moved(_)) {
+                let _ = window.with_winit_window(|native| {
+                    if let Err(error) = constrain_main_window(native) {
+                        eprintln!("移动后约束计时胶囊失败: {error}");
+                    }
+                });
+            } else if matches!(
+                event,
+                winit::event::WindowEvent::Resized(_)
+                    | winit::event::WindowEvent::ScaleFactorChanged { .. }
+            ) {
+                let _ = window.with_winit_window(|native| {
+                    if let Err(error) = configure_main_window(native) {
+                        eprintln!("尺寸变化后更新计时胶囊轮廓失败: {error}");
+                    }
+                });
+            }
+            slint::winit_030::EventResult::Propagate
+        });
+
     let weak = Rc::downgrade(runtime);
     runtime.borrow().main.on_toggle_play(move || {
         dispatch_weak(&weak, Event::User(UserAction::PlayPause));
@@ -208,13 +248,13 @@ fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
     });
 
     let weak = Rc::downgrade(runtime);
-    runtime.borrow().main.on_adjust_work(move |seconds| {
-        dispatch_weak(&weak, Event::User(UserAction::AdjustWork(seconds)));
+    runtime.borrow().main.on_show_settings(move || {
+        dispatch_weak(&weak, Event::User(UserAction::ShowSettings));
     });
 
     let weak = Rc::downgrade(runtime);
-    runtime.borrow().main.on_show_settings(move || {
-        dispatch_weak(&weak, Event::User(UserAction::ShowSettings));
+    runtime.borrow().main.on_quit(move || {
+        dispatch_weak(&weak, Event::User(UserAction::Quit));
     });
 
     let weak = Rc::downgrade(runtime);
@@ -240,8 +280,10 @@ fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
 
     let weak = Rc::downgrade(runtime);
     runtime.borrow().tray.on_show_main(move || {
-        if let Some(runtime) = weak.upgrade() {
-            show_and_activate_main(&runtime);
+        if let Some(runtime) = weak.upgrade()
+            && let Err(error) = show_and_activate_main(&runtime)
+        {
+            eprintln!("显示主窗口失败: {error}");
         }
     });
 
@@ -290,7 +332,7 @@ fn dispatch_at(runtime: &Rc<RefCell<Runtime>>, event: Event, now: TimePoint) {
 
 fn apply_effect(runtime: &Rc<RefCell<Runtime>>, effect: Effect) -> AppResult<()> {
     match effect {
-        Effect::ShowMain => runtime.borrow().main.show()?,
+        Effect::ShowMain => show_main(runtime, false)?,
         Effect::HideMain => runtime.borrow().main.hide()?,
         Effect::ShowSettings => {
             ensure_settings_window(runtime)?;
@@ -299,10 +341,11 @@ fn apply_effect(runtime: &Rc<RefCell<Runtime>>, effect: Effect) -> AppResult<()>
             set_settings_view(settings, runtime.controller.settings());
             settings.set_error_text(SharedString::default());
             settings.show()?;
+            schedule_native_settings_configuration(settings)?;
         }
         Effect::ShowBreakOverlays => show_break_windows(runtime)?,
         Effect::DismissBreakOverlays => dismiss_break_windows(runtime)?,
-        Effect::ActivateMain => show_and_activate_main(runtime),
+        Effect::ActivateMain => show_and_activate_main(runtime)?,
         Effect::PersistSettings(settings) => runtime.borrow().config.save(settings)?,
         Effect::SetAutoStart(enabled) if !runtime.borrow().resource_test => {
             clock_platform::sync_auto_start(enabled)?;
@@ -349,12 +392,13 @@ fn build_break_windows(runtime: &Rc<RefCell<Runtime>>) -> AppResult<Vec<BreakOve
         window
             .window()
             .set_position(slint::PhysicalPosition::new(monitor.key.x, monitor.key.y));
+        #[cfg(not(target_os = "macos"))]
         window.window().set_size(slint::PhysicalSize::new(
             monitor.key.width,
             monitor.key.height,
         ));
         window.show()?;
-        schedule_native_overlay_configuration(&window, Some(monitor.key))?;
+        schedule_native_overlay_configuration(&window, Some(monitor.clone()))?;
         overlays.push(BreakOverlay {
             key: monitor.key,
             window,
@@ -365,7 +409,7 @@ fn build_break_windows(runtime: &Rc<RefCell<Runtime>>) -> AppResult<Vec<BreakOve
 
 fn schedule_native_overlay_configuration(
     window: &BreakWindow,
-    monitor: Option<MonitorKey>,
+    monitor: Option<MonitorSpec>,
 ) -> AppResult<()> {
     let weak = window.as_weak();
     slint::spawn_local(async move {
@@ -375,20 +419,54 @@ fn schedule_native_overlay_configuration(
         match window.window().winit_window().await {
             Ok(native) => {
                 native.set_window_level(winit::window::WindowLevel::AlwaysOnTop);
+                #[cfg(not(target_os = "macos"))]
+                {
+                    native.set_resizable(true);
+                    native.set_min_inner_size(None::<winit::dpi::PhysicalSize<u32>>);
+                    native.set_max_inner_size(None::<winit::dpi::PhysicalSize<u32>>);
+                }
                 if let Some(monitor) = monitor {
-                    native.set_fullscreen(None);
                     native.set_outer_position(winit::dpi::PhysicalPosition::new(
-                        monitor.x, monitor.y,
+                        monitor.key.x,
+                        monitor.key.y,
                     ));
-                    let _ = native.request_inner_size(winit::dpi::PhysicalSize::new(
-                        monitor.width,
-                        monitor.height,
-                    ));
+                    // macOS uses an AppKit screen-frame overlay below. Entering the
+                    // system full-screen Space is animated and serializes multiple
+                    // displays, which is the wrong behavior for a lock overlay.
+                    #[cfg(not(target_os = "macos"))]
+                    if let Some(handle) = monitor.handle {
+                        native.set_fullscreen(Some(winit::window::Fullscreen::Borderless(Some(
+                            handle,
+                        ))));
+                    }
                 } else {
+                    #[cfg(not(target_os = "macos"))]
                     native.set_fullscreen(Some(winit::window::Fullscreen::Borderless(None)));
                 }
-                if let Err(error) = configure_overlay_window(native.as_ref()) {
-                    eprintln!("配置原生休息遮罩失败: {error}");
+                #[cfg(target_os = "macos")]
+                {
+                    use winit::platform::macos::WindowExtMacOS;
+
+                    // `show()` queues Slint's initial preferred-size request. Apply
+                    // simple fullscreen on the next turn. Unlike macOS native
+                    // fullscreen this fills the current screen without creating a
+                    // Space, and winit keeps later layout requests from shrinking it.
+                    Timer::single_shot(Duration::from_millis(200), move || {
+                        if !native.set_simple_fullscreen(true) {
+                            eprintln!("macOS 休息遮罩未能进入简洁全屏模式");
+                        }
+                        if let Err(error) = configure_overlay_window(native.as_ref()) {
+                            eprintln!("配置原生休息遮罩失败: {error}");
+                        }
+                        native.request_redraw();
+                    });
+                }
+                #[cfg(not(target_os = "macos"))]
+                {
+                    native.request_redraw();
+                    if let Err(error) = configure_overlay_window(native.as_ref()) {
+                        eprintln!("配置原生休息遮罩失败: {error}");
+                    }
                 }
             }
             Err(error) => eprintln!("取得休息遮罩 winit 窗口失败: {error}"),
@@ -400,6 +478,33 @@ fn schedule_native_overlay_configuration(
 fn create_break_window(runtime: &Rc<RefCell<Runtime>>, a: i32, b: i32) -> AppResult<BreakWindow> {
     let window = BreakWindow::new()?;
     window.set_formula_text(format!("{a} + {b} =").into());
+    window.on_normalize_answer(|answer| normalize_answer(&answer).into());
+
+    let weak_window = window.as_weak();
+    window.on_answer_focus_changed(move |focused| {
+        if !focused {
+            return;
+        }
+        let weak_window = weak_window.clone();
+        if let Err(error) = slint::spawn_local(async move {
+            let Some(window) = weak_window.upgrade() else {
+                return;
+            };
+            match window.window().winit_window().await {
+                Ok(native) => {
+                    clock_platform::activate_application();
+                    native.focus_window();
+                    // The answer only accepts ASCII digits. Disabling IME for this
+                    // focused overlay prevents Chinese composition from swallowing
+                    // keys without changing the user's global input source.
+                    native.set_ime_allowed(false);
+                }
+                Err(error) => eprintln!("配置休息答案输入焦点失败: {error}"),
+            }
+        }) {
+            eprintln!("调度休息答案输入焦点失败: {error}");
+        }
+    });
 
     let weak = Rc::downgrade(runtime);
     window.on_unlock_requested(move |answer| {
@@ -410,7 +515,29 @@ fn create_break_window(runtime: &Rc<RefCell<Runtime>>, a: i32, b: i32) -> AppRes
     Ok(window)
 }
 
+fn normalize_answer(answer: &str) -> String {
+    answer.chars().filter(char::is_ascii_digit).collect()
+}
+
 fn monitor_specs(runtime: &Rc<RefCell<Runtime>>) -> Vec<MonitorSpec> {
+    #[cfg(target_os = "macos")]
+    {
+        let native: Vec<_> = native_monitor_geometries()
+            .unwrap_or_else(|error| {
+                eprintln!("原生显示器枚举失败: {error}");
+                Vec::new()
+            })
+            .into_iter()
+            .map(platform_monitor_spec)
+            .collect();
+        if !native.is_empty() {
+            // A scaled macOS display can report a winit video-mode size (for
+            // example 3240 px) that is not NSScreen.frame * backingScaleFactor
+            // (3600 px). AppKit window coordinates must use the latter.
+            return native;
+        }
+    }
+
     let mut monitors: Vec<MonitorSpec> = runtime
         .borrow()
         .main
@@ -451,6 +578,8 @@ fn monitor_spec(handle: winit::monitor::MonitorHandle) -> MonitorSpec {
             height: size.height,
             scale_bits: handle.scale_factor().to_bits(),
         },
+        #[cfg(not(target_os = "macos"))]
+        handle: Some(handle),
     }
 }
 
@@ -463,6 +592,8 @@ fn platform_monitor_spec(geometry: MonitorGeometry) -> MonitorSpec {
             height: geometry.height,
             scale_bits: geometry.scale_bits,
         },
+        #[cfg(not(target_os = "macos"))]
+        handle: None,
     }
 }
 
@@ -533,7 +664,7 @@ fn apply_settings(
     rest: i32,
     force: i32,
     auto_start: bool,
-) {
+) -> bool {
     let converted = u32::try_from(work)
         .and_then(|work_seconds| {
             Ok(Settings {
@@ -547,12 +678,48 @@ fn apply_settings(
         .map_err(|error| error.to_string());
 
     match converted {
-        Ok(settings) => {
-            dispatch(runtime, Event::ApplySettings(settings));
-            set_settings_error(runtime, SharedString::default());
+        Ok(settings) => match settings.validate() {
+            Ok(settings) => {
+                if settings != runtime.borrow().controller.settings() {
+                    dispatch(runtime, Event::ApplySettings(settings));
+                }
+                set_settings_error(runtime, SharedString::default());
+                true
+            }
+            Err(error) => {
+                set_settings_error(runtime, SharedString::from(error.to_string()));
+                false
+            }
+        },
+        Err(error) => {
+            set_settings_error(runtime, SharedString::from(error));
+            false
         }
-        Err(error) => set_settings_error(runtime, SharedString::from(error)),
     }
+}
+
+fn commit_duration_input(window: &SettingsWindow, field: i32, text: &str) -> SharedString {
+    let (current, minimum, maximum) = match field {
+        0 => (window.get_work_seconds(), 60, 5_400),
+        1 => (window.get_break_seconds(), 10, 3_600),
+        2 => (window.get_force_seconds(), 0, window.get_break_seconds()),
+        _ => return SharedString::from(text),
+    };
+    let seconds = parse_duration_in_range(text, minimum as u32, maximum as u32)
+        .unwrap_or(current.max(0) as u32);
+
+    match field {
+        0 => window.set_work_seconds(seconds as i32),
+        1 => {
+            window.set_break_seconds(seconds as i32);
+            if window.get_force_seconds() > seconds as i32 {
+                window.set_force_seconds(seconds as i32);
+            }
+        }
+        2 => window.set_force_seconds(seconds as i32),
+        _ => {}
+    }
+    SharedString::from(format_duration(seconds))
 }
 
 fn refresh_views(runtime: &Rc<RefCell<Runtime>>) {
@@ -604,7 +771,33 @@ fn ensure_settings_window(runtime: &Rc<RefCell<Runtime>>) -> AppResult<()> {
     Ok(())
 }
 
+fn schedule_native_settings_configuration(window: &SettingsWindow) -> AppResult<()> {
+    let weak = window.as_weak();
+    slint::spawn_local(async move {
+        let Some(window) = weak.upgrade() else {
+            return;
+        };
+        match window.window().winit_window().await {
+            Ok(native) => {
+                native.set_resizable(false);
+                native.focus_window();
+                clock_platform::activate_application();
+            }
+            Err(error) => eprintln!("取得设置窗口 winit 句柄失败: {error}"),
+        }
+    })?;
+    Ok(())
+}
+
 fn install_settings_callbacks(runtime: &Rc<RefCell<Runtime>>, window: &SettingsWindow) {
+    let weak_window = window.as_weak();
+    window.on_commit_duration(move |field, text| {
+        let Some(window) = weak_window.upgrade() else {
+            return text;
+        };
+        commit_duration_input(&window, field, &text)
+    });
+
     let weak = Rc::downgrade(runtime);
     window.on_toggle_play(move || {
         dispatch_weak(&weak, Event::User(UserAction::PlayPause));
@@ -628,7 +821,9 @@ fn install_settings_callbacks(runtime: &Rc<RefCell<Runtime>>, window: &SettingsW
     let weak = Rc::downgrade(runtime);
     window.on_save_settings(move |work, rest, force, auto_start| {
         if let Some(runtime) = weak.upgrade() {
-            apply_settings(&runtime, work, rest, force, auto_start);
+            apply_settings(&runtime, work, rest, force, auto_start)
+        } else {
+            false
         }
     });
 
@@ -655,30 +850,63 @@ fn set_settings_error(runtime: &Rc<RefCell<Runtime>>, error: SharedString) {
     }
 }
 
-fn show_and_activate_main(runtime: &Rc<RefCell<Runtime>>) {
-    let runtime = runtime.borrow();
-    if let Err(error) = runtime.main.show() {
-        eprintln!("显示主窗口失败: {error}");
-        return;
-    }
-    let _ = runtime
-        .main
-        .window()
-        .with_winit_window(|window| window.focus_window());
+fn show_and_activate_main(runtime: &Rc<RefCell<Runtime>>) -> AppResult<()> {
+    show_main(runtime, true)
+}
+
+fn show_main(runtime: &Rc<RefCell<Runtime>>, activate: bool) -> AppResult<()> {
+    runtime.borrow().main.show()?;
+    schedule_native_main_configuration(runtime, activate)
+}
+
+fn schedule_native_main_configuration(
+    runtime: &Rc<RefCell<Runtime>>,
+    activate: bool,
+) -> AppResult<()> {
+    let weak_main = runtime.borrow().main.as_weak();
+    slint::spawn_local(async move {
+        let Some(main) = weak_main.upgrade() else {
+            return;
+        };
+        match main.window().winit_window().await {
+            Ok(native) => {
+                native.set_window_level(winit::window::WindowLevel::AlwaysOnTop);
+                if let Err(error) = configure_main_window(native.as_ref()) {
+                    eprintln!("配置原生计时胶囊失败: {error}");
+                }
+                if activate {
+                    native.focus_window();
+                    clock_platform::activate_application();
+                }
+            }
+            Err(error) => eprintln!("取得计时胶囊 winit 窗口失败: {error}"),
+        }
+    })?;
+    Ok(())
 }
 
 fn poll_platform_events(runtime: &Rc<RefCell<Runtime>>) {
     let power_events = runtime.borrow().power.drain();
     for event in power_events {
-        let (event, now) = match event {
-            PowerEvent::Suspended { monotonic, wall } => {
-                (Event::Suspended, runtime.borrow().clock.at(monotonic, wall))
-            }
-            PowerEvent::Resumed { monotonic, wall } => {
-                (Event::Resumed, runtime.borrow().clock.at(monotonic, wall))
-            }
+        let (event, now, resumed) = match event {
+            PowerEvent::Suspended { monotonic, wall } => (
+                Event::Suspended,
+                runtime.borrow().clock.at(monotonic, wall),
+                false,
+            ),
+            PowerEvent::Resumed { monotonic, wall } => (
+                Event::Resumed,
+                runtime.borrow().clock.at(monotonic, wall),
+                true,
+            ),
         };
         dispatch_at(runtime, event, now);
+        if resumed
+            && runtime.borrow().controller.snapshot(now).phase != Phase::Break
+            && let Err(error) = schedule_native_main_configuration(runtime, false)
+        {
+            eprintln!("唤醒后恢复计时胶囊置顶失败: {error}");
+        }
     }
 
     let activation = runtime.borrow().instance.take_activation_request();
@@ -783,6 +1011,12 @@ mod tests {
             vec![FALLBACK_MONITOR_KEY]
         );
         assert!(sorted_monitor_keys(std::iter::empty()).is_empty());
+    }
+
+    #[test]
+    fn answer_input_only_keeps_ascii_digits() {
+        assert_eq!(normalize_answer("12三４a3"), "123");
+        assert_eq!(normalize_answer(" 908 "), "908");
     }
 
     #[test]

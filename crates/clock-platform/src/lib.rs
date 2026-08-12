@@ -1,3 +1,4 @@
+mod application;
 mod autostart;
 mod instance;
 mod monitor;
@@ -9,9 +10,10 @@ use clock_domain::Settings;
 use std::error::Error;
 use std::path::PathBuf;
 
+pub use application::{activate_application, configure_application};
 pub use instance::{InstanceRole, SingleInstance};
 pub use monitor::{MonitorGeometry, native_monitor_geometries};
-pub use overlay::configure_overlay_window;
+pub use overlay::{configure_main_window, configure_overlay_window, constrain_main_window};
 pub use power::{PowerEvent, PowerMonitor};
 pub use resource::{ProcessSample, sample_process};
 

@@ -7,4 +7,6 @@ mod model;
 mod settings;
 
 pub use model::{ClockModel, Phase, Snapshot, TimePoint};
-pub use settings::{Settings, SettingsError};
+pub use settings::{
+    Settings, SettingsError, format_duration, parse_duration_in_range, parse_duration_text,
+};

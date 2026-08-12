@@ -258,6 +258,23 @@ mod tests {
     }
 
     #[test]
+    fn next_work_uses_the_just_applied_duration() {
+        let mut controller = controller();
+        let settings = Settings {
+            work_seconds: 800,
+            ..Settings::default()
+        };
+        controller
+            .dispatch(Event::ApplySettings(settings), time(0))
+            .unwrap();
+        controller
+            .dispatch(Event::User(UserAction::NextWork), time(0))
+            .unwrap();
+        assert_eq!(controller.snapshot(time(0)).remaining_seconds, 800);
+        assert!(controller.snapshot(time(0)).running);
+    }
+
+    #[test]
     fn adjust_work_is_seconds_based() {
         let mut controller = controller();
         controller
