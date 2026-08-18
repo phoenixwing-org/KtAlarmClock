@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtMovableWidget.h
  * @brief       透明可拖动浮层控件

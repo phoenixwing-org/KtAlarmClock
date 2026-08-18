@@ -1,9 +1,9 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockSettingWindow.h
- * @brief       设置对话框（KtAlarmClockSettingDlg.qml）；界面见 .ui，可用 Qt Designer 编辑
+ * @brief       设置对话框；界面见 .ui，可用 Qt Designer 编辑
  */
 #ifndef KtAlarmClockSettingWindow_H
 #define KtAlarmClockSettingWindow_H

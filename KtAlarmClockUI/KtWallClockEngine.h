@@ -1,9 +1,9 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtWallClockEngine.h
- * @brief       墙钟倒计时引擎（MyClock.qml 核心逻辑的 C++ 实现）
+ * @brief       墙钟倒计时引擎
  */
 #ifndef KtWallClockEngine_H
 #define KtWallClockEngine_H

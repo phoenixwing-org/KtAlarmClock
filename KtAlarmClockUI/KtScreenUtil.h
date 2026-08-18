@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtScreenUtil.h
  * @brief       弹出窗口/菜单相对鼠标定位并限制在当前屏幕内

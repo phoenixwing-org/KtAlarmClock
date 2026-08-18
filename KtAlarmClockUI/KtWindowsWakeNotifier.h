@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtWindowsWakeNotifier.h
  * @brief       Windows 电源管理唤醒通知（WM_POWERBROADCAST）

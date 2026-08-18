@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtLockScreenManager.cpp
  */
@@ -192,7 +192,7 @@ void KtLockScreenManager::dismiss() {
 
     if (visible_) {
         visible_ = false;
-        emit visible_changed(); // 通知 QML 显示主浮窗
+        emit visible_changed(); // 通知主浮窗状态变化
     }
 }
 //------------------------------------------------------
@@ -493,7 +493,7 @@ void KtLockScreenManager::show(int breakSeconds, int forceSeconds, bool debugMod
 
     if (!visible_) {
         visible_ = true;
-        emit visible_changed(); // QML 隐藏主浮窗
+        emit visible_changed(); // 通知主浮窗状态变化
     }
 }
 //------------------------------------------------------

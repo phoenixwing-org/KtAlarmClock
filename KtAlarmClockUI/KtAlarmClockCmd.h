@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockCmd.h
  * @version		V1.0
@@ -14,12 +14,11 @@
 #include <QObject>
 
 // Kt
-#include "KtAlarmClockCore.h"
+#include "KtAlarmClockParam.h"
 #include "KtAlarmClockUI.h"
 
 // class pre-declare
 class KtAlarmClockController;
-class KtAlarmClockDlg;
 class KtLockScreenManager;
 class KtSingleInstanceGuard;
 class QGuiApplication;
@@ -47,18 +46,13 @@ public:
      */
     void debug(const QString& iMsg);
 
-    /**
-     * @brief Give My Panel
-     */
-    KtAlarmClockDlg* giveMyPanel() const;
-
     void setExePath(const QString& iPath) {
         m_ExePath = iPath;
     };
 
 public slots:
     /**
-     * @brief Force terminate process (bypass QML event loop cleanup)
+     * @brief Force terminate process when normal event-loop shutdown is unavailable
      */
     void forceQuit();
 
@@ -68,9 +62,7 @@ public slots:
     int setAutoStart(bool iValue);
 
 private:
-    KtAlarmClockCoreShared  core;
     KtAlarmClockParamShared parameter;
-    KtAlarmClockDlg*        dialog;
     KtAlarmClockController*   m_pController;
     KtSingleInstanceGuard*    instanceGuard_;
     QString                   m_ExePath;

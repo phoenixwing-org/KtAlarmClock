@@ -1,9 +1,9 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtLockScreenSecondaryWidget.h
- * @brief       副屏锁屏遮罩（MyOver1.qml）
+ * @brief       副屏锁屏遮罩
  */
 #ifndef KtLockScreenSecondaryWidget_H
 #define KtLockScreenSecondaryWidget_H

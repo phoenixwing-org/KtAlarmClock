@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockController.cpp
  */
@@ -271,11 +271,11 @@ void KtAlarmClockController::run_command(int actionId) {
         break;
     case KtAlarmClock::ActionHelp:
         QDesktopServices::openUrl(
-            QUrl(QStringLiteral("https://gitee.com/PhoenixWing321/KtAlarmClock/wikis/Home")));
+            QUrl(QStringLiteral("https://gitee.com/phoenixwing/KtAlarmClock/wikis/Home")));
         break;
     case KtAlarmClock::ActionKtWeb:
         QDesktopServices::openUrl(
-            QUrl(QStringLiteral("https://gitee.com/PhoenixWing321/KtAlarmClock")));
+            QUrl(QStringLiteral("https://gitee.com/phoenixwing/KtAlarmClock")));
         break;
     default:
         break;

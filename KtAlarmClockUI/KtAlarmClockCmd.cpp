@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockCmd.cpp
  */
@@ -20,38 +20,28 @@
 #include "KtAlarmClock.h"
 #include "KtAlarmClockCmd.h"
 #include "KtAlarmClockController.h"
-#include "KtAlarmClockCore.h"
-#include "KtAlarmClockDlg.h"
 #include "KtAlarmClockParam.h"
 #include "KtSingleInstanceGuard.h"
 
 //------------------------------------------------
 KtAlarmClockCmd::KtAlarmClockCmd(QObject* parent)
     : QObject(parent)
-    , core(nullptr)
     , parameter(nullptr)
-    , dialog(nullptr)
     , m_pController(nullptr)
     , instanceGuard_(nullptr)
     , m_ExePath() {
     // qDebug() << "KtAlarmClockCmd::KtAlarmClockCmd()";
     //  new
     parameter = std::make_shared<KtAlarmClockParam>();
-    core      = std::make_shared<KtAlarmClockCore>();
-    // set value
-    core->parameter = parameter;
 }
 //------------------------------------------------
 KtAlarmClockCmd::~KtAlarmClockCmd() {
     // qDebug() << "KtAlarmClockCmd::~KtAlarmClockCmd()";
     //  delete
     parameter = nullptr;
-    core      = nullptr;
     KTDelete(m_pController);
     KTDelete(instanceGuard_);
 
-    // only set NULL
-    KTSetNULL(dialog);
 }
 //------------------------------------------------
 int KtAlarmClockCmd::build() {
@@ -66,9 +56,6 @@ int KtAlarmClockCmd::build() {
 
     instanceGuard_ = new KtSingleInstanceGuard(this);
     if (!instanceGuard_->try_acquire_primary()) return KT_S_ALREADY_RUNNING;
-
-    // dialog
-    dialog = new KtAlarmClockDlg();
 
     parameter->registerRead();
 
@@ -102,10 +89,6 @@ void KtAlarmClockCmd::forceQuit() {
 #else
     std::_Exit(0);
 #endif
-}
-//------------------------------------------------
-KtAlarmClockDlg* KtAlarmClockCmd::giveMyPanel() const {
-    return dialog;
 }
 //------------------------------------------------
 int KtAlarmClockCmd::setAutoStart(bool iValue) {

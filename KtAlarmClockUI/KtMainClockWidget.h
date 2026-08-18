@@ -1,9 +1,9 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtMainClockWidget.h
- * @brief       主浮窗胶囊计时器（MyClock.qml + KtAlarmClockDlg.qml Window）
+ * @brief       主浮窗胶囊计时器
  */
 #ifndef KtMainClockWidget_H
 #define KtMainClockWidget_H

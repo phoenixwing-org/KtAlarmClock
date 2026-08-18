@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtLockScreenPrimaryWidget.cpp
  */
@@ -258,7 +258,7 @@ void KtLockScreenPrimaryWidget::build_ui() {
     ImgKtBlue = new QLabel(DragKtBlue);
     ImgKtBlue->setObjectName(QStringLiteral("lockKtBlue"));
     ImgKtBlue->setPixmap(
-        render_svg_pixmap(QStringLiteral(":/image/kt-blue.svg"), kKtBlueSize, kKtBlueSize));
+        render_svg_pixmap(QStringLiteral(":/image/phoenix-wing-mark.svg"), kKtBlueSize, kKtBlueSize));
     ImgKtBlue->setFixedSize(kKtBlueSize, kKtBlueSize);
     ImgKtBlue->setAttribute(Qt::WA_TransparentForMouseEvents, true);
     ImgKtBlue->move(0, 0);

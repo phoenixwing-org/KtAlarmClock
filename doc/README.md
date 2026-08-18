@@ -1,6 +1,6 @@
 # KtAlarmClock 文档
 
-设计与开发说明集中在本目录。根目录 [README.md](../README.md) 负责项目介绍与构建。
+设计与开发说明集中在本目录。当前工作树对应 `qwidget` 分支（Qt 5 + C++ + QWidget）；根目录 [README.md](../README.md) 负责项目介绍与构建。`qml` 和 `rust` 分支各自维护自己的实现文档，不在本目录混用。
 
 ---
 
@@ -22,6 +22,7 @@
 | --- | --- |
 | [QML迁移到Widget记录.md](./QML迁移到Widget记录.md) | QML→Widget 迁移备忘（已结束） |
 | [TODO.md](./TODO.md) | **产品向**待办（换肤、UI 美化） |
+| [分支点检表.md](./分支点检表.md) | QWidget 分支构建、功能和回归点检 |
 
 ---
 
@@ -46,5 +47,6 @@ README.md（根）
     ├── 高分辨率适配.md
     ├── 计时相关文件索引.md
     ├── QML迁移到Widget记录.md
-    └── TODO.md            ── 仅产品待办
+    ├── TODO.md            ── 仅产品待办
+    └── 分支点检表.md      ── QWidget 分支验收清单
 ```

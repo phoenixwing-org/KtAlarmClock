@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtLockScreenManager.h
  * @brief       多屏锁屏总控
@@ -21,7 +21,7 @@ class QTimer;
 /**
  * @brief 多屏锁屏总控
  *
- * 管理主屏/副屏 QWidget 遮罩、休息墙钟、算式解锁与 QML 属性 visible/exiting。
+ * 管理主屏/副屏 QWidget 遮罩、休息墙钟和算式解锁。
  */
 class KtLockScreenManager : public QObject {
     Q_OBJECT

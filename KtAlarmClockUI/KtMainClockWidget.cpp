@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtMainClockWidget.cpp
  */
@@ -74,7 +74,7 @@ KtMainClockWidget::KtMainClockWidget(QWidget* parent)
     connect(wakeNotifier, &KtWindowsWakeNotifier::system_resumed, this,
             &KtMainClockWidget::try_resume_after_wake);
 
-    move(600, 2); // 与 QML root.x 默认一致
+    move(600, 2); // 默认靠近屏幕上边缘
     refresh_display();
 }
 //------------------------------------------------------

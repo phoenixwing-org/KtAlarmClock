@@ -1,9 +1,9 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockTray.h
- * @brief       系统托盘（KtAlarmClockSystemTrayIcon.qml）
+ * @brief       系统托盘
  */
 #ifndef KtAlarmClockTray_H
 #define KtAlarmClockTray_H

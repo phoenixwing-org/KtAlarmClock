@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtAlarmClockTray.cpp
  */
@@ -29,7 +29,7 @@ KtAlarmClockTray::KtAlarmClockTray(QObject* parent)
     }
 
     TrayIcon = new QSystemTrayIcon(this);
-    TrayIcon->setIcon(QIcon(QStringLiteral(":/image/kt-blue.svg")));
+    TrayIcon->setIcon(QIcon(QStringLiteral(":/image/phoenix-wing-mark.svg")));
     TrayIcon->setToolTip(QStringLiteral("KT护眼闹钟"));
 
     build_menu();

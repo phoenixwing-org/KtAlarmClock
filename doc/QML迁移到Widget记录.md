@@ -31,6 +31,7 @@
 - [x] `KtAlarmClockSettingWindow` — Qt Designer `.ui` + `KtDurationEdit`/slider 绑定
 - [x] `KtAlarmClockCmd::build` — 不再加载 QML 主窗
 - [x] 删除 QML/JS 源文件
+- [x] 删除未接入主流程的 `KtAlarmClockCore` / `KtAlarmClockDlg` 遗留壳
 - [x] `KtAlarmClock.qrc` 仅保留 SVG 与 `lock-screen.qss`
 - [x] 更新 `doc/` 文档（含 [多屏锁屏遮罩.md](./多屏锁屏遮罩.md)、[高分辨率适配.md](./高分辨率适配.md)）
 

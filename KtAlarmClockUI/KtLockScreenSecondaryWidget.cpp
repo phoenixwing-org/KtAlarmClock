@@ -1,6 +1,6 @@
 /**
  * @copyright   Shanghai Kuntai Software Technology Co., Ltd. 2022
- * @license     LGPL 3.0
+ * @license     Apache-2.0
  * @author      Kuntai
  * @file        KtLockScreenSecondaryWidget.cpp
  */
@@ -18,7 +18,7 @@
 #include <QWindow>
 
 namespace {
-constexpr int kMessageHorizontalMargin = 40; // 与 QML width: parent.width - 40 一致
+constexpr int kMessageHorizontalMargin = 40;
 }
 
 //------------------------------------------------------
