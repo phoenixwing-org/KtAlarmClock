@@ -1,0 +1,63 @@
+[package]
+name = "clock-platform"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+clock-domain.workspace = true
+raw-window-handle.workspace = true
+
+[target.'cfg(target_os = "macos")'.dependencies]
+block2 = "0.6.2"
+libc.workspace = true
+objc2 = "0.6.4"
+objc2-app-kit = { version = "0.3.2", default-features = false, features = [
+    "NSApplication",
+    "NSColor",
+    "NSResponder",
+    "NSRunningApplication",
+    "NSScreen",
+    "NSView",
+    "NSWindow",
+    "NSWorkspace",
+    "block2",
+    "objc2-quartz-core",
+    "std",
+] }
+objc2-foundation = { version = "0.3.2", default-features = false, features = [
+    "NSNotification",
+    "NSOperation",
+    "NSObject",
+    "NSString",
+    "block2",
+    "std",
+] }
+objc2-quartz-core = { version = "0.3.2", default-features = false, features = [
+    "CALayer",
+    "objc2-core-foundation",
+    "std",
+] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.62.2", features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_Security",
+    "Win32_System_LibraryLoader",
+    "Win32_System_ProcessStatus",
+    "Win32_System_Power",
+    "Win32_System_Registry",
+    "Win32_System_Threading",
+    "Win32_UI_HiDpi",
+    "Win32_UI_WindowsAndMessaging",
+] }
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints.rust]
+# Native adapters isolate and document the small unsafe FFI boundary. Other
+# modules inherit this warning and cannot add unsafe silently under Clippy -D.
+unsafe_code = "warn"

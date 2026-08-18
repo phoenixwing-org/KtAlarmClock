@@ -1,0 +1,29 @@
+[package]
+name = "kt-alarm-clock"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+build = "build.rs"
+
+[[bin]]
+name = "KtAlarmClock"
+path = "src/main.rs"
+
+[dependencies]
+clock-app.workspace = true
+clock-domain.workspace = true
+clock-platform.workspace = true
+slint.workspace = true
+
+[build-dependencies]
+slint-build.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints.rust]
+# Slint's generated item-tree glue contains narrowly scoped unsafe code and
+# annotates it locally. `deny` still rejects unsafe in our handwritten code,
+# while allowing generated modules to lower the lint for their implementation.
+unsafe_code = "deny"

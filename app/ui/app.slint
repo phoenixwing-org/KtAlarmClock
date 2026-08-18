@@ -1,0 +1,801 @@
+import { Button, LineEdit } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    width: max(64px, time-label.preferred-width + 20px);
+    height: 34px;
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "KT 护眼闹钟";
+
+    in property <string> time-text: "45:00";
+    in property <bool> running: false;
+    in property <bool> in-break: false;
+
+    callback toggle-play();
+    callback start-break();
+    callback show-settings();
+    callback quit();
+    callback open-homepage();
+    callback drag-requested();
+
+    context-menu := ContextMenuArea {
+        width: parent.width;
+        height: parent.height;
+
+        Rectangle {
+            border-radius: self.height / 2;
+            background: #222222;
+
+            time-label := Text {
+                x: 0px;
+                // Center the text's actual glyph box, not a full-height Text
+                // element (which leaves the font baseline visually too high).
+                // Font ascent/descent is not visually symmetric; add a tiny
+                // baseline compensation after geometric centering.
+                y: (parent.height - self.preferred-height) / 2 + 2px;
+                width: parent.width;
+                height: self.preferred-height;
+                text: root.time-text;
+                color: #46aef6;
+                font-size: 18px;
+                font-weight: 500;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+
+        Menu {
+            MenuItem {
+                title: root.running ? "暂停计时" : "开始计时";
+                enabled: !root.in-break;
+                activated => { root.toggle-play(); }
+            }
+            MenuItem {
+                title: "立刻休息";
+                enabled: !root.in-break;
+                activated => { root.start-break(); }
+            }
+            MenuItem {
+                title: "设置";
+                enabled: !root.in-break;
+                activated => { root.show-settings(); }
+            }
+            MenuItem {
+                title: "代码主页";
+                activated => { root.open-homepage(); }
+            }
+            MenuSeparator {}
+            MenuItem {
+                title: "退出";
+                activated => { root.quit(); }
+            }
+        }
+    }
+
+    drag-area := TouchArea {
+        pointer-event(event) => {
+            if event.button == PointerEventButton.left
+                && event.kind == PointerEventKind.down {
+                root.drag-requested();
+            } else if event.button == PointerEventButton.right
+                && event.kind == PointerEventKind.up {
+                context-menu.show({ x: self.mouse-x, y: self.mouse-y });
+            }
+        }
+    }
+}
+
+component DurationRow inherits Rectangle {
+    in property <string> label;
+    in-out property <int> seconds;
+    in property <int> minimum;
+    in property <int> maximum;
+    in property <int> step: 10;
+    in-out property <string> input-text: root.format-duration(root.seconds);
+    callback commit-text(string) -> string;
+
+    height: 44px;
+    min-width: row-layout.min-width;
+    preferred-width: row-layout.preferred-width;
+    background: transparent;
+
+    pure function format-duration(value: int) -> string {
+        return floor(value / 60) + ":" + (mod(value, 60) < 10 ? "0" : "") + mod(value, 60);
+    }
+
+    function set-from-x(x: length) {
+        self.seconds = max(self.minimum, min(self.maximum,
+            round((self.minimum + clamp(x / slider-touch.width, 0, 1)
+                * (self.maximum - self.minimum)) / self.step) * self.step));
+    }
+
+    public function commit-input() {
+        root.input-text = root.commit-text(root.input-text);
+    }
+
+    changed seconds => {
+        root.input-text = root.format-duration(root.seconds);
+    }
+
+    row-layout := HorizontalLayout {
+        spacing: 14px;
+
+        Text {
+            text: root.label;
+            width: 82px;
+            color: #b9d9f0;
+            font-size: 14px;
+            vertical-alignment: center;
+        }
+
+        duration-box := Rectangle {
+            width: 112px;
+            height: 34px;
+            border-radius: 4px;
+            background: #05080b;
+            border-color: #2878bb;
+            border-width: 1px;
+
+            duration-input := TextInput {
+                x: 28px;
+                width: parent.width - 56px;
+                height: parent.height;
+                text <=> root.input-text;
+                color: #b9d9f0;
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                single-line: true;
+                accepted => {
+                    root.commit-input();
+                    self.clear-focus();
+                }
+                changed has-focus => {
+                    if !self.has-focus {
+                        root.commit-input();
+                    }
+                }
+            }
+
+            Text {
+                x: 0px;
+                width: 28px;
+                height: parent.height;
+                text: "-";
+                color: minus.pressed ? #46aef6 : #2878bb;
+                font-size: 18px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            minus := TouchArea {
+                x: 0px;
+                width: 28px;
+                clicked => { root.seconds = max(root.minimum, root.seconds - root.step); }
+            }
+
+            Rectangle {
+                x: 28px;
+                width: 1px;
+                height: parent.height;
+                background: #123551;
+            }
+            Rectangle {
+                x: parent.width - 28px;
+                width: 1px;
+                height: parent.height;
+                background: #123551;
+            }
+            Text {
+                x: parent.width - 28px;
+                width: 28px;
+                height: parent.height;
+                text: "+";
+                color: plus.pressed ? #46aef6 : #2878bb;
+                font-size: 18px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            plus := TouchArea {
+                x: parent.width - 28px;
+                width: 28px;
+                clicked => { root.seconds = min(root.maximum, root.seconds + root.step); }
+            }
+        }
+
+        slider-panel := Rectangle {
+            min-width: 260px;
+            preferred-width: 260px;
+            horizontal-stretch: 1;
+            height: 34px;
+            background: transparent;
+
+            rail := Rectangle {
+                y: (parent.height - self.height) / 2;
+                width: parent.width;
+                height: 6px;
+                border-radius: 3px;
+                background: #123551;
+            }
+            progress := Rectangle {
+                x: 0px;
+                y: rail.y;
+                width: thumb.x + thumb.width / 2;
+                height: rail.height;
+                border-radius: rail.border-radius;
+                background: #2878bb;
+            }
+            thumb := Rectangle {
+                x: clamp((parent.width - self.width) * (root.seconds - root.minimum)
+                    / (root.maximum - root.minimum), 0px, parent.width - self.width);
+                y: (parent.height - self.height) / 2;
+                width: 14px;
+                height: 14px;
+                border-radius: 7px;
+                background: #123551;
+                border-color: #46aef6;
+                border-width: 1px;
+            }
+            slider-touch := TouchArea {
+                mouse-cursor: pointer;
+                pointer-event(event) => {
+                    if event.button == PointerEventButton.left
+                        && event.kind == PointerEventKind.down {
+                        root.set-from-x(self.mouse-x);
+                    }
+                }
+                moved => { root.set-from-x(self.mouse-x); }
+            }
+        }
+    }
+}
+
+component ActionIconButton inherits Rectangle {
+    in property <image> icon;
+    in property <string> description;
+    callback clicked();
+
+    width: 42px;
+    height: 42px;
+    border-radius: 5px;
+    background: action-touch.pressed ? #123551
+        : (action-touch.has-hover ? #111c25 : transparent);
+    border-color: action-touch.has-hover ? #2878bb : #123551;
+    border-width: 1px;
+
+    Image {
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        width: 24px;
+        height: 24px;
+        source: root.icon;
+        image-fit: contain;
+    }
+    action-touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+    Tooltip { text: @markdown("\{root.description}"); }
+}
+
+component DarkTextButton inherits Rectangle {
+    in property <string> text;
+    in property <bool> primary: false;
+    callback clicked();
+
+    height: 36px;
+    min-width: 110px;
+    border-radius: 4px;
+    background: root.primary
+        ? (button-touch.pressed ? #123551 : #2878bb)
+        : (button-touch.has-hover ? #111c25 : #05080b);
+    border-color: root.primary ? #46aef6 : #2878bb;
+    border-width: 1px;
+
+    Text {
+        text: root.text;
+        color: root.primary ? white : #b9d9f0;
+        font-size: 14px;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    button-touch := TouchArea {
+        mouse-cursor: pointer;
+        clicked => { root.clicked(); }
+    }
+}
+
+export component SettingsWindow inherits Window {
+    width: settings-layout.preferred-width;
+    height: settings-layout.preferred-height;
+    title: "KT 护眼闹钟 - 设置";
+    icon: @image-url("../../image/phoenix-wing-mark.svg");
+    background: #05080b;
+
+    in-out property <int> work-seconds: 2700;
+    in-out property <int> break-seconds: 600;
+    in-out property <int> force-seconds: 300;
+    in-out property <bool> auto-start: true;
+    in property <bool> running: false;
+    in property <string> error-text: "";
+
+    callback commit-duration(int, string) -> string;
+    callback save-settings(int, int, int, bool) -> bool;
+    callback restore-defaults();
+    callback toggle-play();
+    callback start-break();
+    callback next-work();
+    callback adjust-work(int);
+
+    function apply-pending-settings() -> bool {
+        work-row.commit-input();
+        break-row.commit-input();
+        force-row.commit-input();
+        return root.save-settings(root.work-seconds, root.break-seconds,
+                                  root.force-seconds, root.auto-start);
+    }
+
+    settings-layout := VerticalLayout {
+        padding: 16px;
+        spacing: 10px;
+
+        Text {
+            text: "计时设置";
+            font-size: 20px;
+            font-weight: 500;
+            color: #46aef6;
+        }
+
+        work-row := DurationRow {
+            label: "工作时间";
+            seconds <=> root.work-seconds;
+            minimum: 60;
+            maximum: 5400;
+            step: 10;
+            commit-text(value) => { return root.commit-duration(0, value); }
+        }
+        break-row := DurationRow {
+            label: "休息时间";
+            seconds <=> root.break-seconds;
+            minimum: 10;
+            maximum: 3600;
+            step: 10;
+            commit-text(value) => { return root.commit-duration(1, value); }
+        }
+        force-row := DurationRow {
+            label: "强制休息";
+            seconds <=> root.force-seconds;
+            minimum: 0;
+            maximum: root.break-seconds;
+            step: 10;
+            commit-text(value) => { return root.commit-duration(2, value); }
+        }
+
+        Rectangle {
+            height: 28px;
+            background: transparent;
+
+            auto-box := Rectangle {
+                y: 5px;
+                width: 18px;
+                height: 18px;
+                border-radius: 3px;
+                background: root.auto-start ? #2878bb : #05080b;
+                border-color: root.auto-start ? #46aef6 : #2878bb;
+                border-width: 1px;
+                Text {
+                    text: root.auto-start ? "✓" : "";
+                    color: white;
+                    font-size: 13px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+            }
+            Text {
+                x: 28px;
+                width: parent.width - 28px;
+                height: parent.height;
+                text: "开机自动启动";
+                color: #b9d9f0;
+                font-size: 14px;
+                vertical-alignment: center;
+            }
+            TouchArea {
+                mouse-cursor: pointer;
+                clicked => { root.auto-start = !root.auto-start; }
+            }
+        }
+
+        if root.error-text != "": Text {
+            text: root.error-text;
+            color: #ff8e8e;
+            wrap: word-wrap;
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            alignment: center;
+            ActionIconButton {
+                icon: @image-url("../../image/coffee.svg");
+                description: "立刻休息";
+                clicked => {
+                    if root.apply-pending-settings() { root.start-break(); }
+                }
+            }
+            ActionIconButton {
+                icon: @image-url("../../image/kt-backward.svg");
+                description: "工作计时减少 60 秒";
+                clicked => {
+                    if root.apply-pending-settings() { root.adjust-work(-60); }
+                }
+            }
+            ActionIconButton {
+                icon: root.running
+                    ? @image-url("../../image/pause.svg")
+                    : @image-url("../../image/play.svg");
+                description: root.running ? "暂停计时" : "开始计时";
+                clicked => {
+                    if root.apply-pending-settings() { root.toggle-play(); }
+                }
+            }
+            ActionIconButton {
+                icon: @image-url("../../image/kt-forward.svg");
+                description: "工作计时增加 60 秒";
+                clicked => {
+                    if root.apply-pending-settings() { root.adjust-work(60); }
+                }
+            }
+            ActionIconButton {
+                icon: @image-url("../../image/next.svg");
+                description: "下一轮工作";
+                clicked => {
+                    if root.apply-pending-settings() { root.next-work(); }
+                }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 10px;
+            DarkTextButton {
+                horizontal-stretch: 1;
+                text: "恢复默认";
+                clicked => { root.restore-defaults(); }
+            }
+            DarkTextButton {
+                horizontal-stretch: 1;
+                text: "保存";
+                primary: true;
+                clicked => {
+                    root.apply-pending-settings();
+                }
+            }
+        }
+    }
+}
+
+// 统一的无视觉拖动句柄。宿主只需在 moved 回调中更新自己的偏移量，
+// 因而 logo、茶杯和倒计时可以独立移动而不复制指针状态机。
+component MoveHandle inherits TouchArea {
+    in-out property <length> start-x: 0px;
+    in-out property <length> start-y: 0px;
+    in-out property <bool> dragging: false;
+    callback dragged(length, length);
+
+    pointer-event(event) => {
+        if (event.button == PointerEventButton.left && event.kind == PointerEventKind.down) {
+            root.start-x = self.x + self.mouse-x;
+            root.start-y = self.y + self.mouse-y;
+            root.dragging = true;
+        } else if (root.dragging && event.kind == PointerEventKind.move) {
+            let current_x = self.x + self.mouse-x;
+            let current_y = self.y + self.mouse-y;
+            root.dragged(current_x - root.start-x, current_y - root.start-y);
+            root.start-x = current_x;
+            root.start-y = current_y;
+        } else if (event.button == PointerEventButton.left && event.kind == PointerEventKind.up) {
+            root.dragging = false;
+        }
+    }
+}
+
+export component BreakWindow inherits Window {
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "休息时间";
+
+    in property <string> time-text: "10:00";
+    in property <bool> forced: true;
+    in property <bool> can-unlock: false;
+    in property <bool> break-finished: false;
+    in property <string> formula-text: "";
+    in property <string> message-text: "";
+    in-out property <string> answer-text: "";
+    in-out property <length> logo-offset-x: 0px;
+    in-out property <length> logo-offset-y: 0px;
+    in-out property <length> time-offset-x: 0px;
+    in-out property <length> time-offset-y: 0px;
+    in-out property <length> coffee-offset-x: 0px;
+    in-out property <length> coffee-offset-y: 0px;
+
+    callback unlock-requested(string);
+    callback normalize-answer(string) -> string;
+    callback answer-focus-changed(bool);
+
+    Rectangle {
+        background: #05080b;
+        // Keep the content at a predictable size while the native window expands
+        // to the monitor. Logo and time deliberately have independent offsets.
+        content-layout := Rectangle {
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            width: 520px;
+            height: 520px;
+            background: transparent;
+
+            logo := Image {
+                x: (parent.width - self.width) / 2 + root.logo-offset-x;
+                // Centered inside the coffee cup body; its drag offset remains
+                // independent from the cup and countdown.
+                y: 124px + root.logo-offset-y;
+                source: @image-url("../../image/phoenix-wing-mark.svg");
+                width: 24px;
+                height: 24px;
+                image-fit: contain;
+            }
+
+            coffee := Image {
+                x: (parent.width - self.width) / 2 + root.coffee-offset-x;
+                y: 86px + root.coffee-offset-y;
+                width: 72px;
+                height: 72px;
+                source: @image-url("../../image/coffee.svg");
+                image-fit: contain;
+            }
+
+            time-label := Text {
+                x: (parent.width - self.width) / 2 + root.time-offset-x;
+                y: 272px + root.time-offset-y;
+                width: 280px;
+                height: 70px;
+                text: root.time-text;
+                color: #46aef6;
+                font-size: 54px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+
+            if root.can-unlock && root.break-finished: Rectangle {
+                x: (parent.width - self.width) / 2;
+                y: 385px;
+                width: 180px;
+                height: 38px;
+                border-radius: 19px;
+                background: unlock-touch.pressed ? #123551 : #05080b;
+                border-color: #2878bb;
+                border-width: 1px;
+                Text {
+                    text: "解锁并继续工作";
+                    color: #46aef6;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+                unlock-touch := TouchArea {
+                    clicked => { root.unlock-requested(""); }
+                }
+            }
+
+            logo-drag := MoveHandle {
+                x: logo.x;
+                y: logo.y;
+                width: logo.width;
+                height: logo.height;
+                dragged(dx, dy) => {
+                    root.logo-offset-x += dx;
+                    root.logo-offset-y += dy;
+                }
+            }
+
+            coffee-drag := MoveHandle {
+                x: coffee.x;
+                y: coffee.y;
+                width: coffee.width;
+                height: coffee.height;
+                dragged(dx, dy) => {
+                    root.coffee-offset-x += dx;
+                    root.coffee-offset-y += dy;
+                }
+            }
+
+            time-drag := MoveHandle {
+                x: time-label.x;
+                y: time-label.y;
+                width: time-label.width;
+                height: time-label.height;
+                dragged(dx, dy) => {
+                    root.time-offset-x += dx;
+                    root.time-offset-y += dy;
+                }
+            }
+        }
+
+        // This status line belongs to the fullscreen surface, not the centered
+        // content package, so it stays near the monitor's bottom edge.
+        status-label := Text {
+            x: 24px;
+            // Re-evaluated on every native resize/monitor change; keep a safe
+            // bottom margin even while a display reports a transient size.
+            y: max(8px, parent.height - 80px);
+            width: parent.width - 48px;
+            height: 24px;
+            text: root.message-text != "" ? root.message-text
+                : (root.break-finished
+                    ? "休息结束 · 点击解锁或按 Esc 恢复工作"
+                    : (root.forced ? "休息进行 · 强制休息中 · 切换显示器继续遮罩"
+                        : "休息进行 · 可完成计算提前解锁 · 切换显示器继续遮罩"));
+            color: root.message-text != "" ? #fca5a5 : #46aef6;
+            font-size: 13px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+
+    if root.can-unlock && !root.break-finished: Rectangle {
+        x: 24px;
+        y: 24px;
+        width: 280px;
+        background: transparent;
+        height: 72px;
+
+        VerticalLayout {
+            spacing: 8px;
+
+            Rectangle {
+                x: 0px;
+                width: parent.width;
+                height: 22px;
+
+                Text {
+                    x: 6px;
+                    width: 18px;
+                    height: 22px;
+                    text: "≡";
+                    color: #46aef6;
+                    font-size: 14px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+
+                Text {
+                    x: 26px;
+                    width: parent.width - 64px;
+                    height: 22px;
+                    text: "请验证一下";
+                    color: #46aef6;
+                    font-size: 13px;
+                    vertical-alignment: center;
+                }
+
+            }
+
+            HorizontalLayout {
+                spacing: 10px;
+                alignment: start;
+
+                Text {
+                    width: 110px;
+                    color: #46aef6;
+                    font-size: 24px;
+                    horizontal-alignment: right;
+                    vertical-alignment: center;
+                    text: root.formula-text;
+                }
+
+                answer-box := Rectangle {
+                    width: 94px;
+                    height: 36px;
+                    border-radius: 6px;
+                    background: #05080b;
+                    border-color: #2878bb;
+                    border-width: 1px;
+
+                    focus-touch := TouchArea {
+                        clicked => { answer.focus(); }
+                    }
+
+                    answer := TextInput {
+                        x: 4px;
+                        y: 1px;
+                        width: parent.width - 8px;
+                        height: parent.height - 2px;
+                        input-type: number;
+                        color: #46aef6;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                        text <=> root.answer-text;
+                        edited => { self.text = root.normalize-answer(self.text); }
+                        changed has-focus => {
+                            root.answer-focus-changed(self.has-focus);
+                        }
+                        accepted => { root.unlock-requested(self.text); }
+                        init => { self.focus(); }
+                    }
+                }
+
+                Rectangle {
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 10px;
+                    background: action-touch.pressed ? #123551 : transparent;
+
+                    Text {
+                        color: #46aef6;
+                        text: "➜";
+                        font-size: 16px;
+                        font-weight: 700;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                    }
+                    action-touch := TouchArea {
+                        clicked => {
+                            if root.can-unlock && !root.break-finished {
+                                root.unlock-requested(answer.text);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export component AppTray inherits SystemTrayIcon {
+    icon: @image-url("../../image/phoenix-wing-mark.svg");
+    tooltip: root.status-text;
+    title: "";
+
+    in property <string> status-text: "KT 护眼闹钟";
+    in property <bool> running: false;
+    in property <bool> in-break: false;
+
+    callback toggle-play();
+    callback start-break();
+    callback show-main();
+    callback show-settings();
+    callback quit();
+    callback open-homepage();
+
+    clicked => { root.show-main(); }
+
+    Menu {
+        MenuItem {
+            title: root.running ? "暂停计时" : "开始计时";
+            enabled: !root.in-break;
+            activated => { root.toggle-play(); }
+        }
+        MenuItem {
+            title: "立刻休息";
+            enabled: !root.in-break;
+            activated => { root.start-break(); }
+        }
+        MenuItem {
+            title: "显示计时器";
+            activated => { root.show-main(); }
+        }
+        MenuItem {
+            title: "设置";
+            enabled: !root.in-break;
+            activated => { root.show-settings(); }
+        }
+        MenuItem {
+            title: "代码主页";
+            activated => { root.open-homepage(); }
+        }
+        MenuSeparator {}
+        MenuItem {
+            title: "退出";
+            activated => { root.quit(); }
+        }
+    }
+}
