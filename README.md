@@ -101,4 +101,4 @@ macOS arm64 已完成编译、严格 Clippy、自动测试、Release 资源采�
 
 ## License
 
-[LGPL-3.0-only](LICENSE)
+[Apache-2.0](LICENSE)

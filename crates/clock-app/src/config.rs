@@ -21,16 +21,17 @@ impl FileConfigStore {
     }
 
     pub fn load(&self) -> Result<Option<Settings>, ConfigError> {
-        if !self.path.exists() {
-            self.restore_backup_if_needed()?;
-        }
-        if !self.path.exists() {
+        let Some(file) = self.load_file_settings()? else {
             return Ok(None);
-        }
-        let source = fs::read_to_string(&self.path).map_err(ConfigError::Io)?;
-        let file: FileSettings = toml::from_str(&source).map_err(ConfigError::Parse)?;
+        };
         let settings = Settings::from(file);
         settings.validate().map(Some).map_err(ConfigError::Invalid)
+    }
+
+    pub fn load_main_window_position(&self) -> Result<Option<MainWindowPosition>, ConfigError> {
+        Ok(self
+            .load_file_settings()?
+            .and_then(|file| file.main_window_position()))
     }
 
     pub fn load_or_default(&self) -> Result<Settings, ConfigError> {
@@ -38,12 +39,22 @@ impl FileConfigStore {
     }
 
     pub fn save(&self, settings: Settings) -> Result<(), ConfigError> {
+        let position = self.load_main_window_position()?;
+        self.save_with_position(settings, position)
+    }
+
+    pub fn save_with_position(
+        &self,
+        settings: Settings,
+        main_window_position: Option<MainWindowPosition>,
+    ) -> Result<(), ConfigError> {
         let settings = settings.validate().map_err(ConfigError::Invalid)?;
         if let Some(parent) = self.path.parent() {
             fs::create_dir_all(parent).map_err(ConfigError::Io)?;
         }
-        let encoded = toml::to_string_pretty(&FileSettings::from(settings))
-            .map_err(ConfigError::Serialize)?;
+        let mut file = FileSettings::from(settings);
+        file.set_main_window_position(main_window_position);
+        let encoded = toml::to_string_pretty(&file).map_err(ConfigError::Serialize)?;
         let temp = sibling_path(&self.path, "tmp");
         let backup = sibling_path(&self.path, "bak");
 
@@ -70,6 +81,18 @@ impl FileConfigStore {
         Ok(())
     }
 
+    fn load_file_settings(&self) -> Result<Option<FileSettings>, ConfigError> {
+        if !self.path.exists() {
+            self.restore_backup_if_needed()?;
+        }
+        if !self.path.exists() {
+            return Ok(None);
+        }
+        let source = fs::read_to_string(&self.path).map_err(ConfigError::Io)?;
+        let file: FileSettings = toml::from_str(&source).map_err(ConfigError::Parse)?;
+        Ok(Some(file))
+    }
+
     fn restore_backup_if_needed(&self) -> Result<(), ConfigError> {
         let backup = sibling_path(&self.path, "bak");
         if backup.exists() {
@@ -85,6 +108,12 @@ pub enum ConfigError {
     Parse(toml::de::Error),
     Serialize(toml::ser::Error),
     Invalid(clock_domain::SettingsError),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct MainWindowPosition {
+    pub x: i32,
+    pub y: i32,
 }
 
 impl Display for ConfigError {
@@ -117,6 +146,10 @@ struct FileSettings {
     break_seconds: u32,
     force_seconds: u32,
     auto_start: bool,
+    #[serde(default)]
+    main_window_x: Option<i32>,
+    #[serde(default)]
+    main_window_y: Option<i32>,
 }
 
 impl From<FileSettings> for Settings {
@@ -131,6 +164,27 @@ impl From<FileSettings> for Settings {
     }
 }
 
+impl FileSettings {
+    fn main_window_position(&self) -> Option<MainWindowPosition> {
+        self.main_window_x
+            .zip(self.main_window_y)
+            .map(|(x, y)| MainWindowPosition { x, y })
+    }
+
+    fn set_main_window_position(&mut self, position: Option<MainWindowPosition>) {
+        match position {
+            Some(position) => {
+                self.main_window_x = Some(position.x);
+                self.main_window_y = Some(position.y);
+            }
+            None => {
+                self.main_window_x = None;
+                self.main_window_y = None;
+            }
+        }
+    }
+}
+
 impl From<Settings> for FileSettings {
     fn from(value: Settings) -> Self {
         Self {
@@ -139,6 +193,8 @@ impl From<Settings> for FileSettings {
             break_seconds: value.break_seconds,
             force_seconds: value.force_seconds,
             auto_start: value.auto_start,
+            main_window_x: None,
+            main_window_y: None,
         }
     }
 }
@@ -200,16 +256,27 @@ mod tests {
         let first = Settings::default();
         store.save(first).unwrap();
         assert_eq!(store.load().unwrap(), Some(first));
+        assert!(store.load_main_window_position().unwrap().is_none());
 
         let second = Settings {
             auto_start: false,
             work_seconds: 1_200,
             ..first
         };
-        store.save(second).unwrap();
+        let second_position = MainWindowPosition { x: 120, y: 80 };
+        store
+            .save_with_position(second, Some(second_position))
+            .unwrap();
         assert_eq!(store.load().unwrap(), Some(second));
+        assert_eq!(
+            store.load_main_window_position().unwrap(),
+            Some(second_position)
+        );
         assert!(!sibling_path(&path, "tmp").exists());
         assert!(!sibling_path(&path, "bak").exists());
+
+        store.save_with_position(second, None).unwrap();
+        assert!(store.load_main_window_position().unwrap().is_none());
     }
 
     #[test]

@@ -10,8 +10,9 @@ resolver = "3"
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-license = "LGPL-3.0-only"
+license = "Apache-2.0"
 rust-version = "1.96"
+authors = ["Phoenix Wing"]
 
 [workspace.dependencies]
 clock-app = { path = "crates/clock-app" }

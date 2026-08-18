@@ -1,6 +1,6 @@
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
-use clock_app::{Controller, Effect, Event, FileConfigStore, UserAction};
+use clock_app::{Controller, Effect, Event, FileConfigStore, MainWindowPosition, UserAction};
 use clock_domain::{
     Phase, Settings, Snapshot, TimePoint, format_duration, parse_duration_in_range,
 };
@@ -14,6 +14,7 @@ use slint::{ComponentHandle, SharedString, Timer, TimerMode};
 use std::cell::RefCell;
 use std::error::Error;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::rc::{Rc, Weak};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
@@ -63,6 +64,7 @@ struct Runtime {
     unlock_answer: i32,
     resource_test: bool,
     resource_state_path: Option<PathBuf>,
+    main_window_position: Option<MainWindowPosition>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -93,6 +95,9 @@ const FALLBACK_MONITOR_KEY: MonitorKey = MonitorKey {
     height: 0,
     scale_bits: 0,
 };
+const MAIN_WINDOW_RIGHT_MARGIN: i32 = 24;
+const MAIN_WINDOW_TOP_MARGIN: i32 = 20;
+const PROJECT_HOME_URL: &str = "https://gitee.com/PhoenixWing321/KtAlarmClock";
 
 fn main() -> AppResult<()> {
     let backend = slint::BackendSelector::new()
@@ -134,6 +139,7 @@ fn main() -> AppResult<()> {
 
     let config = FileConfigStore::new(clock_platform::config_path()?);
     let stored = config.load()?;
+    let initial_main_window_position = config.load_main_window_position()?;
     let initial_settings = match stored {
         Some(settings) => settings,
         None => clock_platform::load_legacy_settings()?.unwrap_or_default(),
@@ -158,6 +164,7 @@ fn main() -> AppResult<()> {
         unlock_answer: 0,
         resource_test,
         resource_state_path,
+        main_window_position: initial_main_window_position,
     }));
 
     install_callbacks(&runtime);
@@ -212,12 +219,27 @@ fn main() -> AppResult<()> {
 }
 
 fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
+    let weak_runtime_for_move = Rc::downgrade(runtime);
     runtime
         .borrow()
         .main
         .window()
-        .on_winit_window_event(|window, event| {
-            if matches!(event, winit::event::WindowEvent::Moved(_)) {
+        .on_winit_window_event(move |window, event| {
+            if let winit::event::WindowEvent::Moved(position) = event {
+                let position = MainWindowPosition {
+                    x: position.x,
+                    y: position.y,
+                };
+
+                if let Some(runtime) = weak_runtime_for_move.upgrade() {
+                    let mut runtime = runtime.borrow_mut();
+                    runtime.main_window_position = Some(position);
+                    let settings = runtime.controller.settings();
+                    if let Err(error) = runtime.config.save_with_position(settings, Some(position)) {
+                        eprintln!("保存主计时窗口位置失败: {error}");
+                    }
+                }
+
                 let _ = window.with_winit_window(|native| {
                     if let Err(error) = constrain_main_window(native) {
                         eprintln!("移动后约束计时胶囊失败: {error}");
@@ -255,6 +277,15 @@ fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
     let weak = Rc::downgrade(runtime);
     runtime.borrow().main.on_quit(move || {
         dispatch_weak(&weak, Event::User(UserAction::Quit));
+    });
+
+    let weak = Rc::downgrade(runtime);
+    runtime.borrow().main.on_open_homepage(move || {
+        if let Some(_runtime) = weak.upgrade() {
+            if let Err(error) = open_url_in_browser(PROJECT_HOME_URL) {
+                eprintln!("打开代码主页失败: {error}");
+            }
+        }
     });
 
     let weak = Rc::downgrade(runtime);
@@ -296,6 +327,35 @@ fn install_callbacks(runtime: &Rc<RefCell<Runtime>>) {
     runtime.borrow().tray.on_quit(move || {
         dispatch_weak(&weak, Event::User(UserAction::Quit));
     });
+
+    let weak = Rc::downgrade(runtime);
+    runtime.borrow().tray.on_open_homepage(move || {
+        if let Some(_runtime) = weak.upgrade() {
+            if let Err(error) = open_url_in_browser(PROJECT_HOME_URL) {
+                eprintln!("打开代码主页失败: {error}");
+            }
+        }
+    });
+}
+
+fn open_url_in_browser(url: &str) -> AppResult<()> {
+    #[cfg(target_os = "macos")]
+    {
+        Command::new("open").arg(url).spawn()?;
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        // `start` 需要占位的空窗口标题参数以正确处理含有特殊字符的 URL。
+        Command::new("cmd").args(["/C", "start", "", url]).spawn()?;
+    }
+
+    #[cfg(all(unix, not(target_os = "macos")))]
+    {
+        Command::new("xdg-open").arg(url).spawn()?;
+    }
+
+    Ok(())
 }
 
 fn dispatch_weak(runtime: &Weak<RefCell<Runtime>>, event: Event) {
@@ -333,7 +393,15 @@ fn dispatch_at(runtime: &Rc<RefCell<Runtime>>, event: Event, now: TimePoint) {
 fn apply_effect(runtime: &Rc<RefCell<Runtime>>, effect: Effect) -> AppResult<()> {
     match effect {
         Effect::ShowMain => show_main(runtime, false)?,
-        Effect::HideMain => runtime.borrow().main.hide()?,
+        Effect::HideMain => {
+            // Never leave the user without either the main clock or a usable
+            // break overlay if overlay creation failed on one monitor.
+            if runtime.borrow().break_windows.is_empty() {
+                show_main(runtime, true)?;
+            } else {
+                runtime.borrow().main.hide()?;
+            }
+        }
         Effect::ShowSettings => {
             ensure_settings_window(runtime)?;
             let runtime = runtime.borrow();
@@ -379,6 +447,7 @@ fn build_break_windows(runtime: &Rc<RefCell<Runtime>>) -> AppResult<Vec<BreakOve
     if monitors.is_empty() {
         let window = create_break_window(runtime, a, b)?;
         window.show()?;
+        window.hide()?;
         schedule_native_overlay_configuration(&window, None)?;
         return Ok(vec![BreakOverlay {
             key: FALLBACK_MONITOR_KEY,
@@ -398,6 +467,7 @@ fn build_break_windows(runtime: &Rc<RefCell<Runtime>>) -> AppResult<Vec<BreakOve
             monitor.key.height,
         ));
         window.show()?;
+        window.hide()?;
         schedule_native_overlay_configuration(&window, Some(monitor.clone()))?;
         overlays.push(BreakOverlay {
             key: monitor.key,
@@ -459,6 +529,11 @@ fn schedule_native_overlay_configuration(
                             eprintln!("配置原生休息遮罩失败: {error}");
                         }
                         native.request_redraw();
+                        if let Err(error) = window.show() {
+                            eprintln!("显示 macOS 休息遮罩失败: {error}");
+                        }
+                        clock_platform::activate_application();
+                        native.focus_window();
                     });
                 }
                 #[cfg(not(target_os = "macos"))]
@@ -467,6 +542,10 @@ fn schedule_native_overlay_configuration(
                     if let Err(error) = configure_overlay_window(native.as_ref()) {
                         eprintln!("配置原生休息遮罩失败: {error}");
                     }
+                    if let Err(error) = window.show() {
+                        eprintln!("显示休息遮罩失败: {error}");
+                    }
+                    native.focus_window();
                 }
             }
             Err(error) => eprintln!("取得休息遮罩 winit 窗口失败: {error}"),
@@ -503,6 +582,97 @@ fn create_break_window(runtime: &Rc<RefCell<Runtime>>, a: i32, b: i32) -> AppRes
             }
         }) {
             eprintln!("调度休息答案输入焦点失败: {error}");
+        }
+    });
+
+    // Emergency escape hatch: Escape or the native close request always leaves
+    // the break state through the existing idempotent debug-exit path. This is
+    // deliberately handled at the native window layer so it still works when
+    // the Slint content is misplaced or an input method captures text events.
+    let weak = Rc::downgrade(runtime);
+    let weak_window_for_keys = window.as_weak();
+    window.window().on_winit_window_event(move |_window, event| {
+        // Forward keyboard digits through the fullscreen window as a fallback
+        // when the first click only activates the native window.
+        if let winit::event::WindowEvent::KeyboardInput { event: key_event, .. } = event
+            && key_event.state == winit::event::ElementState::Pressed
+            && let Some(runtime) = weak.upgrade()
+        {
+            let now = runtime.borrow().clock.now();
+            let snapshot = runtime.borrow().controller.snapshot(now);
+            if snapshot.phase == Phase::Break
+                && snapshot.can_unlock
+                && snapshot.remaining_seconds > 0
+                && let Some(window) = weak_window_for_keys.upgrade()
+            {
+                let key = key_event.physical_key;
+                if matches!(
+                    key,
+                    winit::keyboard::PhysicalKey::Code(winit::keyboard::KeyCode::Backspace)
+                ) {
+                    let mut answer = window.get_answer_text().to_string();
+                    answer.pop();
+                    window.set_answer_text(answer.into());
+                    return slint::winit_030::EventResult::PreventDefault;
+                }
+                if matches!(
+                    key,
+                    winit::keyboard::PhysicalKey::Code(winit::keyboard::KeyCode::Enter)
+                        | winit::keyboard::PhysicalKey::Code(
+                            winit::keyboard::KeyCode::NumpadEnter,
+                        )
+                ) {
+                    let answer = window.get_answer_text();
+                    handle_unlock(&runtime, answer.as_str());
+                    return slint::winit_030::EventResult::PreventDefault;
+                }
+                if let Some(text) = key_event.text.as_deref() {
+                    let digits = normalize_answer(text);
+                    if !digits.is_empty() {
+                        let mut answer = window.get_answer_text().to_string();
+                        answer.push_str(&digits);
+                        window.set_answer_text(answer.into());
+                        return slint::winit_030::EventResult::PreventDefault;
+                    }
+                }
+            }
+        }
+
+        let emergency = match event {
+            winit::event::WindowEvent::CloseRequested => true,
+            winit::event::WindowEvent::KeyboardInput { event, .. } => {
+                event.state == winit::event::ElementState::Pressed
+                    && event.physical_key
+                        == winit::keyboard::PhysicalKey::Code(winit::keyboard::KeyCode::Escape)
+            }
+            // macOS Spaces and Windows virtual desktops generally surface as
+            // the overlay losing focus/being occluded. Treat this as an exit
+            // only after the break is complete; forced rest remains enforced.
+            winit::event::WindowEvent::Focused(false)
+            | winit::event::WindowEvent::Occluded(true) => true,
+            _ => false,
+        };
+        if emergency {
+            let can_emergency_exit = weak
+                .upgrade()
+                .map(|runtime| {
+                    let now = runtime.borrow().clock.now();
+                    let snapshot = runtime.borrow().controller.snapshot(now);
+                    // Escape is only a backup for the completed-break unlock
+                    // button. It must never bypass forced rest.
+                    snapshot.phase == Phase::Break
+                        && !snapshot.forced
+                        && snapshot.remaining_seconds == 0
+                })
+                .unwrap_or(false);
+            if can_emergency_exit {
+                if let Some(runtime) = weak.upgrade() {
+                    dispatch(&runtime, Event::Unlock);
+                }
+            }
+            slint::winit_030::EventResult::PreventDefault
+        } else {
+            slint::winit_030::EventResult::Propagate
         }
     });
 
@@ -864,12 +1034,20 @@ fn schedule_native_main_configuration(
     activate: bool,
 ) -> AppResult<()> {
     let weak_main = runtime.borrow().main.as_weak();
+    let requested_position = runtime.borrow().main_window_position;
     slint::spawn_local(async move {
         let Some(main) = weak_main.upgrade() else {
             return;
         };
         match main.window().winit_window().await {
             Ok(native) => {
+                let position =
+                    requested_position.or_else(|| Some(default_main_window_position(&native)));
+                if let Some(position) = position {
+                    native.set_outer_position(winit::dpi::PhysicalPosition::new(
+                        position.x, position.y,
+                    ));
+                }
                 native.set_window_level(winit::window::WindowLevel::AlwaysOnTop);
                 if let Err(error) = configure_main_window(native.as_ref()) {
                     eprintln!("配置原生计时胶囊失败: {error}");
@@ -883,6 +1061,28 @@ fn schedule_native_main_configuration(
         }
     })?;
     Ok(())
+}
+
+fn default_main_window_position(window: &winit::window::Window) -> MainWindowPosition {
+    let size = window.inner_size();
+    let fallback_width = i32::try_from(size.width).unwrap_or(i32::MAX);
+    let monitor = window
+        .current_monitor()
+        .or_else(|| window.available_monitors().next());
+
+    if let Some(monitor) = monitor {
+        let origin = monitor.position();
+        let extent = monitor.size();
+        let width = i32::try_from(extent.width).unwrap_or(i32::MAX);
+        let x = origin.x + width.saturating_sub(fallback_width + MAIN_WINDOW_RIGHT_MARGIN);
+        let y = origin.y + MAIN_WINDOW_TOP_MARGIN;
+        MainWindowPosition { x, y }
+    } else {
+        MainWindowPosition {
+            x: MAIN_WINDOW_RIGHT_MARGIN,
+            y: MAIN_WINDOW_TOP_MARGIN,
+        }
+    }
 }
 
 fn poll_platform_events(runtime: &Rc<RefCell<Runtime>>) {

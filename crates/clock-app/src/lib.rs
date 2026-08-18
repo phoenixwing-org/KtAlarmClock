@@ -3,5 +3,5 @@
 mod config;
 mod controller;
 
-pub use config::{ConfigError, FileConfigStore};
+pub use config::{ConfigError, FileConfigStore, MainWindowPosition};
 pub use controller::{Controller, Effect, Event, UserAction};
