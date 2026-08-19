@@ -161,8 +161,10 @@ mod imp {
     };
     use windows::Win32::UI::HiDpi::GetDpiForWindow;
     use windows::Win32::UI::WindowsAndMessaging::{
-        GetWindowRect, HWND_TOPMOST, SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER,
-        SWP_SHOWWINDOW, SetWindowPos,
+        GWL_EXSTYLE, GWL_STYLE, GetWindowLongPtrW, GetWindowRect, HWND_TOPMOST, SWP_FRAMECHANGED,
+        SWP_NOACTIVATE, SWP_NOMOVE, SWP_NOSIZE, SWP_NOZORDER, SWP_SHOWWINDOW, SetWindowLongPtrW,
+        SetWindowPos, WS_CAPTION, WS_EX_APPWINDOW, WS_EX_TOOLWINDOW, WS_MAXIMIZEBOX,
+        WS_MINIMIZEBOX, WS_POPUP, WS_SYSMENU, WS_THICKFRAME,
     };
 
     // Keep the native window region aligned with the 34 logical-pixel Slint pill.
@@ -170,6 +172,7 @@ mod imp {
 
     pub(super) fn configure_main(window: &impl HasWindowHandle) -> PlatformResult<()> {
         let window = native_window(window)?;
+        configure_tool_window(window)?;
         set_topmost(window)?;
         clip_to_rounded_rect(window)?;
         constrain_native_window(window)
@@ -180,7 +183,9 @@ mod imp {
     }
 
     pub(super) fn configure_overlay(window: &impl HasWindowHandle) -> PlatformResult<()> {
-        set_topmost(native_window(window)?)
+        let window = native_window(window)?;
+        configure_tool_window(window)?;
+        set_topmost(window)
     }
 
     fn native_window(window: &impl HasWindowHandle) -> PlatformResult<HWND> {
@@ -205,6 +210,46 @@ mod imp {
                 0,
                 0,
                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_SHOWWINDOW,
+            )
+        }?;
+        Ok(())
+    }
+
+    fn configure_tool_window(window: HWND) -> PlatformResult<()> {
+        // Slint requests a frameless window, but winit can recreate/activate the
+        // native HWND with the default overlapped style on Windows. Remove every
+        // caption/frame button explicitly so activation cannot reveal a white
+        // title bar or resize buttons. WS_EX_TOOLWINDOW also keeps the capsule
+        // and overlays out of the taskbar's application-button list.
+        let style = unsafe { GetWindowLongPtrW(window, GWL_STYLE) } as u32;
+        let style = (style
+            & !(WS_CAPTION.0
+                | WS_THICKFRAME.0
+                | WS_MINIMIZEBOX.0
+                | WS_MAXIMIZEBOX.0
+                | WS_SYSMENU.0))
+            | WS_POPUP.0;
+        unsafe { SetWindowLongPtrW(window, GWL_STYLE, style as isize) };
+
+        let ex_style = unsafe { GetWindowLongPtrW(window, GWL_EXSTYLE) } as u32;
+        let ex_style = (ex_style & !WS_EX_APPWINDOW.0) | WS_EX_TOOLWINDOW.0;
+        unsafe { SetWindowLongPtrW(window, GWL_EXSTYLE, ex_style as isize) };
+
+        // Recalculate the non-client area immediately; without this notification
+        // Windows may retain the old frame until the next resize or activation.
+        unsafe {
+            SetWindowPos(
+                window,
+                None,
+                0,
+                0,
+                0,
+                0,
+                SWP_NOMOVE
+                    | SWP_NOSIZE
+                    | SWP_NOZORDER
+                    | SWP_NOACTIVATE
+                    | SWP_FRAMECHANGED,
             )
         }?;
         Ok(())
