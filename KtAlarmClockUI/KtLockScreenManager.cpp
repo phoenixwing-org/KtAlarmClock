@@ -149,8 +149,7 @@ void KtLockScreenManager::enter_system_sleep_at(qint64 wallMs) {
         return;
 
     sleepStartedMs_ = wallMs;
-    if (breakClock_.get_running())
-        breakClock_.freeze_for_system_sleep_at(wallMs);
+    // 休息按墙钟截止时间推进，系统休眠也属于用户休息时间；这里只停 UI tick。
 
     if (tickTimer_)
         tickTimer_->stop();
@@ -542,21 +541,10 @@ void KtLockScreenManager::try_resume_after_wake() {
     if (!visible_) return;
 
     const qint64 now                 = QDateTime::currentMSecsSinceEpoch();
-    const bool   wasSleepSuspended   = breakClock_.is_sleep_suspended();
-    const bool   hadSleepStartedMs   = sleepStartedMs_ > 0;
-
-    if (hadSleepStartedMs && forceEndMs_ > 0)
-        forceEndMs_ += (now - sleepStartedMs_); // 强制等待期不随休眠流逝
-
     sleepStartedMs_ = 0;
 
-    if (breakClock_.get_running()) {
-        breakClock_.realign_phase_start_if_ahead();
-    }
-    else if (!breakClock_.resume_after_system_sleep()) {
-        if (wasSleepSuspended && breakClock_.get_counter() <= 0)
-            sync_wall_clocks();
-    }
+    // breakClock_ 使用墙钟，不执行 resume_after_system_sleep()，也不移动
+    // forceEndMs_；这样休息和强制期都包含系统休眠时长。
 
     if (tickTimer_ && !tickTimer_->isActive())
         tickTimer_->start();
