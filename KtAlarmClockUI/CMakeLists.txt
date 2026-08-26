@@ -16,7 +16,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE KtAlarmClockUI_EXPORTS)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${KT_BASE_INCLUDE}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

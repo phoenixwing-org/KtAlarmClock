@@ -28,7 +28,7 @@
 | ---------- | -------------------------------- | ------------------------------------------------ |
 | 可执行入口 | `KtAlarmClock/`                  | `main.cpp`，启动应用与插件                       |
 | UI 与业务  | `KtAlarmClockUI/`                | QWidget 界面、计时、托盘、设置和多屏遮罩         |
-| 构建       | `CMakeLists.txt`、`common.cmake` | CMake 3.25+；产物目录由 preset / `ROOT_DIR` 决定 |
+| 构建       | `CMakeLists.txt`、KtRoot/cmake/SdkCore.cmake | CMake 3.25+；产物目录由 `ROOT_DIR`、`SDK_PREFIX` 和目标平台自动决定 |
 
 QML/JavaScript 主流程已迁移完成；本分支后续只维护 QWidget 路径。详细迁移记录见 [doc/QML迁移到Widget记录.md](doc/QML迁移到Widget记录.md)。
 
